@@ -1,6 +1,6 @@
-import { Route, Router } from 'wouter'
-import { createTheme } from '@mui/material/styles'
-import { AppBar, Avatar, Box, Button, Stack, ThemeProvider, Typography } from '@mui/material'
+import { Route, Router } from 'wouter';
+import { createTheme } from '@mui/material/styles';
+import { AppBar, Avatar, Box, Button, Stack, ThemeProvider, Typography } from '@mui/material';
 import {
     Briefing,
     Depth,
@@ -10,10 +10,11 @@ import {
     Staining,
     StainingGuide,
     Result,
-} from './pages'
-import config from './config'
-import { navigate } from 'wouter/use-browser-location'
-import PrivacyPolicy from './pages/PrivacyPolicy'
+    PrivacyPolicy,
+} from './pages';
+import config from './config';
+import { navigate } from 'wouter/use-browser-location';
+import LanguageSelector from './utils/LanguageSelector';
 
 const Theme = {
     theme: createTheme({
@@ -23,30 +24,9 @@ const Theme = {
             }
         }
     })
-}
+};
 
-function changeLanguage(language: 'english' | 'bengali') {
-    localStorage.setItem('language', language)
-
-    document.body.className = language
-}
-
-function setLanguage() {
-    if (localStorage.getItem('language')) {
-        if (localStorage.getItem('language') === 'english') {
-            changeLanguage('english')
-        } else if (localStorage.getItem('language') === 'bengali') {
-            changeLanguage('bengali')
-        } else {
-            console.error(`invalid language option ${localStorage.getItem('language')}`)
-            localStorage.removeItem('language')
-        }
-    } else {
-        changeLanguage('english')
-    }
-}
-
-setLanguage()
+LanguageSelector.init();
 
 function App() {
     return (
@@ -84,7 +64,7 @@ function App() {
                                     src={`${config.basePath}/british.png`}
                                 />
                             }
-                            onClick={() => changeLanguage('english')}
+                            onClick={() => LanguageSelector.set('english')}
                         />
 
                         <Button
@@ -94,7 +74,7 @@ function App() {
                                     src={`${config.basePath}/bangladesh.jpg`}
                                 />
                             }
-                            onClick={() => changeLanguage('bengali')}
+                            onClick={() => LanguageSelector.set('bengali')}
                         />
                     </Box>
                 </Stack>
@@ -122,7 +102,7 @@ function App() {
                 </Router>
             </Stack>
         </ThemeProvider>
-    )
+    );
 }
 
-export default App
+export default App;

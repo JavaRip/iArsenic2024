@@ -1,3 +1,3 @@
 export default {
-    basePath: '',
-}
+    basePath: '/iarsenic-staging/us-central1/app',
+};
