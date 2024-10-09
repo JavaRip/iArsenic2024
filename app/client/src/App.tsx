@@ -2,6 +2,8 @@ import { Route, Router, Switch } from 'wouter';
 import { createTheme } from '@mui/material/styles';
 import { Stack, ThemeProvider } from '@mui/material';
 import {
+    AllUsers,
+    AllWells,
     Briefing,
     Depth,
     Flooding,
@@ -87,6 +89,8 @@ function App() {
                             <Route path='/staining-guide' component={StainingGuide} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
                             <Route path='/well/:id' component={Well} />
+                            <Route path='/all-wells' component={AllWells} />
+                            <Route path='/all-users' component={AllUsers} />
                         </Stack>
                     </Route>
                 </Switch>

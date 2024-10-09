@@ -1,8 +1,9 @@
 import { Context } from 'koa';
-import { AccessTokenSchema, GuestTokenSchema, Well, WellSchema, validateModel } from 'iarsenic-types'
+import { AccessTokenSchema, GuestTokenSchema, User, Well, WellSchema, validateModel } from 'iarsenic-types'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
 import { z } from 'zod';
+import { UserService } from '../services';
 
 export const WellController = {
     async createWellByToken(ctx: Context) {
@@ -21,9 +22,18 @@ export const WellController = {
     // todo - add pagination
     async getAllWells(ctx: Context) {
         const wells = await WellService.getAllWells();
+        const users: { [userId: string]: User } = {}
+
+        for (const well of wells) {
+            if (!users[well.userId] && well.userId !== 'guest') {
+                users[well.userId] = await UserService.getById(
+                    well.userId
+                )
+            }
+        }
 
         ctx.status = 200
-        ctx.body = { wells }
+        ctx.body = { users, wells }
     },
 
     async getWellsByToken(ctx: Context) {

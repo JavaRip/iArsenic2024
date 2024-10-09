@@ -1,3 +1,5 @@
+export { default as AllUsers } from './AllUsers';
+export { default as AllWells } from './AllWells';
 export { default as Briefing } from './Briefing';
 export { default as Depth } from './Depth';
 export { default as Flooding } from './Flooding';
@@ -9,6 +11,7 @@ export { default as MyWells } from './MyWells';
 export { default as PrivacyPolicy } from './PrivacyPolicy';
 export { default as Profile } from './Profile';
 export { default as Region } from './Region';
+export { default as ResetPassword } from './ResetPassword';
 export { default as Result } from './Result';
 export { default as Review } from './Review';
 export { default as SignUp } from './SignUp';
@@ -17,4 +20,3 @@ export { default as Staining } from './Staining';
 export { default as StainingGuide } from './StainingGuide';
 export { default as VerifyEmail } from './VerifyEmail';
 export { default as Well } from './Well';
-export { default as ResetPassword } from './ResetPassword';

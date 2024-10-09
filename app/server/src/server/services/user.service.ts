@@ -285,6 +285,11 @@ export const UserService = {
     },
 
     async getAllUsers(): Promise<User[]> {
-        return await UserRepo.findAll()
+        const users = await UserRepo.findAll()
+
+        return users.map(user => {
+            const { password, ...userData } = user
+            return userData
+        })
     },
 }
