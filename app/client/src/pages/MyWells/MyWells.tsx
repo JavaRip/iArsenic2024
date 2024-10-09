@@ -1,11 +1,12 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import WellCard from './WellCard';
 import { useEffect, useState } from 'react';
-import { Well } from 'iarsenic-types';
+import { Well, WellSchema } from 'iarsenic-types';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import { navigate } from 'wouter/use-browser-location';
 
 export default function MyWells(): JSX.Element {
+    const [loading, setLoading] = useState<boolean>(true);
     const [wells, setWells] = useState<Well[]>([]);
 
     async function fetchUserWells() {
@@ -40,6 +41,8 @@ export default function MyWells(): JSX.Element {
                 prediction: well.prediction,
             };
         }));
+
+        setLoading(false);
     }
 
     async function addWell(): Promise<Well> {
@@ -62,12 +65,22 @@ export default function MyWells(): JSX.Element {
         }
 
         const data = await res.json();
-        return data.well as Well;
+
+        return WellSchema.parse({
+            ...data.well,
+            createdAt: new Date(data.well.createdAt),
+        });
     }
 
     useEffect(() => {
         fetchUserWells();
     }, []);
+
+    if (loading) {
+        return (
+            <CircularProgress />
+        );
+    }
 
     return (
         <>

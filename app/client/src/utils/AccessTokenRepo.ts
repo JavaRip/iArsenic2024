@@ -6,7 +6,9 @@ export default class AccessTokenRepo {
     static token: AccessToken | null = null;
 
     static get = async (): Promise<AccessToken | null> => {
-        if (AccessTokenRepo.token) return AccessTokenRepo.token;
+        if (AccessTokenRepo.token) {
+            return AccessTokenRepo.token;
+        }
 
         const accessToken = localStorage.getItem(this.dataKey) || null;
         if (!accessToken) return null;
@@ -54,12 +56,14 @@ export default class AccessTokenRepo {
         }
 
         token.user = validatedUserRes.data;
+        AccessTokenRepo.token = token;
 
-        return token;
+        return AccessTokenRepo.token;
     };
 
     static delete = () => {
         localStorage.removeItem(AccessTokenRepo.dataKey);
+        AccessTokenRepo.token = null;
     };
 
     static set = (accessToken: AccessToken) => {

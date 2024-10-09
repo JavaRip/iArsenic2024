@@ -12,18 +12,7 @@ export default function Review() {
     const [well, setWell] = useState<Well>();
 
     useEffect(() => {
-        async function fetchToken() {
-            const token = await AccessTokenRepo.get();
-            if (token == null) return;
-
-            setToken(token);
-        }
-
-        fetchToken();
-    }, []);
-
-    useEffect(() => {
-        async function fetchWell() {
+        async function fetchWell(token: AccessToken | null) {
             if (!wellId) return;
 
             const headers: HeadersInit = {};
@@ -48,7 +37,20 @@ export default function Review() {
             setWell(data.well);
         }
 
-        fetchWell();
+        async function fetchToken(): Promise<AccessToken | null> {
+            const token = await AccessTokenRepo.get();
+            if (token == null) return null;
+
+            setToken(token);
+            return token;
+        }
+
+        async function setTokenFetchWell() {
+            const token = await fetchToken();
+            await fetchWell(token);
+        }
+
+        setTokenFetchWell();
     }, [token, wellId]);
 
     if (!well) {

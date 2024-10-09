@@ -38,7 +38,7 @@ export default function WellCard({ well }: props): JSX.Element {
 
                 {/* Well Details in Grid */}
                 <Grid container spacing={2} mt={2}>
-                    {well.depth && (
+                    {well.depth != null && (
                         <Grid item xs={6}>
                             <Typography variant="subtitle2">Depth</Typography>
                             <Typography variant="body2" color="text.secondary">

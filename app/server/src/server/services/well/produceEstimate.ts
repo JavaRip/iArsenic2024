@@ -39,7 +39,7 @@ export default function produceEstimate(well: Well): ModelMessageCode {
 
     const depth = well.depth;
 
-    if (!depth) throw new Error('depth not found in well data');
+    if (depth == null) throw new Error('depth not found in well data');
 
     const regionStrataKey = (() => {
         if (depth < 15.3) return 's15';

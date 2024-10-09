@@ -1,7 +1,7 @@
 import { Box, Typography, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { Well, AccessToken } from 'iarsenic-types';
+import { Well, AccessToken, WellSchema } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import AccessTokenRepo from '../../utils/AccessTokenRepo';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -55,16 +55,42 @@ export default function Review() {
 
             const data = await result.json();
 
-            setWell(data.well);
+            const well = WellSchema.parse({
+                ...data.well,
+                createdAt: new Date(data.well.createdAt),
+            });
+
+            if (missingFields(well).length == 0 && well.prediction == null) {
+                const res = await fetch(`/api/v1/self/well/${wellId}/predict`, {
+                    method: 'POST',
+                    headers: {
+                        authorization: `Bearer ${token.id}`,
+                    }
+                });
+
+                if (!res.ok) {
+                    console.error('Failed to fetch prediction:', res);
+                    return;
+                }
+
+                const data = await res.json();
+
+                const predictionWell = WellSchema.parse({
+                    ...well,
+                    prediction: data.prediction,
+                });
+
+                setWell(predictionWell);
+            }
+
+            setWell(well);
         }
 
         fetchWell();
     }, [wellId, token]);
 
     if (!well) {
-        return (
-            <CircularProgress />
-        );
+        return <CircularProgress />;
     }
 
     return (
@@ -178,73 +204,92 @@ export default function Review() {
                 </Card>
             )}
 
-            <Card
-                variant="outlined"
-                sx={{
-                    width: '100%',
-                    padding: '16px',
-                    marginBottom: '16px',
-                }}
-            >
-                {well.regionKey && (
-                    <Box mb={2}>
-                        <Typography variant="h6" gutterBottom>Region</Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Division: {well.regionKey.division}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            District: {well.regionKey.district}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Upazila: {well.regionKey.upazila}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Union: {well.regionKey.union}
-                        </Typography>
-
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Mouza: {well.regionKey.mouza}
-                        </Typography>
-                    </Box>
-                )}
-
-                {well.staining && (
-                    <Box mb={2}>
-                        <Typography variant="h6" gutterBottom>Staining</Typography>
-                        <Typography variant="body1" component="p" gutterBottom>
-                            Staining: {well.staining}
-                        </Typography>
-
-                        {well.utensilStaining && (
-                            <Typography variant="body1" component="p" gutterBottom>
-                                Utensil Staining: {well.utensilStaining}
+            {/* check region key as this is the first value entered */}
+            {well.regionKey && (
+                <Card
+                    variant="outlined"
+                    sx={{
+                        width: '100%',
+                        padding: '16px',
+                        marginBottom: '16px',
+                    }}
+                >
+                    {well.prediction && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Well Prediction</Typography>
+                            <Typography variant="body1" gutterBottom>
+                                Model: {well.prediction.model}
                             </Typography>
-                        )}
-                    </Box>
-                )}
+                            <Typography variant="body1" gutterBottom>
+                                Model Output: {well.prediction.modelOutput}
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>
+                                Risk Assesment: {well.prediction.riskAssesment}
+                            </Typography>
+                        </Box>
+                    )
 
-                {well.depth && (
-                    <Box mb={2}>
-                        <Typography variant="h6" gutterBottom>Depth</Typography>
-                        <Typography variant="body1" component="p">
-                            Depth: {well.depth} meters
-                        </Typography>
-                    </Box>
-                )}
+                    }
+                    {well.regionKey && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Region</Typography>
 
-                {well.flooding && (
-                    <Box>
-                        <Typography variant="h6" gutterBottom>Flooding</Typography>
-                        <Typography variant="body1" component="p">
-                            Flooding: {well.flooding ? 'Yes' : 'No'}
-                        </Typography>
-                    </Box>
-                )}
-            </Card>
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Division: {well.regionKey.division}
+                            </Typography>
+
+                            <Typography variant="body1" component="p" gutterBottom>
+                                District: {well.regionKey.district}
+                            </Typography>
+
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Upazila: {well.regionKey.upazila}
+                            </Typography>
+
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Union: {well.regionKey.union}
+                            </Typography>
+
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Mouza: {well.regionKey.mouza}
+                            </Typography>
+                        </Box>
+                    )}
+
+                    {well.staining && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Staining</Typography>
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Staining: {well.staining}
+                            </Typography>
+
+                            {well.utensilStaining && (
+                                <Typography variant="body1" component="p" gutterBottom>
+                                    Utensil Staining: {well.utensilStaining}
+                                </Typography>
+                            )}
+                        </Box>
+                    )}
+
+                    {well.depth != null && (
+                        <Box mb={2}>
+                            <Typography variant="h6" gutterBottom>Depth</Typography>
+                            <Typography variant="body1" component="p">
+                                Depth: {well.depth} meters
+                            </Typography>
+                        </Box>
+                    )}
+
+                    {well.flooding && (
+                        <Box>
+                            <Typography variant="h6" gutterBottom>Flooding</Typography>
+                            <Typography variant="body1" component="p">
+                                Flooding: {well.flooding ? 'Yes' : 'No'}
+                            </Typography>
+                        </Box>
+                    )}
+                </Card>
+            )}
         </>
     );
 }
