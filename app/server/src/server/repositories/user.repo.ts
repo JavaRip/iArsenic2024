@@ -5,6 +5,7 @@ import db from '../db';
 export interface IUserRepo extends Repository<User> {
     findByEmail: (email: string) => Promise<User | null>;
     update: (user: User) => Promise<void>;
+    findAll: () => Promise<User[]>;
 }
 
 export const UserRepo: IUserRepo = {
@@ -45,10 +46,14 @@ export const UserRepo: IUserRepo = {
         const snapshot = await db.collection('user').get();
         const users: User[] = [];
 
-        snapshot.forEach((doc) => {
-            const user = UserSchema.parse(doc.data());
-            users.push(user);
-        });
+        for (const user of snapshot.docs) {
+            const docData = user.data();
+
+            users.push(UserSchema.parse({
+                ...docData,
+                createdAt: docData.createdAt.toDate(),
+            }))
+        }
 
         return users;
     },

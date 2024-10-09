@@ -282,5 +282,9 @@ export const UserService = {
         })
 
         await TokenRepo.update(newToken)
-    }
+    },
+
+    async getAllUsers(): Promise<User[]> {
+        return await UserRepo.findAll()
+    },
 }

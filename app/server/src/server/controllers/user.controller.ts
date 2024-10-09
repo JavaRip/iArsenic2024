@@ -167,5 +167,12 @@ export const UserController = {
         ctx.body = {
             message: 'Password has been successfully reset.',
         };
-    }
+    },
+
+    async getAllUsers(ctx: Context): Promise<void> {
+        const users = await UserService.getAllUsers();
+
+        ctx.status = 200;
+        ctx.body = { users };
+    },
 }
