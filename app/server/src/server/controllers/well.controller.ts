@@ -26,9 +26,16 @@ export const WellController = {
 
         for (const well of wells) {
             if (!users[well.userId] && well.userId !== 'guest') {
-                users[well.userId] = await UserService.getById(
-                    well.userId
-                )
+                try {
+                    users[well.userId] = await UserService.getById(
+                        well.userId
+                    )
+                } catch (error) {
+                    console.error(`
+                        Failed to get user ID: ${well.userId}
+                        for well ID: ${well.id}
+                    `)
+                }
             }
         }
 
