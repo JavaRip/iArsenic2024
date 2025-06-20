@@ -1,3 +1,6 @@
 import { getFirestore } from 'firebase-admin/firestore';
 
-export default getFirestore();
+const db = getFirestore();
+db.settings({ ignoreUndefinedProperties: true });
+
+export default db;
