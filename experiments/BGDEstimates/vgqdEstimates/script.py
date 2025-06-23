@@ -9,6 +9,7 @@ from math import isnan
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
 
 
 # Dynamically import produce_estimate
@@ -176,3 +177,6 @@ confusion_output_path = f"{MODEL_VERSION}_confusion_matrix.png"
 plt.savefig(confusion_output_path)
 plt.show()
 print(f"Saved confusion matrix to {confusion_output_path}")
+
+df.info()
+print(df.head())

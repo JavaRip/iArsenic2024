@@ -220,6 +220,46 @@ def create_confusion_matrices(df, output_dir="output/confusion_matrices"):
         plt.savefig(output_path)
         plt.close()
 
+def create_binary_confusion_matrix(df, model_col="m150_10_risk_assesment", output_dir="output/confusion_matrices"):
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Drop rows with missing prediction or expected values
+    df = df.dropna(subset=[model_col, "expected_risk"]).copy()
+
+    # Define binary threshold
+    safe_if_under = 3  # both expected and predicted are safe if < 3
+
+    # Assign binary categories for plotting
+    df["true_binary"] = df["expected_risk"].apply(lambda x: 0 if x < safe_if_under else 1)
+    df["pred_binary"] = df[model_col].apply(lambda x: 0 if x < safe_if_under else 1)
+    print(df.info())
+    print(df.head())
+
+    # Correct prediction if both fall in the same binary class
+    df["prediction_correct"] = df["true_binary"] == df["pred_binary"]
+
+    # Confusion matrix
+    cm = confusion_matrix(df["true_binary"], df["pred_binary"], labels=[0, 1])
+    cm_df = pd.DataFrame(cm, index=["Safe (<3)", "Unsafe (≥3)"], columns=["Safe (<3)", "Unsafe (≥3)"])
+
+    # Plot confusion matrix
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm_df, annot=True, fmt="d", cmap="Blues", cbar=False)
+    plt.title(f"Binary Confusion Matrix for {model_col}")
+    plt.xlabel("Predicted")
+    plt.ylabel("Expected")
+    plt.tight_layout()
+
+    output_path = os.path.join(output_dir, f"{model_col}_binary_confusion_matrix.png")
+    plt.savefig(output_path)
+    plt.close()
+    print(f"Saved binary confusion matrix for {model_col} to {output_path}")
+
+    # Save annotated data
+    annotated_path = os.path.join(output_dir, f"{model_col}_with_prediction_correct.csv")
+    df.to_csv(annotated_path, index=False)
+    print(f"Saved prediction results with correctness column to {annotated_path}")
+
 if __name__ == "__main__":
     df = pd.read_excel(INPUT_PATH)
     if not os.path.exists('output/BGD_Traverse_with_regions.csv'):
@@ -236,3 +276,4 @@ if __name__ == "__main__":
 
     df = pd.read_csv('output/bgd-with-local-predictions.csv')
     create_confusion_matrices(df)
+    create_binary_confusion_matrix(df, 'm150_risk_assesment')
