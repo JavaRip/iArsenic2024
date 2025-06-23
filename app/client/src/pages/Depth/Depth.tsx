@@ -1,18 +1,21 @@
-import { Box, Button, Collapse, Slider, Switch, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Collapse, Slider, Stack, Switch, TextField } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import { useUnits } from "../../utils/useUnits";
 import TranslatableText from "../../components/TranslatableText";
+import { useWells } from "../../utils/useWells";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
     const wellId = params?.id;
-    const { data: token } = useAccessToken();
     const { units, setUnits } = useUnits();
+
+    const { getWell, updateWell } = useWells();
+    const { data: well, isLoading } = getWell(wellId);
+    const updateWellMutation = updateWell()
 
     const [depth, setDepth] = useState(1);
     const [showDepthGuide, setShowDepthGuide] = useState(false)
@@ -24,48 +27,60 @@ export default function Depth(): JSX.Element {
     function handleDepthChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value: number = Number(event.target.value);
         setDepth(value);
-        console.log(value)
     }
 
     function switchUnits() {
         const newUnits = units === 'feet' ? 'meters' : 'feet';
         setUnits(newUnits);
-
-        let newDepth
-        if (units === 'feet') {
-            newDepth = Math.floor(depth * 0.3048);
-        } else {
-            newDepth = Math.floor(depth / 0.3048);
-        }
-
-        if (newDepth < 1) setDepth(1)
-        else setDepth(newDepth)
     }
 
-    async function handleNext() {
-        const headers: HeadersInit = {};
-        if (token) {
-            headers['authorization'] = `Bearer ${token.id}`;
-        }
-
+    async function handleNext(): Promise<void> {
+        if (!wellId) return
         const depthMeters = units === 'meters' ? depth : Math.floor(depth * 0.3048);
-        const body = { depth: depthMeters };
 
-        const res = await fetch(`/api/v1/self/well/${wellId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
-            body: JSON.stringify(body),
-        });
+        const updates: {
+            depth: number,
+            flooding?: false,
+        } = { depth: depthMeters };
 
-        if (!res.ok) {
-            console.error('Failed to update well:', res);
-            return;
+        if (depthMeters >= 15) {
+            updates.flooding = false
         }
 
-        navigate(`/well/${wellId}/flooding`);
+        try {
+            await updateWellMutation.mutateAsync({
+                wellId,
+                data: updates,
+            })
+
+            if (updates?.flooding !== undefined) {
+                navigate(`/well/${wellId}/well-in-use`)
+                return
+            }
+
+            navigate(`/well/${wellId}/flooding`);
+            return;
+        } catch (err) {
+            console.error('Failed to update well:', err)
+        }
+    }
+    
+    useEffect(() => {
+        if (well && well.depth !== undefined) {
+            if (units === 'meters') {
+                setDepth(well.depth);
+            } else {
+                setDepth(Math.floor(well.depth / 0.3048));
+            }
+        }
+    }, [well, units]);
+
+    if (isLoading) {
+        return (
+            <Stack alignItems='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
+        )
     }
 
     return (
