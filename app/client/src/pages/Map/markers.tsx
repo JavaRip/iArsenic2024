@@ -68,9 +68,6 @@ export default function Markers({ wells, regionTranslations, highlightId }: prop
         w.depth != null
     );
 
-    console.log(filteredWells)
-    console.log(`highlightId: ${highlightId}`)
-
     return (
         <>
             {filteredWells.map((w, index) => {

@@ -10,15 +10,17 @@ import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
 import Markers from './markers';
 import UpaMap from './upaMap';
 import { useAccessToken } from '../../utils/useAccessToken';
+import MapInterface from './MapInterface';
 
 export default function Map() {
     const highlightId = new URLSearchParams(window.location.search).get('highlight');
-
     const position: LatLngExpression = [23.8041, 90.4152];
+
     const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
     const { data: token } = useAccessToken()
     const [wells, setWells] = useState<Well[]>();
     const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
+    const [drinkingOnly, setDrinkingOnly] = useState(false); // <-- NEW
 
     async function getInteractiveMap() {
         const res = await fetch(`/interactive-map.geojson`);
@@ -28,29 +30,18 @@ export default function Map() {
 
     async function getPredictionPinData() {
         const headers: HeadersInit = {}
-
         if (token) headers['authorization'] = `Bearer ${token.id}`
 
-        const res = await fetch(`/api/v1/wells`, {
-            headers
-        });
-
-        if (!res.ok) {
-            throw new Error(`Failed to fetch well data:, ${res}`);
-        }
+        const res = await fetch(`/api/v1/wells`, { headers });
+        if (!res.ok) throw new Error(`Failed to fetch well data:, ${res}`);
 
         const data = await res.json();
-        const wells = data.wells;
-
-        const parsedWells = [];
-        for (const well of wells) {
-            parsedWells.push(
-                WellSchema.parse({
-                    ...well,
-                    createdAt: new Date(well.createdAt),
-                })
-            );
-        }
+        const parsedWells = data.wells.map((well: any) =>
+            WellSchema.parse({
+                ...well,
+                createdAt: new Date(well.createdAt),
+            })
+        );
 
         setWells(parsedWells);
     }
@@ -61,7 +52,6 @@ export default function Map() {
     }
 
     useEffect(() => {
-
         getRegionTranslations();
         getInteractiveMap();
     }, []);
@@ -76,18 +66,25 @@ export default function Map() {
         </Stack>
     );
 
+    const filteredWells = drinkingOnly
+        ? wells.filter(w => w.wellInUse)
+        : wells;
+
     return (
         <Stack direction='column' justifyContent='center' alignItems='center'>
             <MapContainer center={position} zoom={7} scrollWheelZoom={true}>
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; OpenStreetMap contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     crossOrigin="anonymous"
                 />
-
                 <UpaMap interactiveMap={interactiveMap} regionTranslations={regionTranslations} />
-                <Markers wells={wells} regionTranslations={regionTranslations} highlightId={highlightId} />
+                <Markers wells={filteredWells} regionTranslations={regionTranslations} highlightId={highlightId} />
             </MapContainer>
+            <MapInterface
+                drinkingOnly={drinkingOnly}
+                setDrinkingOnly={setDrinkingOnly}
+            />
         </Stack>
     );
 }
