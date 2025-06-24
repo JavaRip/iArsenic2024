@@ -23,7 +23,7 @@ export default {
     },
     1: {
         english: {
-            title: 'Low Risk (under 50 µg/L)',
+            title: 'Low Risk',
             body: `
                 Your tube well water falls under 'Low Risk' for
                 arsenic contamination. It is likely safe, but
