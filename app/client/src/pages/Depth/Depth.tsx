@@ -31,14 +31,23 @@ export default function Depth(): JSX.Element {
             } else {
                 setDepth(1)
             }
+
+            setRawInput(String(newValue))
         } else {
             setDepth(newValue as number);
+            setRawInput(String(newValue))
         }
     }
 
     function switchUnits() {
         const newUnits = units === 'feet' ? 'meters' : 'feet';
         setUnits(newUnits);
+
+        if (newUnits === 'feet') {
+            setRawInput(String(Math.round(depth / 0.3048)))
+        } else {
+            setRawInput(String(depth))
+        }
     }
 
     async function handleNext(): Promise<void> {
