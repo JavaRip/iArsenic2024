@@ -7,9 +7,14 @@ import TranslatableText from "../../components/TranslatableText";
 type props = {
     interactiveMap: GeoJSON,
     regionTranslations: RegionTranslations,
+    disablePointerEvents: boolean,
 }
 
-export default function UpaMap({ interactiveMap, regionTranslations }: props): JSX.Element {
+export default function UpaMap({ 
+    interactiveMap, 
+    regionTranslations,
+    disablePointerEvents,
+}: props): JSX.Element {
     function getColor(as: number): string {
         if (as < 10) return 'rgba(51, 204, 56, 0.5)';
         if (as < 50) return 'rgba(250, 205, 61, 0.5)';
@@ -30,7 +35,8 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
                 dashArray: '3',
                 fillOpacity: 0.7,
             })}
-            onEachFeature={(feature, layer) => { // TODO create feature typing
+            interactive={!disablePointerEvents}
+            onEachFeature={(feature, layer) => {
                 layer.bindPopup(ReactDOMServer.renderToString(
                     <>
                         <TranslatableText 

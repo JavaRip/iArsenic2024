@@ -66,7 +66,7 @@ function App() {
                 <Switch>
                     {/* Splash & Map Page */}
                     <Route path='/' component={Splash} />
-                    <Route path='/map' component={Map} />
+                    <Route path='/map' component={() => <Map />} />
                     {/* App Pages with HeaderBar and Stack layout */}
                     <Route>
                         <HeaderBar />

@@ -5,6 +5,7 @@ import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
 import { useAccessToken } from '../../utils/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
+import MapSection from './MapSection';
 
 const sectionFontStyle = {
     color: 'whitesmoke',
@@ -170,7 +171,7 @@ export default function SplashPage(): JSX.Element {
                 imageBorderRadius='15px'
             />
 
-            <Section
+            <MapSection
                 title={
                     <TranslatableText
                         variant='h3'
@@ -190,11 +191,6 @@ export default function SplashPage(): JSX.Element {
                         `}
                     />
                 ]}
-                imageConfig={{
-                    imageUrl: `/splashPage/interactive_map.png`,
-                    imageSide: 'left',
-                    imageAlt: 'Interactive map of Bangladesh',
-                }}
                 backgroundColor='#1d5e16'
                 maxTextWidth='50%'
             />
