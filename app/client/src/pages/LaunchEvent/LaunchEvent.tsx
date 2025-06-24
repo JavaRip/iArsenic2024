@@ -1,4 +1,4 @@
-import { Box, Card, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Card, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { schedule } from "./schedule";
 import { actions } from "./actions";
@@ -51,6 +51,23 @@ export default function LaunchEvent(): JSX.Element {
                         <strong>Moderator</strong> Mr. Mohammad Saifur Rahman, Project Director, ARRP, DPHE
                     </Typography>
                 </Box>
+
+                <Stack alignItems='center' width='100%' my='32px'>
+                    <a href="/iArsenic Launch Brochure.pdf" download style={{ textDecoration: 'none' }}>
+                        <Button
+                            variant="contained" 
+                            color="primary"
+                            sx={{
+                                height: '77px',
+                                width: '307px',
+                            }}
+                        >
+                            <Typography variant='h6'>
+                                Click Here For The Launch Brochure
+                            </Typography>
+                        </Button>
+                    </a>
+                </Stack>
             </LaunchPageCard>
 
             <LaunchPageCard>
