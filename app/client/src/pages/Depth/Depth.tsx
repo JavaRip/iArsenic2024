@@ -20,13 +20,20 @@ export default function Depth(): JSX.Element {
     const [depth, setDepth] = useState(1);
     const [showDepthGuide, setShowDepthGuide] = useState(false)
 
-    function handleSliderChange(_: Event, newValue: number | number[]) {
-        setDepth(newValue as number);
-    }
+    const [rawInput, setRawInput] = useState<string>('');
 
-    function handleDepthChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const value: number = Number(event.target.value);
-        setDepth(value);
+    function handleSliderChange(_: Event, newValue: number | number[]) {
+        if (units === 'feet') {
+            const convertedValue = Math.round((newValue as number) * 0.3048)
+
+            if (convertedValue >= 1) {
+                setDepth(convertedValue)
+            } else {
+                setDepth(1)
+            }
+        } else {
+            setDepth(newValue as number);
+        }
     }
 
     function switchUnits() {
@@ -36,14 +43,12 @@ export default function Depth(): JSX.Element {
 
     async function handleNext(): Promise<void> {
         if (!wellId) return
-        const depthMeters = units === 'meters' ? depth : Math.floor(depth * 0.3048);
-
         const updates: {
             depth: number,
             flooding?: false,
-        } = { depth: depthMeters };
+        } = { depth };
 
-        if (depthMeters >= 15) {
+        if (depth >= 15) {
             updates.flooding = false
         }
 
@@ -67,13 +72,35 @@ export default function Depth(): JSX.Element {
     
     useEffect(() => {
         if (well && well.depth !== undefined) {
-            if (units === 'meters') {
-                setDepth(well.depth);
-            } else {
-                setDepth(Math.floor(well.depth / 0.3048));
-            }
+            setDepth(well.depth)
         }
-    }, [well, units]);
+    }, [well]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            const value = Number(rawInput);
+
+            if (isNaN(value) || value < 1) {
+                return;
+            }
+
+            if (units === 'feet') {
+                if (value > 1640) {
+                    setDepth(1640)
+                    setRawInput('1640')
+                }
+                else setDepth(Math.round(value * 0.3048));
+            } else {
+                if (value > 500) {
+                    setDepth(500)
+                    setRawInput('500')
+                }
+                else setDepth(value);
+            }
+        }, 100);
+
+        return () => clearTimeout(timeout);
+    }, [rawInput, units]);
 
     if (isLoading) {
         return (
@@ -196,7 +223,11 @@ export default function Depth(): JSX.Element {
                 <Slider
                     sx={{ width: '85%' }}
                     onChange={handleSliderChange}
-                    value={depth}
+                    value={
+                        units === 'meters' ?
+                        depth :
+                        Math.round(depth / 0.3048)
+                    }
                     step={1}
                     min={1}
                     max={units === 'meters' ? 500 : 1640}
@@ -218,8 +249,13 @@ export default function Depth(): JSX.Element {
                         />
                     }
                     type="number"
-                    value={depth}
-                    onChange={handleDepthChange}
+                    value={rawInput === '' 
+                        ? (units === 'meters' ? depth : Math.round(depth / 0.3048)).toString()
+                        : rawInput
+                    }
+                    onChange={(e) => {
+                        setRawInput(e.target.value);
+                    }}
                     InputLabelProps={{
                         shrink: true,
                     }}
