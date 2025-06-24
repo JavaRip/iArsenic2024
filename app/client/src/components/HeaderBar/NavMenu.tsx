@@ -10,6 +10,7 @@ import LocalDrinkIcon from '@mui/icons-material/LocalDrink';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupsIcon from '@mui/icons-material/Groups';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import LoginIcon from '@mui/icons-material/Login';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import InfoIcon from '@mui/icons-material/Info';
@@ -55,6 +56,11 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
             <Box sx={{ width: 300 }} onClick={() => setOpen(false)}>
                 <List>
                     <NavListItem
+                        path='launch-event'
+                        Icon={RocketLaunchIcon}
+                        label={<TranslatableText english="Launch Event" bengali="লঞ্চ ইভেন্ট" variant="body1" />}
+                    />
+                    <NavListItem
                         path='landing'
                         Icon={AccountCircleIcon}
                         label={<TranslatableText english="Landing" bengali="ল্যান্ডিং" variant="body1" />}
@@ -73,11 +79,6 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         path='understanding-risk'
                         Icon={HealthAndSafetyIcon}
                         label={<TranslatableText english="Understanding Risk" bengali="ঝুঁকি বোঝা" variant="body1" />}
-                    />
-                    <NavListItem
-                        path='my-wells'
-                        Icon={LocalDrinkIcon}
-                        label={<TranslatableText english="My Wells" bengali="আমার কূপসমূহ" variant="body1" />}
                     />
                     <NavListItem
                         path='map'
@@ -121,6 +122,11 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                                 Icon={AccountCircleIcon} 
                                 label={<TranslatableText english='My Profile' bengali="আমার প্রোফাইল" variant='body1' />}
                             />
+                            <NavListItem
+                                path='my-wells'
+                                Icon={LocalDrinkIcon}
+                                label={<TranslatableText english="My Wells" bengali="আমার কূপসমূহ" variant="body1" />}
+                            />
                         </List>
                     </>
                 )}
@@ -150,6 +156,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
 
                 <Divider />
                 <TranslatableText
+                    ml={2}
                     english='Select Language' 
                     bengali='ভাষা নির্বাচন করুন' // chatgpt generated
                     variant='h6'

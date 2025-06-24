@@ -26,6 +26,7 @@ import {
     VerifyEmail,
     Well,
     WellInUse,
+    LaunchEvent,
 } from './pages';
 
 import { HeaderBar } from './components';
@@ -81,6 +82,7 @@ function App() {
                             <Route path='/briefing' component={Briefing} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
+                            <Route path='/launch-event' component={LaunchEvent} />
                             <Route path='/login' component={Login} />
                             <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
@@ -93,12 +95,12 @@ function App() {
                             <Route path='/well/:id' component={Well} />
                             <Route path='/well/:id/depth' component={Depth} />
                             <Route path='/well/:id/flooding' component={Flooding} />
-                            <Route path='/well/:id/upload-image' component={PhotoUpload} />
                             <Route path='/well/:id/region' component={Region} />
                             <Route path='/well/:id/result' component={Result} />
                             <Route path='/well/:id/review' component={Review} />
                             <Route path='/well/:id/select-region' component={SelectRegion} />
                             <Route path='/well/:id/staining' component={Staining} />
+                            <Route path='/well/:id/upload-image' component={PhotoUpload} />
                             <Route path='/well/:id/well-in-use' component={WellInUse} />
                         </Stack>
                     </Route>

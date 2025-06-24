@@ -22,3 +22,4 @@ export { default as UnderstandingRisk } from './UnderstandingRisk';
 export { default as VerifyEmail } from './VerifyEmail';
 export { default as Well } from './Well';
 export { default as WellInUse } from './WellInUse';
+export { default as LaunchEvent } from './LaunchEvent';
