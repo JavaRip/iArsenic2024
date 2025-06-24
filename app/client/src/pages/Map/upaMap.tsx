@@ -21,9 +21,6 @@ export default function UpaMap({
         return 'rgba(245, 35, 28, 0.5)';
     }
 
-    console.log(regionTranslations)
-    console.log(interactiveMap)
-
     return (
         <GeoJSONComponent
             data={{
