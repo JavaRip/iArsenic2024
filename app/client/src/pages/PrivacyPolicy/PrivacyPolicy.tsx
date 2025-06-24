@@ -173,6 +173,7 @@ export default function PrivacyPolicy(): JSX.Element {
                 <TranslatableText 
                     width='100%'
                     variant='body1' 
+                    mb='1rem'
                     english={`
                         We use the data you provide to calculate the probability
                         of arsenic presence in your groundwater. These
