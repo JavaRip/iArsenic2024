@@ -21,6 +21,9 @@ export default function UpaMap({
         return 'rgba(245, 35, 28, 0.5)';
     }
 
+    console.log(regionTranslations)
+    console.log(interactiveMap)
+
     return (
         <GeoJSONComponent
             data={{
@@ -42,15 +45,17 @@ export default function UpaMap({
                         <TranslatableText 
                             variant='body1'
                             english={`Mean As: ${Math.floor(feature.properties.as)}`}
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali={`গড় আর্সেনিক: ${Math.floor(feature.properties.as)}`}
                         />
 
                         <TranslatableText 
                             variant='body1'
                             english={`Division: ${feature.properties.div}`}
                             bengali={`
-                                ${regionTranslations.Divisions.Division}:
-                                ${regionTranslations.Divisions[feature.properties.div]}
+                                ${regionTranslations.Divisions.division}:
+                                ${regionTranslations.Divisions[
+                                    (feature.properties.div as string).toLowerCase()
+                                ]}
                             `}
                         />
 
@@ -58,8 +63,10 @@ export default function UpaMap({
                             variant='body1'
                             english={`District: ${feature.properties.dis}`}
                             bengali={`
-                                ${regionTranslations.Districts.District}:
-                                ${regionTranslations.Districts[feature.properties.dis]}
+                                ${regionTranslations.Districts.district}:
+                                ${regionTranslations.Districts[
+                                    (feature.properties.dis as string).toLowerCase()
+                                ]}
                             `}
                         />
                         
@@ -67,8 +74,10 @@ export default function UpaMap({
                             variant='body1'
                             english={`Upazila: ${feature.properties.upa}`}
                             bengali={`
-                                ${regionTranslations.Upazilas.Upazila}:
-                                ${regionTranslations.Upazilas[feature.properties.upa]}
+                                ${regionTranslations.Upazilas.upazila}:
+                                ${regionTranslations.Upazilas[
+                                    (feature.properties.upa as string).toLowerCase()
+                                ]}
                             `}
                         />
                     </>

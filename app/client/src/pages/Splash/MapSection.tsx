@@ -73,6 +73,19 @@ export default function Section({
                         position: 'relative',
                     }} 
                 >
+                    <img
+                        src='/splashPage/interactive_map.png'
+                        alt='Interactive map of Bangladesh'
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            height: '100%',
+                            width: '100%',
+                            objectFit: 'cover',
+                            zIndex: 0,
+                        }}
+                    />
                     <Map 
                         containerSx={{ 
                             borderRadius: '12px', 
