@@ -1,5 +1,9 @@
 import { Box, Card, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { ReactNode } from "react";
+import { schedule } from "./schedule";
+import { actions } from "./actions";
+import { tiers } from "./tiers";
+import { recommendtations } from "./recommendations";
 
 function LaunchPageCard({ children }: { children: ReactNode }) {
     return (
@@ -22,45 +26,6 @@ function LaunchPageCard({ children }: { children: ReactNode }) {
 }
 
 export default function LaunchEvent(): JSX.Element {
-    const schedule = [
-        { time: "3:00–3:05", item: "Opening & Welcome Remarks", presenter: "Chairperson – Chief Engineer, DPHE" },
-        { time: "3:05–3:10", item: "Context & Importance of Arsenic Mitigation in Bangladesh", presenter: "Prof. Kazi Matin Uddin, University of Dhaka" },
-        { time: "3:10–3:25", item: "Technology for Public Good: App & Dashboard Vision", presenter: "Dr. Mo Hoque (iArsenic) & Dr. Ashraf Dewan (Dashboard)" },
-        { time: "3:25–3:30", item: "Future Pathways: Customisation for Institutions", presenter: "Mr. Kane Swartz, Technical Lead" },
-        { time: "3:30–3:35", item: "Guest Reflections", presenter: "Mr. Ashish Daml" },
-        { time: "3:35–3:40", item: "Guest Reflections", presenter: "Prof. Martin Van Kranendonk" },
-        { time: "3:40–3:55", item: "Chief Guest Address and Formal Launch Ceremony", presenter: "Md Rezaul Maksud Jahedi, Secretary, LGED" },
-    ];
-
-    const tiers = [
-        {
-            tier: "Tier 1",
-            criteria: [
-                "≥50% of wells are unsafe (>50 ppb)",
-                "Fewer than 5 safe wells (≤10 ppb)",
-                "<3 government deep wells",
-            ],
-            priority: "🚨 High-Risk / Urgent action",
-        },
-        {
-            tier: "Tier 2",
-            criteria: [
-                "Majority of wells are in the 10–50 ppb range",
-                "At least 10% are safe (≤10 ppb)",
-                "At least 5 safe government wells installed",
-            ],
-            priority: "⚠️ Moderate / Manage safe sources",
-        },
-        {
-            tier: "Tier 3",
-            criteria: [
-                "≥80% of wells are safe (≤10 ppb)",
-                "Wells include a range of deeper safe sources (>450 ft)",
-            ],
-            priority: "✅ Low-Risk / Monitoring only",
-        },
-    ];
-
     return (
         <Box
             maxWidth="1200px"
@@ -208,6 +173,168 @@ export default function LaunchEvent(): JSX.Element {
                     <strong>Table 1</strong> Ward-level arsenic risk classification. Every ward is included; where data are incomplete, a provisional Tier 2 classification is assigned.
                 </Typography>
 
+            </LaunchPageCard>
+
+            <LaunchPageCard>
+                <Typography variant='h5'>
+                    How the iArsenic App Supports Safe Water Decisions
+                </Typography>
+
+                <Stack direction='row' gap='20px'>
+                    <Box width='40%'>
+                        <Typography mb='1rem'>
+                            The iArsenic web app allows users to assess whether a hand-pump tubewell is likely safe—without chemical testing. By entering a few easy-to-observe details—well location, depth, and staining—the app sends this information to a cloud server, where it is analysed using a hydrochemical AI model. Based on this, it returns an instant risk estimate.
+                        </Typography>
+
+                        <Typography mb='1rem'>
+                            The iArsenic system links user inputs to scientific models—turning simple field data into instant risk guidance, making hidden dangers visible and helping people protect themselves and others.
+                        </Typography>
+                    </Box>
+
+                    <Box width='55%'>
+                        <img
+                            src={`/scientists-society.png`}
+                            alt="Scientists in Society"
+                        />
+                    </Box>
+                </Stack>
+
+                <Typography mb='0.5rem'>
+                    The model has been validated against 173 points of field data. It achieves an AUC of 0.84.This means that if you randomly pick one unsafe and one safe well, there’s an 84% chance iArsenic will give a higher risk score to the unsafe one. This makes the app highly effective for screening and prioritising wells for action. It is not a replacement for chemical testing, but a practical screening tool to guide decisions.
+                </Typography>
+
+                <Typography mb='0.5rem'>
+                    Users are also asked whether they still use the well for drinking. These responses are anonymously mapped in real time, helping researchers, planners, and local authorities identify where unsafe usage continues—regardless of prior testing.
+                </Typography>
+
+                <Stack alignItems='center' direction='column' width='100%'>
+                    <img
+                        src={`/roc-curve.png`}
+                        alt="iArsenic prediction model ROC curve"
+                    />
+                </Stack>
+            </LaunchPageCard>
+            
+            <LaunchPageCard>
+                <Typography variant='h5'>
+                    Why One Layer Isn't Enough
+                </Typography>
+
+                <Typography mb='0.5rem'>
+                    Arsenic exposure in Bangladesh cannot be solved with one tool, one message, or one deep well. Every intervention—whether a painted well, a sermon, or a school lesson—has its gaps. Paint fades. Habits return. Data gets forgotten. But when these actions are layered, they cover each other’s weaknesses.
+                </Typography>
+
+                <Typography mb='0.5rem'>
+                    This is the logic of the Swiss cheese model3: each layer has holes, but stacked together, they block failure. From schools to mosques to mobile apps, layered safeguards help communities shift behaviour, share water, and stay safe—without waiting for enforcement.
+                </Typography>
+
+                <Stack alignItems='center' direction='column' width='100%'>
+                    <img
+                        src={`/cheese.png`}
+                        alt="Multilayer Safety Model Diagram"
+                    />
+                </Stack>
+
+                <Typography mb='0.5rem' textAlign='center' variant='body2' width='100%'>
+                    These layers match the 8 actions listed above—each like a slice in the Swiss cheese model—working together to reduce risk. 
+                </Typography>
+            </LaunchPageCard>
+
+            <LaunchPageCard>
+                <Typography variant='h5'>
+                    What Actions Can Be Taken
+                </Typography>
+
+                <Stack alignItems='center' width='100%'>
+                    <TableContainer sx={{ width: 'max-content' }}>
+                        <Table size="small">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell><strong>Safeguard Layers</strong></TableCell>
+                                    <TableCell><strong>What It Does</strong></TableCell>
+                                    <TableCell><strong>Tool Support</strong></TableCell>
+                                    <TableCell><strong>Tier Focus</strong></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {actions.map((row, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{row.safeguard}</TableCell>
+                                        <TableCell>{row.whatItDoes}</TableCell>
+                                        <TableCell>{row.toolSupport}</TableCell>
+                                        <TableCell>{row.tierFocus}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Stack>
+            </LaunchPageCard>
+
+            <LaunchPageCard>
+                <Typography variant='h5'>
+                    Recommendations
+                </Typography>
+
+                <Stack alignItems='center' width='100%'>
+                    {recommendtations.map((row, index) => (
+                        <Box 
+                            key={index}
+                            width='820px'
+                            p='36px'
+                            sx={{
+                                backgroundColor: (index % 2 === 1) ?
+                                    'rgb(235, 249, 244)' :
+                                    'white'
+                            }}
+                        >
+                            <Typography variant='h6' mb='0.5rem'>
+                                {row.title}
+                            </Typography>
+
+                            <ul style={{ paddingLeft: 16, margin: 0 }}>
+                                {row.recommendations.map((c, i) => (
+                                    <li key={i}>{c}</li>
+                                ))}
+                            </ul>
+
+                        </Box>
+                    ))}
+                </Stack>
+
+                <Typography mb='0.5rem' textAlign='center' variant='body2' width='100%'>
+                    Together, these actions can shift arsenic mitigation from one-off responses to a resilient, layered public health system.
+                </Typography>
+            </LaunchPageCard>
+
+            <LaunchPageCard>
+                <Typography variant='h5'>
+                    Figures
+                </Typography>
+                
+                <Stack alignSelf='center' width='820px'>
+                    <Typography mb='1rem'>
+                        <sup>1</sup>Smith, A., et. al. (2000). Contamination of drinking-water by arsenic in Bangladesh: a public health emergency. Bulletin of the World Health Organization, 78(9), 1093–1103.
+                    </Typography>
+
+                    <Typography mb='1rem'>
+                        <sup>2</sup>Khan M. et al., (2025) Well-water arsenic mitigation in Bangladesh: Benefits outweighing risks of sharing private environmental data, Environmental Science & Technology (under review)
+                    </Typography>
+
+                    <Typography mb='1rem'>
+                        <sup>3</sup>Reason, J. (2000). Human error: models and management. BMJ, 320(7237), 768–770.
+                    </Typography>
+                </Stack>
+
+                <Typography variant='h5'>
+                    Citations
+                </Typography>
+
+                <Stack alignSelf='center' width='820px'>
+                    <Typography>
+                        Hoque MA*, Dewan A, Swartz K, Kopecky J, Smith J, Ahmed KM, Islam A, Rahman S, and Butler AP (2025), Citizen Intelligence for Safe Water: A Data-Driven Approach to Arsenic Risk Reduction in Bangladesh. iArsenic Launch Event Brief, 01 July 2025, Department of Public Health Engineering (DPHE), Dhaka, Bangladesh. 
+                    </Typography>
+                </Stack>
             </LaunchPageCard>
         </Box>
     );
