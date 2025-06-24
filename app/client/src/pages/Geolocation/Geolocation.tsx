@@ -18,6 +18,8 @@ export type RegionErrors = {
 };
 
 export default function Region(): JSX.Element {
+    const returnToReview = new URLSearchParams(window.location.search).get('returnToReview');
+
     const position: LatLngExpression = [23.8041, 90.4152];
     const [, params] = useRoute('/well/:id/region');
     const wellId = params?.id;
@@ -56,8 +58,13 @@ export default function Region(): JSX.Element {
         const regionKeyValid = division && district && upazila && union && mouza;
 
         if (!regionKeyValid) {
-            navigate(`/well/${wellId}/select-region`);
-            return;
+            if (returnToReview === 'true') {
+                navigate(`/well/${wellId}/select-region?returnToReview=true`);
+                return;
+            } else {
+                navigate(`/well/${wellId}/select-region`);
+                return;
+            }
         }
 
         try {
