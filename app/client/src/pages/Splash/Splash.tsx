@@ -139,7 +139,7 @@ export default function SplashPage(): JSX.Element {
                     <TranslatableText 
                         variant='h3'
                         english='The Vision' 
-                        bengali='দৃষ্টি' // google translate generated
+                        bengali='ভবিষ্যৎ পরিকল্পনা' // chatgpt generated
                     />
                 }
                 texts={[
