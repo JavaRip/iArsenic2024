@@ -41,7 +41,7 @@ export default function Section({
     appendage,
 }: props): JSX.Element {
     return (
-        <Box sx={{ ...sectionStyle, backgroundColor }} px={{ xs: 1, sm: 1, md: 4 }}>
+        <Box sx={{ ...sectionStyle, backgroundColor, maxWidth: '100%' }} px={{ xs: 1, sm: 1, md: 4 }}>
             {title}
 
             <Stack
@@ -49,6 +49,7 @@ export default function Section({
                     md: 'column-reverse',
                     lg: imageConfig?.imageSide === 'right' ? 'row-reverse' : 'row',
                 }}
+                maxWidth='100%'
                 alignItems='center'
                 justifyContent='center'
             >
@@ -69,6 +70,7 @@ export default function Section({
                 <Box
                     sx={{
                         height: '600px',
+                        maxWidth: '100%',
                         width: '600px',
                         position: 'relative',
                     }} 

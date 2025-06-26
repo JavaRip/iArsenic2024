@@ -182,7 +182,7 @@ export default function SplashPage(): JSX.Element {
                 texts={[
                     <TranslatableText
                         variant='h5'
-                        sx={{ ...sectionFontStyle }}
+                        sx={{ ...sectionFontStyle, maxWidth: '100%' }}
                         english={`
                             User location data appear on an interactive map in real time. This dynamic map allows you to observe the current usage and adoption of the application, as well as the assessments provided by the app for various tubewells. The map features a colour-coded background indicating the general arsenic concentration levels across different areas, helping you identify regions with higher or lower levels of contamination. This visual tool enables a better understanding of arsenic risk distribution and the effectiveness of the app.
                         `}
