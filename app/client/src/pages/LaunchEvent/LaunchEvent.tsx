@@ -28,7 +28,8 @@ function LaunchPageCard({ children }: { children: ReactNode }) {
 export default function LaunchEvent(): JSX.Element {
     return (
         <Box
-            maxWidth="1200px"
+            width="1200px"
+            maxWidth='100vw'
             mx="auto"
             px={2}
         >
@@ -36,9 +37,10 @@ export default function LaunchEvent(): JSX.Element {
                 <img
                     src={`/launch-event-banner.png`}
                     alt="Launch Event Banner"
+                    width='100%'
                 />
 
-                <Box width='675px'>
+                <Box width='675px' maxWidth='100%'>
                     <Typography variant='h6' textAlign='left'>
                         <strong>DPHE Auditorium</strong> | 3:00–4:00 PM (Dhaka time)
                     </Typography>
@@ -102,8 +104,25 @@ export default function LaunchEvent(): JSX.Element {
                     Citizen Intelligence for Safe Water: A Data-Driven Approach to Arsenic Risk Reduction in Bangladesh
                 </Typography>
 
-                <Stack direction='row' gap='20px'>
-                    <Box width='55%'>
+                <Stack 
+                    direction={{ 
+                        xs: 'column',
+                        sm: 'column',
+                        md: 'row',
+                        lg: 'row',
+                    }}
+                    alignItems='center'
+                    width='100%'
+                    gap='20px'
+                >
+                    <Box 
+                        width={{
+                            xs: '100%',
+                            sm: '100%',
+                            md: '55%',
+                            lg: '55%',
+                        }}
+                    >
                         <Typography mb='1rem'>
                             Bangladesh has made significant progress in tackling the world’s largest mass poisoning crisis1. Since the 1990s, national and international efforts have reduced exposure from over 60 million people to around 20 million by 20242. Yet, the remaining exposed populations are the hardest to reach.
                         </Typography>
@@ -117,12 +136,21 @@ export default function LaunchEvent(): JSX.Element {
                         </Typography>
                     </Box>
 
-                    <Box width='35%'>
-                        <img
-                            width='450px'
-                            src={`/ui-demo.png`}
-                            alt="Launch Event UI Demo"
-                        />
+                    <Box 
+                        width={{
+                            xs: '100%',
+                            sm: '100%',
+                            md: '40%',
+                            lg: '40%',
+                        }}
+                    >
+                        <Box maxWidth='max-content'>
+                            <img
+                                width='100%'
+                                src={`/ui-demo.png`}
+                                alt="Launch Event UI Demo"
+                            />
+                        </Box>
                     </Box>
                 </Stack>
 
@@ -159,7 +187,7 @@ export default function LaunchEvent(): JSX.Element {
                 </Typography>
 
                 <Stack alignItems='center' width='100%'>
-                    <TableContainer sx={{ width: 'max-content' }}>
+                    <TableContainer>
                         <Table size="small">
                             <TableHead>
                                 <TableRow>
@@ -197,8 +225,24 @@ export default function LaunchEvent(): JSX.Element {
                     How the iArsenic App Supports Safe Water Decisions
                 </Typography>
 
-                <Stack direction='row' gap='20px'>
-                    <Box width='40%'>
+                <Stack 
+                    direction={{ 
+                        xs: 'column',
+                        sm: 'column',
+                        md: 'row',
+                        lg: 'row',
+                    }}
+                    width='100%'
+                    gap='20px'
+                >
+                    <Box 
+                        width={{
+                            xs: '100%',
+                            sm: '100%',
+                            md: '40%',
+                            lg: '40%',
+                        }}
+                    >
                         <Typography mb='1rem'>
                             The iArsenic web app allows users to assess whether a hand-pump tubewell is likely safe—without chemical testing. By entering a few easy-to-observe details—well location, depth, and staining—the app sends this information to a cloud server, where it is analysed using a hydrochemical AI model. Based on this, it returns an instant risk estimate.
                         </Typography>
@@ -208,10 +252,18 @@ export default function LaunchEvent(): JSX.Element {
                         </Typography>
                     </Box>
 
-                    <Box width='55%'>
+                    <Box 
+                        width={{
+                            xs: '100%',
+                            sm: '100%',
+                            md: '55%',
+                            lg: '55%',
+                        }}
+                    >
                         <img
                             src={`/scientists-society.png`}
                             alt="Scientists in Society"
+                            width='100%'
                         />
                     </Box>
                 </Stack>
@@ -225,10 +277,13 @@ export default function LaunchEvent(): JSX.Element {
                 </Typography>
 
                 <Stack alignItems='center' direction='column' width='100%'>
-                    <img
-                        src={`/roc-curve.png`}
-                        alt="iArsenic prediction model ROC curve"
-                    />
+                    <Box maxWidth='max-content'>
+                        <img
+                            src={`/roc-curve.png`}
+                            alt="iArsenic prediction model ROC curve"
+                            width='100%'
+                        />
+                    </Box>
                 </Stack>
             </LaunchPageCard>
             
@@ -246,10 +301,13 @@ export default function LaunchEvent(): JSX.Element {
                 </Typography>
 
                 <Stack alignItems='center' direction='column' width='100%'>
-                    <img
-                        src={`/cheese.png`}
-                        alt="Multilayer Safety Model Diagram"
-                    />
+                    <Box maxWidth='max-content'>
+                        <img
+                            src={`/cheese.png`}
+                            alt="Multilayer Safety Model Diagram"
+                            width='100%'
+                        />
+                    </Box>
                 </Stack>
 
                 <Typography mb='0.5rem' textAlign='center' variant='body2' width='100%'>
@@ -263,7 +321,7 @@ export default function LaunchEvent(): JSX.Element {
                 </Typography>
 
                 <Stack alignItems='center' width='100%'>
-                    <TableContainer sx={{ width: 'max-content' }}>
+                    <TableContainer>
                         <Table size="small">
                             <TableHead>
                                 <TableRow>
@@ -298,6 +356,7 @@ export default function LaunchEvent(): JSX.Element {
                         <Box 
                             key={index}
                             width='820px'
+                            maxWidth='100%'
                             p='36px'
                             sx={{
                                 backgroundColor: (index % 2 === 1) ?
@@ -329,7 +388,7 @@ export default function LaunchEvent(): JSX.Element {
                     Figures
                 </Typography>
                 
-                <Stack alignSelf='center' width='820px'>
+                <Stack alignSelf='center' width='820px' maxWidth='100%'>
                     <Typography mb='1rem'>
                         <sup>1</sup>Smith, A., et. al. (2000). Contamination of drinking-water by arsenic in Bangladesh: a public health emergency. Bulletin of the World Health Organization, 78(9), 1093–1103.
                     </Typography>
@@ -347,7 +406,7 @@ export default function LaunchEvent(): JSX.Element {
                     Citations
                 </Typography>
 
-                <Stack alignSelf='center' width='820px'>
+                <Stack alignSelf='center' width='820px' maxWidth='100%'>
                     <Typography>
                         Hoque MA*, Dewan A, Swartz K, Kopecky J, Smith J, Ahmed KM, Islam A, Rahman S, and Butler AP (2025), Citizen Intelligence for Safe Water: A Data-Driven Approach to Arsenic Risk Reduction in Bangladesh. iArsenic Launch Event Brief, 01 July 2025, Department of Public Health Engineering (DPHE), Dhaka, Bangladesh. 
                     </Typography>
