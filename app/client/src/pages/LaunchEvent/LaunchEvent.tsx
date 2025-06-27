@@ -96,76 +96,6 @@ export default function LaunchEvent(): JSX.Element {
             </LaunchPageCard>
 
             <LaunchPageCard>
-                <Typography variant='h4' textAlign='center'>
-                    iArsenic Launch Brief
-                </Typography>
-
-                <Typography variant='h5'>
-                    Citizen Intelligence for Safe Water: A Data-Driven Approach to Arsenic Risk Reduction in Bangladesh
-                </Typography>
-
-                <Stack 
-                    direction={{ 
-                        xs: 'column',
-                        sm: 'column',
-                        md: 'row',
-                        lg: 'row',
-                    }}
-                    alignItems='center'
-                    width='100%'
-                    gap='20px'
-                >
-                    <Box 
-                        width={{
-                            xs: '100%',
-                            sm: '100%',
-                            md: '55%',
-                            lg: '55%',
-                        }}
-                    >
-                        <Typography mb='1rem'>
-                            Bangladesh has made significant progress in tackling the world’s largest mass poisoning crisis1. Since the 1990s, national and international efforts have reduced exposure from over 60 million people to around 20 million by 20242. Yet, the remaining exposed populations are the hardest to reach.
-                        </Typography>
-
-                        <Typography mb='1rem'>
-                            Many people continue using contaminated wells due to habit, lack of awareness, or forgotten test results. There is no legal mechanism to prevent unsafe use or stop high-risk wells from being installed. Fallback is common, especially because arsenic-related symptoms on humans take years to appear.
-                        </Typography>
-
-                        <Typography mb='1rem'>
-                            Many people continue using contaminated wells due to habit, lack of awareness, or forgotten test results. There is no legal mechanism to prevent unsafe use or stop high-risk wells from being installed. Fallback is common, especially because arsenic-related symptoms on humans take years to appear.
-                        </Typography>
-                    </Box>
-
-                    <Box 
-                        width={{
-                            xs: '100%',
-                            sm: '100%',
-                            md: '40%',
-                            lg: '40%',
-                        }}
-                    >
-                        <Box maxWidth='max-content'>
-                            <img
-                                width='100%'
-                                src={`/ui-demo.png`}
-                                alt="Launch Event UI Demo"
-                            />
-                        </Box>
-                    </Box>
-                </Stack>
-
-                <Box>
-                    <Typography mb='1rem'>
-                        This is dangerous. Arsenic is a slow-acting, multi-systemic toxin linked to cardiovascular disease, neurological damage, cancer, and early death. In some areas, it may account for up to 5% of adult mortality.
-                    </Typography>
-
-                    <Typography mb='1rem'>
-                        We need layered safeguards—from schools to mosques to mobile tools. The iArsenic app and ARRP DataViewer dashboard enable a new model of citizen intelligence, where people are informed, engaged, and empowered to act—building resilience through data, trust, and cooperation. 
-                    </Typography>
-                </Box>
-            </LaunchPageCard>
-
-            <LaunchPageCard>
                 <Typography variant='h5'>
                     Why Infrastructure Alone Won’t Solve It — and Who’s Still at Risk
                 </Typography>
@@ -253,18 +183,20 @@ export default function LaunchEvent(): JSX.Element {
                     </Box>
 
                     <Box 
-                        width={{
-                            xs: '100%',
-                            sm: '100%',
-                            md: '55%',
-                            lg: '55%',
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
                         }}
                     >
-                        <img
-                            src={`/scientists-society.png`}
-                            alt="Scientists in Society"
+                        <Box 
                             width='100%'
-                        />
+                        >
+                            <img
+                                src={`/scientists-society.png`}
+                                alt="Scientists in Society"
+                                width='100%'
+                            />
+                        </Box>
                     </Box>
                 </Stack>
 
