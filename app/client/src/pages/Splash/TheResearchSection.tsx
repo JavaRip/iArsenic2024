@@ -36,7 +36,9 @@ export default function TheResearchSection(): JSX.Element {
 
             <Stack
                 direction={{
-                    md: 'column-reverse',
+                    xs: 'column',
+                    sm: 'column',
+                    md: 'column',
                     lg: 'row-reverse',
                 }}
                 alignItems='center'
@@ -79,39 +81,6 @@ export default function TheResearchSection(): JSX.Element {
                             এই ধরণগুলো চোখে দেখা যায় না, তবে ডেটার মধ্যে এগুলোর স্পষ্ট ছাপ থাকে। iArsenic অ্যাপটি এই ধরণের সার্বজনীন ও আঞ্চলিক ধরণগুলো মাঠপর্যায়ের তথ্যের সঙ্গে একত্র করে, এবং সেগুলোকে ক্লাউড-ভিত্তিক একটি কৃত্রিম বুদ্ধিমত্তা (AI) মডেলের মাধ্যমে বিশ্লেষণ করে। এই মডেলটি লক্ষ লক্ষ আর্সেনিক পরীক্ষার ফলাফলের ওপর প্রশিক্ষিত। এর ফলে, কোনো রাসায়নিক পরীক্ষা ছাড়াই এটি একটি নির্দিষ্ট অবস্থানের জন্য তাৎক্ষণিক ঝুঁকির অনুমান দিতে পারে — যা মানুষের নিরাপদ পানি বেছে নেওয়ার সিদ্ধান্তকে বিজ্ঞানসম্মতভাবে সহায়তা করে।
                         `}
                     />
-                </Box>
-
-                <Box mx={{ xs: 1, sm: 1, md: 4 }}>
-                    <img
-                        style={{
-                            maxWidth: '100%',
-                            maxHeight: '50rem',
-                            height: 'auto',
-                            borderRadius: '15px',
-                        }}
-                        src='/splashPage/red_vs_black_staining.jpg'
-                        alt='Image showing red and black staining on a well platform'
-                    />
-                </Box>
-            </Stack>
-
-            <Stack
-                direction={{
-                    md: 'column-reverse',
-                    lg: 'row',
-                }}
-                alignItems='center'
-                justifyContent='center'
-            >
-                <Box maxWidth={{ md: '100%', lg: '50%' }}>
-                    <TranslatableText 
-                        variant='h5'
-                        sx={{ ...sectionFontStyle }}
-                        english={`
-                        `}
-                        bengali={<>
-                        </>}
-                    />
 
                     <TranslatableText
                         variant='h5'
@@ -123,7 +92,33 @@ export default function TheResearchSection(): JSX.Element {
                             iArsenic কীভাবে কাজ করে: মাঠপর্যায়ের ইনপুট — যেমন টিউবওয়েলের গভীরতা, অবস্থান, এবং প্ল্যাটফর্মে থাকা দাগের রং — ক্লাউড-ভিত্তিক একটি AI মডেলের মাধ্যমে বিশ্লেষণ করা হয়। পূর্বের পরীক্ষার ডেটার সাথে মিলিয়ে, এটি ব্যবহারকারীকে রঙের মাধ্যমে স্পষ্টভাবে ঝুঁকির মাত্রা জানিয়ে দেয় — ফলে কমিউনিটিগুলো মুহূর্তেই সিদ্ধান্ত নিতে পারে।
                         `}
                     />
+                </Box>
 
+                <Box mx={{ xs: 1, sm: 1, md: 4 }}>
+                    <img
+                        style={{
+                            maxWidth: '100%',
+                            maxHeight: '50rem',
+                            height: 'auto',
+                            borderRadius: '15px',
+                        }}
+                        src='/scientists-society.png'
+                        alt='Project Concept Diagram'
+                    />
+                </Box>
+            </Stack>
+
+            <Stack
+                direction={{
+                    xs: 'column',
+                    sm: 'column',
+                    md: 'column',
+                    lg: 'row',
+                }}
+                alignItems='center'
+                justifyContent='center'
+            >
+                <Box maxWidth={{ md: '100%', lg: '50%' }}>
                     <TranslatableText
                         variant='h5'
                         sx={{ ...sectionFontStyle }}
@@ -144,10 +139,11 @@ export default function TheResearchSection(): JSX.Element {
                             height: 'auto',
                             borderRadius: '15px',
                         }}
-                        src='/scientists-society.png'
-                        alt='Project Concept Diagram'
+                        src='/splashPage/red_vs_black_staining.jpg'
+                        alt='Image showing red and black staining on a well platform'
                     />
                 </Box>
+
             </Stack>
         </Box>
     );
