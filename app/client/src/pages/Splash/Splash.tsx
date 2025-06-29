@@ -5,8 +5,10 @@ import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
 import { useAccessToken } from '../../utils/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
+import MapSection from './MapSection';
+import TheResearchSection from './TheResearchSection';
 
-const sectionFontStyle = {
+export const sectionFontStyle = {
     color: 'whitesmoke',
     textAlign: 'justify',
     m: 4,
@@ -72,55 +74,15 @@ export default function SplashPage(): JSX.Element {
                     />,
                 ]}
                 imageConfig={{
+                    imageSide: 'left',
                     imageUrl: `/splashPage/well_with_chickens.jpg`,
-                    imageSide: 'right',
                     imageAlt: 'Well With Chicken',
                 }}
                 backgroundColor={theme.palette.primary.dark}
                 maxTextWidth='50%'
             />
 
-            <Section
-                title={
-                    <TranslatableText 
-                        variant='h3'
-                        english='The Research' 
-                        bengali='গবেষণা'
-                    />
-                }
-                texts={[
-                    <TranslatableText 
-                        variant='h5'
-                        sx={{ ...sectionFontStyle }}
-                        english={`
-                            Figure 1: The colour of staining on tubewell platform and domestic utensils is an indication of underlying geology and redox condition: (Left panel) Black colouration derives from precipitation manganese oxide in groundwater and indicates that the well is most likely As-free, and (Right panel) Red colouration derives from precipitation of groundwater iron oxide and indicates likely presence of As, particularly if the well is shallow (<100 m below ground level) and located in an arsenic-prone areas. (Photos are shot by the PI in west central Bangladesh).
-                        `}
-                        bengali={<>
-                            <strong>চিত্র ১:</strong> নলকূপের চৌকাঠ ও ব্যবহৃত বাসনপত্রে যে দাগ পড়ে, তার রঙ দেখে ভূগর্ভস্থ ভূতত্ত্ব ও রাসায়নিক অবস্থার ইঙ্গিত পাওয়া যায়।
-                            <strong>(বাঁ পাশের ছবি):</strong> কালো দাগ সাধারণত ভূগর্ভস্থ পানিতে ম্যাঙ্গানিজ অক্সাইড জমে তৈরি হয় এবং এটি নির্দেশ করে যে ঐ নলকূপে আর্সেনিক নেই বা খুবই কম।
-                            <strong>(ডান পাশের ছবি):</strong> লালচে দাগ পানিতে লৌহ অক্সাইডের উপস্থিতির কারণে দেখা যায় এবং এটি ইঙ্গিত দেয় যে ঐ নলকূপে আর্সেনিক থাকতে পারে, বিশেষ করে যদি নলকূপটি অগভীর হয় (মাটির নিচে ১০০ মিটারের কম গভীরতায়) এবং আর্সেনিক-প্রবণ অঞ্চলে অবস্থান করে।
-                            (ছবিগুলো পশ্চিম-মধ্য বাংলাদেশের, প্রকল্প পরিচালকের তোলা।)
-                        </>}
-                    />,
-                    <TranslatableText
-                        variant='h5'
-                        english={`
-                            It is widely accepted that iron reduction is the main driver of the release of arsenic into aquifer water. Studies have found that qualitative factors, such as tubewell staining, can indicate subsurface redox condition, geology and water quality. Red staining is associated with iron reduction that may lead to release of As whilst black staining is associated with manganese reduction (any release of As due to manganese reduction is sorbed back on the, yet to be reduced, iron).
-                        `}
-                        bengali={`
-                            সাধারণভাবে এটি গ্রহণযোগ্য যে, ভূগর্ভস্থ পানিতে আর্সেনিক ছড়িয়ে পড়ার প্রধান কারণ হলো লৌহ যৌগের রাসায়নিক পরিবর্তন (reduction)। বিভিন্ন গবেষণায় দেখা গেছে যে, নলকূপের দাগের মতো গুণগত সূচক, ভূগর্ভের রাসায়নিক অবস্থা, এবং ভূতাত্ত্বিক গঠন পানির গুণমান সম্পর্কে ধারণা দিতে পারে ।
-                            লালচে দাগ ইঙ্গিত দেয় যে সেখানে লৌহ যৌগ হ্রাসের প্রক্রিয়া চলছে, যা আর্সেনিক দূষণের কারণ হতে পারে। অপরদিকে, কালচে দাগ ম্যাঙ্গানিজ যৌগ হ্রাসের কারণে হয়, তবে এই প্রক্রিয়ায় কোনো আর্সেনিক মুক্ত হলেও তা লৌহের গায়ে আবার আটকে যায়—যেহেতু ঐ লৌহ এখনো হ্রাস পায়নি। 
-                        `}
-                    />
-                ]}
-                imageConfig={{
-                    imageUrl: `/splashPage/red_vs_black_staining.jpg`,
-                    imageSide: 'left',
-                    imageAlt: 'Image showing red and black staining on a well platform',
-                }}
-                backgroundColor='dimgray'
-                maxTextWidth='50%'
-            />
+            <TheResearchSection />
 
             <Section
                 title={
@@ -169,7 +131,7 @@ export default function SplashPage(): JSX.Element {
                 imageBorderRadius='15px'
             />
 
-            <Section
+            <MapSection
                 title={
                     <TranslatableText
                         variant='h3'
@@ -180,7 +142,7 @@ export default function SplashPage(): JSX.Element {
                 texts={[
                     <TranslatableText
                         variant='h5'
-                        sx={{ ...sectionFontStyle }}
+                        sx={{ ...sectionFontStyle, maxWidth: '100%' }}
                         english={`
                             User location data appear on an interactive map in real time. This dynamic map allows you to observe the current usage and adoption of the application, as well as the assessments provided by the app for various tubewells. The map features a colour-coded background indicating the general arsenic concentration levels across different areas, helping you identify regions with higher or lower levels of contamination. This visual tool enables a better understanding of arsenic risk distribution and the effectiveness of the app.
                         `}
@@ -189,11 +151,6 @@ export default function SplashPage(): JSX.Element {
                         `}
                     />
                 ]}
-                imageConfig={{
-                    imageUrl: `/splashPage/interactive_map.png`,
-                    imageSide: 'left',
-                    imageAlt: 'Interactive map of Bangladesh',
-                }}
                 backgroundColor='#1d5e16'
                 maxTextWidth='50%'
             />

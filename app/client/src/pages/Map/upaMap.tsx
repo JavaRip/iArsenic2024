@@ -7,9 +7,14 @@ import TranslatableText from "../../components/TranslatableText";
 type props = {
     interactiveMap: GeoJSON,
     regionTranslations: RegionTranslations,
+    disablePointerEvents: boolean,
 }
 
-export default function UpaMap({ interactiveMap, regionTranslations }: props): JSX.Element {
+export default function UpaMap({ 
+    interactiveMap, 
+    regionTranslations,
+    disablePointerEvents,
+}: props): JSX.Element {
     function getColor(as: number): string {
         if (as < 10) return 'rgba(51, 204, 56, 0.5)';
         if (as < 50) return 'rgba(250, 205, 61, 0.5)';
@@ -30,21 +35,24 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
                 dashArray: '3',
                 fillOpacity: 0.7,
             })}
-            onEachFeature={(feature, layer) => { // TODO create feature typing
+            interactive={!disablePointerEvents}
+            onEachFeature={(feature, layer) => {
                 layer.bindPopup(ReactDOMServer.renderToString(
                     <>
                         <TranslatableText 
                             variant='body1'
                             english={`Mean As: ${Math.floor(feature.properties.as)}`}
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali={`গড় আর্সেনিক: ${Math.floor(feature.properties.as)}`}
                         />
 
                         <TranslatableText 
                             variant='body1'
                             english={`Division: ${feature.properties.div}`}
                             bengali={`
-                                ${regionTranslations.Divisions.Division}:
-                                ${regionTranslations.Divisions[feature.properties.div]}
+                                ${regionTranslations.Divisions.division}:
+                                ${regionTranslations.Divisions[
+                                    (feature.properties.div as string).toLowerCase()
+                                ]}
                             `}
                         />
 
@@ -52,8 +60,10 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
                             variant='body1'
                             english={`District: ${feature.properties.dis}`}
                             bengali={`
-                                ${regionTranslations.Districts.District}:
-                                ${regionTranslations.Districts[feature.properties.dis]}
+                                ${regionTranslations.Districts.district}:
+                                ${regionTranslations.Districts[
+                                    (feature.properties.dis as string).toLowerCase()
+                                ]}
                             `}
                         />
                         
@@ -61,8 +71,10 @@ export default function UpaMap({ interactiveMap, regionTranslations }: props): J
                             variant='body1'
                             english={`Upazila: ${feature.properties.upa}`}
                             bengali={`
-                                ${regionTranslations.Upazilas.Upazila}:
-                                ${regionTranslations.Upazilas[feature.properties.upa]}
+                                ${regionTranslations.Upazilas.upazila}:
+                                ${regionTranslations.Upazilas[
+                                    (feature.properties.upa as string).toLowerCase()
+                                ]}
                             `}
                         />
                     </>

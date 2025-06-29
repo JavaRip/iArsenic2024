@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useAccessToken } from './useAccessToken';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -7,13 +8,21 @@ export function useUnits() {
     const { data: token } = useAccessToken();
     const queryClient = useQueryClient();
 
-    function getUnits(): 'meters' | 'feet' {
+    const [units, setUnitsState] = useState<'meters' | 'feet'>(() => {
         const stored = localStorage.getItem(UNITS_KEY) || 'feet';
         return stored === 'meters' ? 'meters' : 'feet';
-    }
+    });
 
-    async function setUnits(units: 'meters' | 'feet') {
-        localStorage.setItem(UNITS_KEY, units);
+    useEffect(() => {
+        const stored = localStorage.getItem(UNITS_KEY);
+        if (stored && stored !== units) {
+            setUnitsState(stored === 'meters' ? 'meters' : 'feet');
+        }
+    }, []);
+
+    async function setUnits(newUnits: 'meters' | 'feet') {
+        localStorage.setItem(UNITS_KEY, newUnits);
+        setUnitsState(newUnits);
 
         if (token?.user) {
             await fetch(`/api/v1/self/user`, {
@@ -22,7 +31,7 @@ export function useUnits() {
                     'Content-Type': 'application/json',
                     authorization: `Bearer ${token.id}`,
                 },
-                body: JSON.stringify({ units }),
+                body: JSON.stringify({ units: newUnits }),
             });
 
             queryClient.invalidateQueries({ queryKey: ['accessToken'] });
@@ -30,7 +39,7 @@ export function useUnits() {
     }
 
     return {
-        units: getUnits(),
+        units,
         setUnits,
     };
 }
