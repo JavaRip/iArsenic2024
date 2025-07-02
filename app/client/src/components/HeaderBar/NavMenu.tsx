@@ -10,8 +10,9 @@ import LocalDrinkIcon from '@mui/icons-material/LocalDrink';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupsIcon from '@mui/icons-material/Groups';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import EmailIcon from '@mui/icons-material/Email';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import LoginIcon from '@mui/icons-material/Login';
+// import LoginIcon from '@mui/icons-material/Login';
 import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import InfoIcon from '@mui/icons-material/Info';
 import Box from '@mui/material/Box';
@@ -36,9 +37,16 @@ function NavListItem(
         Icon: SvgIconComponent;
     }
 ): JSX.Element {
+    const handleClick = () => {
+        if (path.startsWith('mailto:')) {
+            window.location.href = path;
+        } else {
+            navigate(`/${path}`);
+        }
+    };
     return (
         <ListItem key={path}>
-            <ListItemButton onClick={() => navigate(`/${path}`)}>
+            <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
                     <Icon />
                 </ListItemIcon>
@@ -127,11 +135,11 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         Icon={FmdGoodIcon}
                         label={<TranslatableText english="Maps" bengali="মানচিত্র" variant="body1" />}
                     />
-                    <NavListItem
+                    {/* <NavListItem
                         path='login'
                         Icon={LoginIcon}
                         label={<TranslatableText english="Login" bengali="লগইন করুন" variant="body1" />}
-                    />
+                    /> */}
                     <ListItem key='powerbi-dash'>
                         <ListItemButton onClick={() => {
                             window.open(
@@ -153,6 +161,18 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                             />
                         </ListItemButton>
                     </ListItem>
+                    <NavListItem
+                        path="mailto:contact@iarsenic.com"
+                        Icon={EmailIcon}
+                        label={
+                            <TranslatableText
+                                english="Get in touch"
+                                bengali="আমাদের ইমেইল করুন"
+                                variant="body1"
+                            />
+                        }
+                    />
+
                 </List>
 
                 {role && (
