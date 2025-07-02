@@ -173,7 +173,9 @@ export default function Result(): JSX.Element {
                                 <Button
                                     sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
                                     variant='outlined'
-                                    onClick={() => window.location.href = 'mailto:contact@iarsenic.com'}
+                                    onClick={() => {
+                                        window.location.href = `mailto:contact@iarsenic.com?subject=Well ID: ${wellId}`
+                                    }}
                                     startIcon={<EmailIcon />}
                                 >
                                     <TranslatableText 
