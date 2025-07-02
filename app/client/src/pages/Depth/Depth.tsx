@@ -20,7 +20,7 @@ export default function Depth(): JSX.Element {
     const [depth, setDepth] = useState(1);
     const [showDepthGuide, setShowDepthGuide] = useState(false)
 
-    const [rawInput, setRawInput] = useState<string>('');
+    const [rawInput, setRawInput] = useState<string>('1');
 
     function handleSliderChange(_: Event, newValue: number | number[]) {
         if (units === 'feet') {
@@ -86,6 +86,8 @@ export default function Depth(): JSX.Element {
     }, [well]);
 
     useEffect(() => {
+        if (rawInput === '') return; // Don't update depth if user is still typing
+
         const timeout = setTimeout(() => {
             const value = Number(rawInput);
 
@@ -94,17 +96,20 @@ export default function Depth(): JSX.Element {
             }
 
             if (units === 'feet') {
+                const converted = Math.round(value * 0.3048);
                 if (value > 1640) {
-                    setDepth(1640)
-                    setRawInput('1640')
+                    setDepth(Math.round(1640 * 0.3048));
+                    setRawInput('1640');
+                } else {
+                    setDepth(converted);
                 }
-                else setDepth(Math.round(value * 0.3048));
             } else {
                 if (value > 500) {
-                    setDepth(500)
-                    setRawInput('500')
+                    setDepth(500);
+                    setRawInput('500');
+                } else {
+                    setDepth(value);
                 }
-                else setDepth(value);
             }
         }, 100);
 
@@ -258,12 +263,20 @@ export default function Depth(): JSX.Element {
                         />
                     }
                     type="number"
-                    value={rawInput === '' 
-                        ? (units === 'meters' ? depth : Math.round(depth / 0.3048)).toString()
-                        : rawInput
-                    }
+                    value={rawInput}
                     onChange={(e) => {
-                        setRawInput(e.target.value);
+                        const value = e.target.value;
+
+                        // Allow empty string so user can delete and retype
+                        if (value === '') {
+                            setRawInput('');
+                            return;
+                        }
+
+                        // Allow only digits (no decimal, no minus, no letters)
+                        if (/^\d+$/.test(value)) {
+                            setRawInput(value);
+                        }
                     }}
                     InputLabelProps={{
                         shrink: true,
