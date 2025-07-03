@@ -118,10 +118,6 @@ export default function Depth(): JSX.Element {
     }, [well]);
 
     useEffect(() => {
-        console.log('--------------------------------')
-        console.log(rawInput)
-        console.log(Number(rawInput))
-
         if (rawInput === '') return;
 
         const timeout = setTimeout(() => {
@@ -320,7 +316,7 @@ export default function Depth(): JSX.Element {
                     <TranslatableText 
                         error={true}
                         english='Depth input must be numeric value greater than 0'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='নলকূপের গভীরতা অবশ্যই শূন্যের চেয়ে বেশি হতে হবে এবং শুধুমাত্র সংখ্যায় হতে হবে।'
                     />
                 )}
             </PageCard>
