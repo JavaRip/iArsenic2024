@@ -110,6 +110,7 @@ export default function Depth(): JSX.Element {
                     setRawInput('500');
                 } else {
                     setDepth(value);
+                    setRawInput(String(value))
                 }
             }
         }, 100);
