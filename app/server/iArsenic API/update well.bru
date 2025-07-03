@@ -5,9 +5,13 @@ meta {
 }
 
 patch {
-  url: {{base_url}}/api/v1/self/well/{{well_id}}
+  url: {{base_url}}/api/v1/self/well/:wellId
   body: json
   auth: none
+}
+
+params:path {
+  wellId: 43f25546-4a5e-43bb-a18c-e90934344392
 }
 
 headers {

@@ -155,7 +155,10 @@ export const WellService = {
         let modelOutput;
         try {
             modelOutput = await produceEstimate(well);
-        } catch {}
+        } catch (error) {
+            console.error(error)
+            console.error('Error producing estimate for well')
+        }
     
         if (modelOutput || modelOutput === 0) {
             wellUpdates.modelOutput = modelOutput;

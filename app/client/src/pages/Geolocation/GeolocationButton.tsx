@@ -74,8 +74,8 @@ export default function GeolocationButton({
 
         const data = await response.json();
 
-        setDistrict(data.division);
-        setDivision(data.district);
+        setDivision(data.division);
+        setDistrict(data.district);
         setUpazila(data.upazila);
         setUnion(data.union);
         setMouza(data.mouza);
