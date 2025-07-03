@@ -81,7 +81,26 @@ export default function Depth(): JSX.Element {
     
     useEffect(() => {
         if (well && well.depth !== undefined) {
-            setDepth(well.depth)
+            const wellDepth = well.depth;
+
+            if (units === 'feet') {
+                const feetValue = Math.round(wellDepth / 0.3048);
+                if (feetValue > 1640) {
+                    setDepth(Math.round(1640 * 0.3048));
+                    setRawInput('1640');
+                } else {
+                    setDepth(wellDepth);
+                    setRawInput(String(feetValue));
+                }
+            } else {
+                if (wellDepth > 500) {
+                    setDepth(500);
+                    setRawInput('500');
+                } else {
+                    setDepth(wellDepth);
+                    setRawInput(String(wellDepth));
+                }
+            }
         }
     }, [well]);
 
