@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, CircularProgress, Grid, Stack } from "@mui/material";
+import { Box, Button, CircularProgress, Stack } from "@mui/material";
 import { Well, RiskAssesment } from 'iarsenic-types';
 import { navigate } from "wouter/use-browser-location";
 import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
@@ -107,89 +107,77 @@ export default function Result(): JSX.Element {
             }
             onNext={async () => navigate(`/`)}
         >
-            <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Stack sx={{ alignItems: 'center', height: '220px' }}>
+                <Box className='english'>
+                    <EnglishSpeedo value={speedoValue} />
+                </Box>
+                <Box className='bengali'>
+                    <BengaliSpeedo value={speedoValue} />
+                </Box>
+            </Stack>
 
-                <Grid item xs={12} style={{ height: '220px' }}>
-                    <Stack sx={{ alignItems: 'center' }}>
-                        <Box className='english'>
-                            <EnglishSpeedo value={speedoValue} />
-                        </Box>
-                        <Box className='bengali'>
-                            <BengaliSpeedo value={speedoValue} />
-                        </Box>
-                    </Stack>
-                </Grid>
+            <PageCard>
+                <TranslatableText 
+                    variant='h6' 
+                    mb='1rem'
+                    english={warningTexts.english.title}
+                    bengali={warningTexts.bengali.title}
+                />
 
-                <Stack sx={{ alignItems: 'center' }}>
-                    <Grid item xs={12}>
-                        <Box textAlign='center'>
-                            <PageCard>
-                                <TranslatableText 
-                                    variant='h6' 
-                                    mb='1rem'
-                                    english={warningTexts.english.title}
-                                    bengali={warningTexts.bengali.title}
-                                />
+                <TranslatableText 
+                    variant='body1' 
+                    mb='1rem'
+                    english={warningTexts.english.body}
+                    bengali={warningTexts.bengali.body}
+                />
 
-                                <TranslatableText 
-                                    variant='body1' 
-                                    mb='1rem'
-                                    english={warningTexts.english.body}
-                                    bengali={warningTexts.bengali.body}
-                                />
+                <Button
+                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
+                    variant='outlined'
+                    onClick={() => navigate(`/understanding-risk`)}
+                >
+                    <TranslatableText 
+                        variant='body1' 
+                        english='What does this mean?'
+                        bengali='ফলাফল বিশদ ব্যাখ্যা দেখতে চান?'
+                    />
+                </Button>
 
-                                <Button
-                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
-                                    variant='outlined'
-                                    onClick={() => navigate(`/understanding-risk`)}
-                                >
-                                    <TranslatableText 
-                                        variant='body1' 
-                                        english='What does this mean?'
-                                        bengali='ফলাফল বিশদ ব্যাখ্যা দেখতে চান?'
-                                    />
-                                </Button>
+                <Button
+                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
+                    variant='outlined'
+                    onClick={() => navigate(`/map?highlight=${well.id}`)}
+                >
+                    <TranslatableText 
+                        variant='body1' 
+                        english='View on map'
+                        bengali='মানচিত্রে দেখুন' // chatgpt generated
+                    />
+                </Button>
+            </PageCard>
 
-                                <Button
-                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
-                                    variant='outlined'
-                                    onClick={() => navigate(`/map?highlight=${well.id}`)}
-                                >
-                                    <TranslatableText 
-                                        variant='body1' 
-                                        english='View on map'
-                                        bengali='মানচিত্রে দেখুন' // chatgpt generated
-                                    />
-                                </Button>
-                            </PageCard>
+            <PageCard>
 
-                            <PageCard>
-
-                                <TranslatableText
-                                    variant='h6'
-                                    english='Need further information?'
-                                    bengali='আরও তথ্য দরকার?' 
-                                />
-                                <Button
-                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
-                                    variant='outlined'
-                                    onClick={() => {
-                                        window.location.href = `mailto:contact@iarsenic.com?subject=Well ID: ${wellId}`
-                                    }}
-                                    startIcon={<EmailIcon />}
-                                >
-                                    <TranslatableText 
-                                        variant='body1' 
-                                        english='Get in touch'
-                                        bengali='আমাদের ইমেইল করুন' 
-                                    />
-                                </Button>
-                            </PageCard>
-                        </Box>
-                    </Grid>
-                </Stack>
-                
-            </Grid>
+                <TranslatableText
+                    variant='h6'
+                    english='Need further information?'
+                    bengali='আরও তথ্য দরকার?' 
+                />
+                <Button
+                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
+                    variant='outlined'
+                    onClick={() => {
+                        window.location.href = `mailto:contact@iarsenic.com?subject=Well ID: ${wellId}`
+                    }}
+                    startIcon={<EmailIcon />}
+                >
+                    <TranslatableText 
+                        variant='body1' 
+                        english='Get in touch'
+                        bengali='আমাদের ইমেইল করুন' 
+                    />
+                </Button>
+            </PageCard>
         </WellDataEntryLayout>
     );
 }
