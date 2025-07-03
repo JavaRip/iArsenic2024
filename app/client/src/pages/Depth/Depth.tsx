@@ -134,7 +134,6 @@ export default function Depth(): JSX.Element {
                     setRawInput('1640');
                 } else {
                     setDepth(converted);
-                    setRawInput(String(converted))
                 }
             } else {
                 if (value > 500) {
@@ -142,7 +141,6 @@ export default function Depth(): JSX.Element {
                     setRawInput('500');
                 } else {
                     setDepth(value);
-                    setRawInput(String(value))
                 }
             }
         }, 100);
