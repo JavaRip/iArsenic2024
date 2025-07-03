@@ -19,6 +19,7 @@ export default function Depth(): JSX.Element {
 
     const [depth, setDepth] = useState(1);
     const [showDepthGuide, setShowDepthGuide] = useState(false)
+    const [error, setError] = useState(false)
 
     const [rawInput, setRawInput] = useState<string>('1');
 
@@ -52,6 +53,17 @@ export default function Depth(): JSX.Element {
 
     async function handleNext(): Promise<void> {
         if (!wellId) return
+
+        if (!/^\d+$/.test(rawInput) || rawInput === '') {
+            setError(true)
+            return
+        }
+
+        if (Number(rawInput) <= 0) {
+            setError(true)
+            return
+        }
+
         const updates: {
             depth: number,
             flooding?: false,
@@ -61,6 +73,7 @@ export default function Depth(): JSX.Element {
             updates.flooding = false
         }
 
+        setError(false)
         try {
             await updateWellMutation.mutateAsync({
                 wellId,
@@ -105,12 +118,16 @@ export default function Depth(): JSX.Element {
     }, [well]);
 
     useEffect(() => {
-        if (rawInput === '') return; // Don't update depth if user is still typing
+        console.log('--------------------------------')
+        console.log(rawInput)
+        console.log(Number(rawInput))
+
+        if (rawInput === '') return;
 
         const timeout = setTimeout(() => {
             const value = Number(rawInput);
 
-            if (isNaN(value) || value < 1) {
+            if (isNaN(value) || value < 0) {
                 return;
             }
 
@@ -212,7 +229,11 @@ export default function Depth(): JSX.Element {
                 </Box>
             </PageCard>
 
-            <PageCard>
+            <PageCard
+                sx={{ 
+                    outline: error ? '1px solid red' : 'none'
+                }} 
+            >
                 <Box
                     justifyItems='center'
                     alignItems='center'
@@ -271,6 +292,8 @@ export default function Depth(): JSX.Element {
 
                 <TextField
                     id="outlined-number"
+                    type="number"
+                    value={rawInput}
                     label={units === 'meters' ?
                         <TranslatableText 
                             variant='body1' 
@@ -283,27 +306,23 @@ export default function Depth(): JSX.Element {
                             bengali='ফুট (ft)'
                         />
                     }
-                    type="number"
-                    value={rawInput}
-                    onChange={(e) => {
-                        const value = e.target.value;
-
-                        // Allow empty string so user can delete and retype
-                        if (value === '') {
-                            setRawInput('');
-                            return;
-                        }
-
-                        // Allow only digits (no decimal, no minus, no letters)
-                        if (/^\d+$/.test(value)) {
-                            setRawInput(value);
-                        }
+                    inputMode="numeric"
+                    onChange={e => {
+                        setRawInput(e.target.value);
                     }}
                     InputLabelProps={{
                         shrink: true,
                     }}
                     sx={{ width: '85%' }}
                 />
+
+                {error && (
+                    <TranslatableText 
+                        error={true}
+                        english='Depth input must be numeric value greater than 0'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
+                )}
             </PageCard>
 
         </WellDataEntryLayout>

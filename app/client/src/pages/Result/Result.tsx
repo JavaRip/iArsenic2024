@@ -10,6 +10,7 @@ import { useAccessToken } from "../../utils/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
+import EmailIcon from '@mui/icons-material/Email';
 
 type EstimateTexts = {
     english: {
@@ -158,6 +159,29 @@ export default function Result(): JSX.Element {
                                         variant='body1' 
                                         english='View on map'
                                         bengali='মানচিত্রে দেখুন' // chatgpt generated
+                                    />
+                                </Button>
+                            </PageCard>
+
+                            <PageCard>
+
+                                <TranslatableText
+                                    variant='h6'
+                                    english='Need further information?'
+                                    bengali='আরও তথ্য দরকার?' 
+                                />
+                                <Button
+                                    sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
+                                    variant='outlined'
+                                    onClick={() => {
+                                        window.location.href = `mailto:contact@iarsenic.com?subject=Well ID: ${wellId}`
+                                    }}
+                                    startIcon={<EmailIcon />}
+                                >
+                                    <TranslatableText 
+                                        variant='body1' 
+                                        english='Get in touch'
+                                        bengali='আমাদের ইমেইল করুন' 
                                     />
                                 </Button>
                             </PageCard>
