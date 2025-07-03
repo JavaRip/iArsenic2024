@@ -168,7 +168,7 @@ export default function Result(): JSX.Element {
                                 <TranslatableText
                                     variant='h6'
                                     english='Need further information?'
-                                    bengali='BENGALI PLACEHOLDER' 
+                                    bengali='আরও তথ্য দরকার?' 
                                 />
                                 <Button
                                     sx={{ width: '90%', height: '4rem', marginTop: '1rem' }}
@@ -181,7 +181,7 @@ export default function Result(): JSX.Element {
                                     <TranslatableText 
                                         variant='body1' 
                                         english='Get in touch'
-                                        bengali='BENGALI PLACEHOLDER' 
+                                        bengali='আমাদের ইমেইল করুন' 
                                     />
                                 </Button>
                             </PageCard>
