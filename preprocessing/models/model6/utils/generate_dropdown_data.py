@@ -12,6 +12,7 @@ def generate_dropdown_data(mouzas):
     }
 
     divisions = []
+    rows = []  # To store full paths for CSV output
 
     for div in sorted(mouzas['div'].unique()):
         region_labels['divisions'].append(div)
@@ -33,6 +34,15 @@ def generate_dropdown_data(mouzas):
                     uni_mouzas = upa_mouzas[upa_mouzas['uni'] == uni]
                     mouzas_list = sorted(uni_mouzas['mou'].unique().tolist())
                     region_labels['mouzas'].extend(mouzas_list)
+
+                    for mou in mouzas_list:
+                        rows.append({
+                            'division': div,
+                            'district': dis,
+                            'upazila': upa,
+                            'union': uni,
+                            'mouza': mou,
+                        })
 
                     unions.append({
                         "union": uni,
@@ -56,12 +66,18 @@ def generate_dropdown_data(mouzas):
 
     os.makedirs('output', exist_ok=True)
 
+    # Write hierarchical structure to JSON
     with open('output/dropdown-data.json', 'w') as f:
         json.dump(divisions, f, indent=2)
 
+    # Write region label values to separate CSVs
     for region_type, values in region_labels.items():
         unique_values = sorted(set(values))
         df = pd.DataFrame(unique_values, columns=[region_type[:-1]])
         df.to_csv(f'output/{region_type}.csv', index=False)
+
+    # Write full hierarchical paths to a CSV
+    full_df = pd.DataFrame(rows)
+    full_df.to_csv('output/dropdown-data.csv', index=False)
 
     return divisions
