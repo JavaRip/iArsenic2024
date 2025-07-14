@@ -1,55 +1,43 @@
-import { Button, CircularProgress, Link, List, ListItem } from "@mui/material";
+import { Button, Link, List, ListItem } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
-import { Well } from "iarsenic-types";
-import { useAccessToken } from "../../utils/useAccessToken";
 import TranslatableText from "../../components/TranslatableText";
 import PageCard from "../../components/PageCard";
-import { useState } from "react";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function Briefing(): JSX.Element {
-    const { data: token } = useAccessToken();
-    const [changingPage, setChangingPage] = useState(false)
-
-    async function addWell(): Promise<Well> {
-        setChangingPage(true)
-        const headers: HeadersInit = {};
-
-        if (token) {
-            headers.authorization = `Bearer ${token.id}`;
-        }
-
-        const res = await fetch(`/api/v1/self/well`, {
-            method: 'POST',
-            headers,
-        });
-
-        if (!res.ok) {
-            throw new Error('Failed to add well');
-        }
-
-        const well = await res.json();
-
-        if (!token) {
-            const stored = localStorage.getItem("unclaimedWellIds");
-            const unclaimed: string[] = stored ? JSON.parse(stored) : [];
-            localStorage.setItem("unclaimedWellIds", JSON.stringify([...unclaimed, well.id]));
-        }
-
-        setChangingPage(false)
-        return well as Well;
-    }
-
     return (
         <>
             <TranslatableText
-                english='Estimate Preparation'
-                bengali='মূল্যায়ন প্রস্তুতি'
+                english='Briefing'
+                bengali='ব্রিফিং'
                 mb='1rem'
                 variant='h4'
                 textAlign='center'
             />
 
+            <Button
+                variant='outlined'
+                startIcon={<ArrowBackIcon />}
+                sx={{ alignSelf: 'start' }}
+                onClick={() => window.history.back()}
+            >
+                <TranslatableText 
+                    variant='body1' 
+                    textAlign='center'
+                    english='Return'
+                    bengali='ফিরে যান' // chatgpt generated
+                />
+            </Button>
+
             <PageCard>
+                <TranslatableText 
+                    english='Estimate Preparation'
+                    bengali='মূল্যায়ন প্রস্তুতি'
+                    mb='1rem'
+                    textAlign="center"
+                    variant='h5' 
+                />
+
                 <TranslatableText
                     english={`
                         To accurately estimate the arsenic levels in your
@@ -123,11 +111,11 @@ export default function Briefing(): JSX.Element {
 
             <PageCard>
                 <TranslatableText 
-                    variant='h5' 
+                    bengali='এ্যপটি কিভাবে কাজ করে'
+                    english='How It Works'
                     mb='1rem'
                     textAlign="center"
-                    english='How It Works'
-                    bengali='এ্যপটি কিভাবে কাজ করে'
+                    variant='h5' 
                 />
 
                 <TranslatableText 
@@ -218,24 +206,17 @@ export default function Briefing(): JSX.Element {
                     `}
                 />
             </PageCard>
-
             <Button
-                sx={{ width: '90%', height: '4rem' }}
+                sx={{ width: '90%', height: '4rem', marginTop: '2rem'}}
                 variant='contained'
-                disabled={changingPage}
-                onClick={async () => {
-                    const newWell = await addWell();
-                    navigate(`/well/${newWell.id}/region`);
-                }}
+                onClick={() => window.history.back()}
             >
-                {changingPage ?
-                    <CircularProgress /> :
-                    <TranslatableText 
-                        variant='body1'
-                        english='Generate Estimate' 
-                        bengali='ঝুঁকি  মূল্যায়ন করুন'
-                    />
-                }
+                <TranslatableText 
+                    width='100%'
+                    variant='body1' 
+                    english='Return'
+                    bengali='ফিরে যান' // chatgpt generated
+                />
             </Button>
         </>
     );
