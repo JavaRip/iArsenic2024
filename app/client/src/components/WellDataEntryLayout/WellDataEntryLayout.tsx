@@ -8,6 +8,7 @@ interface Props {
     title: ReactNode;
     onNext: () => Promise<void>;
     children: ReactNode;
+    nextDisabled?: boolean;
     nextText?: ReactNode;
 }
 
@@ -15,6 +16,7 @@ export default function WellAssessmentPageLayout({
     title,
     onNext,
     children,
+    nextDisabled = false,
     nextText = <TranslatableText
         variant="button"
         english="Next Step"
@@ -50,7 +52,7 @@ export default function WellAssessmentPageLayout({
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
-                disabled={changingPage}
+                disabled={changingPage || nextDisabled}
                 onClick={async () => {
                     setChangingPage(true)
                     try {

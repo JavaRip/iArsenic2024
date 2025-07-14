@@ -1,10 +1,23 @@
-import { Button, List, ListItem } from "@mui/material";
-import { navigate } from "wouter/use-browser-location";
+import { Button, CircularProgress, List, ListItem } from "@mui/material";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
 import config from '../../config'
+import { useWells } from "../../utils/useWells";
+import { navigate } from "wouter/use-browser-location";
 
 export default function Landing(): JSX.Element {
+    const { createWell } = useWells();
+    const createWellMutation = createWell();
+
+    async function startCreateWellFlow() {
+        try {
+            const newWell = await createWellMutation.mutateAsync(undefined);
+            navigate(`/well/${newWell.id}/region`);
+        } catch (err) {
+            console.error('Failed to create well:', err);
+        }
+    }
+
     return (
         <>
             <TranslatableText
@@ -44,11 +57,11 @@ export default function Landing(): JSX.Element {
 
             <PageCard>
                 <TranslatableText
-                    variant='h6'
-                    textAlign='center'
-                    mb='1rem'
-                    english='Express Assesment'
                     bengali='দ্রুত মূল্যায়ন' // chatgpt generated
+                    english='Express Assesment'
+                    mb='1rem'
+                    textAlign='center'
+                    variant='h5'
                 />
 
                 <TranslatableText
@@ -128,16 +141,40 @@ export default function Landing(): JSX.Element {
                 </List>
             </PageCard>
 
+            {/* this could be a dedicated component that handles pending and error states */}
             <Button
-                sx={{ width: '90%', height: '4rem' }}
+                sx={{ 
+                    width: '90%', 
+                    height: '4rem',
+                }}
                 variant='contained'
-                onClick={() => navigate(`/briefing`)}
+                onClick={startCreateWellFlow}
+                disabled={
+                    createWellMutation.isPending ||
+                    createWellMutation.isError
+                }
             >
-                <TranslatableText
-                    variant='body1'
-                    english='Start Your Assesment'
-                    bengali='আপনার মূল্যায়ন শুরু করুন'
-                />
+                {(() => {
+                    if (createWellMutation.isPending) {
+                        return <CircularProgress />
+                    } else if (createWellMutation.isError) {
+                        return (
+                            <TranslatableText
+                                variant='body1'
+                                english='Something went wrong, please refresh'
+                                bengali='Something went wrong, please refresh' // BENGALI PLACEHOLDER
+                            />
+                        )
+                    } else {
+                        return (
+                            <TranslatableText
+                                variant='body1'
+                                english='Start Your Assesment'
+                                bengali='আপনার মূল্যায়ন শুরু করুন'
+                            />
+                        )
+                    }
+                })()}
             </Button>
         </>
     );

@@ -37,6 +37,7 @@ export default function Region(): JSX.Element {
     const [errors, setErrors] = useState<RegionErrors>({ withWell: false });
     const [regionGeovalidated, setRegionGeovalidated] = useState<boolean>(false);
     const [geolocation, setGeolocation] = useState<[number, number] | ''>('');
+    const [gettingRegionKey, setGettingRegionKey] = useState<boolean>(false);
 
     useEffect(() => {
         if (!well) return
@@ -116,6 +117,7 @@ export default function Region(): JSX.Element {
                 />
             }
             onNext={handleNext}
+            nextDisabled={gettingRegionKey}
         >
             <PageCard>
                 <TranslatableText
@@ -204,6 +206,8 @@ export default function Region(): JSX.Element {
                         <Box mb={4}>
                             <GeolocationButton
                                 setRegionGeovalidated={setRegionGeovalidated}
+                                setGettingRegionKey={setGettingRegionKey}
+                                gettingRegionKey={gettingRegionKey}
                                 geolocation={geolocation}
                                 setGeolocation={setGeolocation}
                                 setDivision={setDivision}
