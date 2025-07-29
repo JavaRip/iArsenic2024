@@ -7,6 +7,8 @@ import TranslatableText from "../../components/TranslatableText";
 
 type props = {
     setRegionGeovalidated: (geovalidated: boolean) => void,
+    setGettingRegionKey: (loadingRegion: boolean) => void,
+    gettingRegionKey: boolean,
     geolocation: [number, number] | '',
     setGeolocation: (geolocation: [number, number]) => void,
     setDivision: (selectedDivision: string) => void,
@@ -18,6 +20,8 @@ type props = {
 
 export default function GeolocationButton({
     setRegionGeovalidated,
+    setGettingRegionKey,
+    gettingRegionKey,
     geolocation,
     setGeolocation,
     setDivision,
@@ -29,7 +33,6 @@ export default function GeolocationButton({
     const [geolocationFailed, setGeolocationFailed] = useState<boolean>(false);
     const [geolocationSuccess, setGeolocationSuccess] = useState<boolean>(false);
 
-    const [gettingRegionKey, setGettingRegionKey] = useState<boolean>(false);
     const [regionNotFound, setRegionNotFound] = useState<boolean>(false);
 
     async function getGeolocation() {
