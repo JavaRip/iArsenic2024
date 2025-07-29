@@ -74,5 +74,40 @@ export function useWells() {
         });
     };
 
-    return { getWell, getWells, updateWell };
+    const createWell = () => {
+        return useMutation({
+            mutationFn: async (data?: Partial<Well>) => {
+                const headers: HeadersInit = {
+                    'Content-Type': 'application/json',
+                };
+
+                if (token?.id) {
+                    headers.authorization = `Bearer ${token.id}`;
+                }
+
+                const res = await fetch(`/api/v1/self/well`, {
+                    method: 'POST',
+                    headers,
+                    ...(data ? { body: JSON.stringify(data) } : {}),
+                });
+
+                if (!res.ok) throw new Error('Failed to create well');
+                const well = await res.json();
+
+                // Optionally store unclaimed well ID in localStorage
+                if (!token?.id) {
+                    const stored = localStorage.getItem("unclaimedWellIds");
+                    const unclaimed: string[] = stored ? JSON.parse(stored) : [];
+                    localStorage.setItem("unclaimedWellIds", JSON.stringify([...unclaimed, well.id]));
+                }
+
+                return well as Well;
+            },
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['wells'] });
+            },
+        });
+    };
+
+    return { getWell, getWells, updateWell, createWell };
 }
