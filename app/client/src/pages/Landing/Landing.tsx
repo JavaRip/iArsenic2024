@@ -1,4 +1,4 @@
-import { Button, CircularProgress, List, ListItem } from "@mui/material";
+import { Button, CircularProgress, Link, List, ListItem } from "@mui/material";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
 import config from '../../config'
@@ -128,14 +128,26 @@ export default function Landing(): JSX.Element {
                     <ListItem>
                         <TranslatableText
                             variant='body1'
-                            english={`
-                                Using this app is entirely voluntary. 
-                                You decide if and when to start your assessment.
-                            `}
-                            bengali={`
-                                এই অ্যাপটি ব্যবহার আপনার ইচ্ছানির্ভর । আপনি চাইলে 
-                                আর্সেনিকের মাত্রা মূল্যায়ন শুরু করতে পারেন।
-                            `}
+                            english={<>
+                                Using this app is entirely voluntary.&nbsp;
+                                <Link
+                                    onClick={() => navigate('/briefing')}  
+                                    sx={{ cursor: 'pointer' }}
+                                >
+                                    Click here
+                                </Link>
+                                &nbsp;to learn what 
+                                information you may need to provide if you choose to proceed
+                            </>}
+                            bengali={<>
+                                এই অ্যাপটি ব্যবহার সম্পূর্ণ ইচ্ছানির্ভর।  আপনি এগিয়ে গেলে কী কী তথ্য দিতে হতে পারে, তা জানতে&nbsp;
+                                <Link
+                                    onClick={() => navigate('/briefing')}  
+                                    sx={{ cursor: 'pointer' }}
+                                >
+                                    এখানে ক্লিক করুন।
+                                </Link>
+                            </>}
                         />
                     </ListItem>
                 </List>
