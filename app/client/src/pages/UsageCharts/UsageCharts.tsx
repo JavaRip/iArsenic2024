@@ -141,13 +141,7 @@ export default function Depth(): JSX.Element {
     } = getLineChartData(wells)
 
     return (
-        <Stack 
-            alignItems='center'
-            maxWidth='100%'
-            mx='auto' 
-            px={2}
-            width='1200px'
-        >
+        <>
             <TranslatableText
                 english='Usage Charts'
                 bengali=''
@@ -173,7 +167,7 @@ export default function Depth(): JSX.Element {
                 />
             </Button>
 
-            <PageCard>
+            <PageCard expandable="1280px">
                 <TranslatableText 
                     english='Usage per day - past 14 days'
                     bengali=''
@@ -206,7 +200,7 @@ export default function Depth(): JSX.Element {
                 />
             </PageCard>
 
-            <PageCard>
+            <PageCard expandable="1280px">
                 <TranslatableText 
                     english='All Time Cumulative Data'
                     bengali=''
@@ -231,6 +225,6 @@ export default function Depth(): JSX.Element {
                     }}
                 />
             </PageCard>
-        </Stack>
+        </>
     );
 }

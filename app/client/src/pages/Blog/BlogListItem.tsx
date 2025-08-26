@@ -34,6 +34,8 @@ export function BlogListItem({
                 <Stack 
                     direction='row'
                     width='100%' 
+                    mb='32px'
+                    mt='16px'
                     sx={{ 
                         justifyItems: 'cetner',
                         alignItems: 'center',
@@ -43,8 +45,8 @@ export function BlogListItem({
                         src={authorImage.src} 
                         alt={authorImage.alt}
                         sx={{ 
-                            height: '96px', 
-                            width: '96px', 
+                            height: '80px', 
+                            width: '80px', 
                             mx: '8px',
                         }}
                     />
@@ -63,10 +65,11 @@ export function BlogListItem({
                     alt={coverImage.alt || title}
                 />
 
-                <Stack spacing={4}>
+                <Stack spacing={4} mt='16px'>
                     <Typography 
-                        variant='h5' 
+                        variant='h5'
                         alignContent='center' 
+                        textAlign='center'
                         mt={2}
                     >
                         {title}
