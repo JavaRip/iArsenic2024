@@ -37,12 +37,13 @@ export function useWells() {
                     headers.authorization = `Bearer ${token?.id}`
                 }
 
-                const res = await fetch(`/api/v1/self/wells`, {
+                const res = await fetch(`/api/v1/wells`, {
                     headers,
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch wells');
-                return res.json();
+                const data = await res.json();
+                return data.wells
             },
         });
     };

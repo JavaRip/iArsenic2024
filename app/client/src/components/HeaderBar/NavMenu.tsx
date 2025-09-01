@@ -1,27 +1,28 @@
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import BookIcon from '@mui/icons-material/Book';
+import Box from '@mui/material/Box';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import EmailIcon from '@mui/icons-material/Email';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import GroupsIcon from '@mui/icons-material/Groups';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import InfoIcon from '@mui/icons-material/Info';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LocalDrinkIcon from '@mui/icons-material/LocalDrink';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import GroupsIcon from '@mui/icons-material/Groups';
-import FmdGoodIcon from '@mui/icons-material/FmdGood';
-import EmailIcon from '@mui/icons-material/Email';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
-import InfoIcon from '@mui/icons-material/Info';
-import Box from '@mui/material/Box';
-import PublicIcon from '@mui/icons-material/Public';
 import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
+import PublicIcon from '@mui/icons-material/Public';
+import TranslatableText from '../TranslatableText';
 import { navigate } from 'wouter/use-browser-location';
 import { SvgIconComponent } from '@mui/icons-material';
-import { Avatar, Button, keyframes, Stack, Typography } from '@mui/material';
+import { Avatar, Button, Stack, Typography } from '@mui/material';
 import { useLanguage } from '../../utils/useLanguage';
-import TranslatableText from '../TranslatableText';
 
 interface props {
     open: boolean;
@@ -55,15 +56,6 @@ function NavListItem(
     );
 }
 
-const shine = keyframes`
-    0% {
-        background-position: 0% 50%;
-    }
-    100% {
-        background-position: 200% 50%;
-    }
-`;
-
 export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
     const { setLanguage } = useLanguage();
 
@@ -71,44 +63,11 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
         <Drawer open={open} onClose={() => setOpen(false)}>
             <Box sx={{ width: 300 }} onClick={() => setOpen(false)}>
                 <List>
-                    <ListItem key='launch-event'>
-                        <Box
-                            sx={{
-                                p: '2px',
-                                borderRadius: '12px',
-                                background: 'linear-gradient(270deg, #00ffcc, #ff00cc, #00ffcc)',
-                                backgroundSize: '400% 400%',
-                                animation: `${shine} 18s ease-in-out infinite alternate`,
-                                height: '100%',
-                                width: '100%',
-                            }}
-                            onClick={() => navigate(`/launch-event`)}
-                        >
-                            <Box
-                                sx={{
-                                    backgroundColor: 'background.paper',
-                                    borderRadius: '10px',
-                                    margin: '1px',
-                                }}
-                            >
-                                <ListItemButton sx={{ padding: '20px' }}>
-                                    <ListItemIcon>
-                                        <RocketLaunchIcon />
-                                    </ListItemIcon>
-                                    <ListItemText 
-                                        primary={
-                                            <TranslatableText
-                                                english="Launch Event"
-                                                bengali="লঞ্চ ইভেন্ট"
-                                                variant="body1"
-                                            />
-                                        }
-                                    />
-                                </ListItemButton>
-                            </Box>
-                        </Box>
-                    </ListItem>
-
+                    <NavListItem
+                        path='blog'
+                        Icon={BookIcon}
+                        label={<TranslatableText english="Blog" bengali="" variant="body1" />}
+                    />
                     <NavListItem
                         path='landing'
                         Icon={AccountCircleIcon}
@@ -133,6 +92,11 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         path='map'
                         Icon={FmdGoodIcon}
                         label={<TranslatableText english="Maps" bengali="মানচিত্র" variant="body1" />}
+                    />
+                    <NavListItem
+                        path='usage-charts'
+                        Icon={BarChartIcon}
+                        label={<TranslatableText english="Usage Charts" bengali="" variant="body1" />}
                     />
                     {/* <NavListItem
                         path='login'

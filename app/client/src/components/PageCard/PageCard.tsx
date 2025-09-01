@@ -6,6 +6,7 @@ interface StandardCardProps {
     gap?: string;
     sx?: SxProps<Theme>;
     variant?: "outlined" | "elevation";
+    expandable?: string; // px value
 }
 
 export default function StandardCard({ 
@@ -13,7 +14,16 @@ export default function StandardCard({
     sx, 
     variant = "outlined",
     gap = '1rem',
+    expandable,
 }: StandardCardProps) {
+
+    const expandableStyle = {
+        width: expandable,
+        maxWidth: '100vw',
+        mx: 'auto',
+        px: 2,
+    }
+
     return (
         <Card
             variant={variant}
@@ -25,6 +35,7 @@ export default function StandardCard({
                 display: "flex",
                 flexDirection: "column",
                 gap,
+                ...(expandable ? expandableStyle : {}),
                 ...sx,
             }}
         >

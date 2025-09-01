@@ -2,11 +2,13 @@ import { Route, Router, Switch } from 'wouter';
 import { createTheme } from '@mui/material/styles';
 import { Stack, ThemeProvider } from '@mui/material';
 import {
+    BlogIndex,
     Briefing,
     Depth,
     Flooding,
     ForgotPassword,
     Landing,
+    LaunchEvent,
     Login,
     Map,
     MyWells,
@@ -23,10 +25,10 @@ import {
     Staining,
     StainingGuide,
     UnderstandingRisk,
+    UsageCharts,
     VerifyEmail,
     Well,
     WellInUse,
-    LaunchEvent,
 } from './pages';
 
 import { HeaderBar } from './components';
@@ -79,10 +81,11 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
+                            <Route path='/blog' component={BlogIndex} />
+                            <Route path='/blog/launch-event' component={LaunchEvent} />
                             <Route path='/briefing' component={Briefing} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
-                            <Route path='/launch-event' component={LaunchEvent} />
                             <Route path='/login' component={Login} />
                             <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
@@ -91,6 +94,7 @@ function App() {
                             <Route path='/sign-up' component={SignUp} />
                             <Route path='/staining-guide' component={StainingGuide} />
                             <Route path='/understanding-risk' component={UnderstandingRisk} />
+                            <Route path='/usage-charts' component={UsageCharts} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
                             <Route path='/well/:id' component={Well} />
                             <Route path='/well/:id/depth' component={Depth} />

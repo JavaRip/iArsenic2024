@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/x-charts": "^7.29.1",
     "@tanstack/react-query": "^5.75.4",
     "@turf/centroid": "^7.2.0",
     "dotenv": "^16.4.5",
