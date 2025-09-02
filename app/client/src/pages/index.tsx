@@ -3,7 +3,7 @@ export { default as Depth } from './Depth';
 export { default as Flooding } from './Flooding';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as Landing } from './Landing';
-export { BlogIndex, LaunchEvent } from './Blog';
+export { BlogIndex, LaunchEvent, LaunchEventBlog } from './Blog';
 export { default as Login } from './Login';
 export { default as Map } from './Map';
 export { default as MyWells } from './MyWells';

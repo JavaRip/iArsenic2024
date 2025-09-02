@@ -3,18 +3,18 @@ import PageCard from "../../components/PageCard";
 import { navigate } from "wouter/use-browser-location";
 
 interface BlogListItemProps {
-  title: string,
-  summary: string,
-  date: string | Date,
-  path: string,
-  coverImage: { src: string; alt: string },
-  authorImage: { src: string; alt: string },
-  authorName: string,
+    title: string,
+    summary: string,
+    date: string | Date,
+    path: string,
+    coverImage: { src: string; alt: string },
+    authorImage: { src: string; alt: string },
+    authorName: string,
 };
 
 function formatDate(d: string | Date) {
-  const date = new Date(d);
-  return date.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "2-digit" });
+    const date = new Date(d);
+    return date.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "2-digit" });
 }
 
 export function BlogListItem({
@@ -28,7 +28,7 @@ export function BlogListItem({
     return (
         <PageCard expandable='900px'>
             <Box
-                onClick={() => navigate('/blog/launch-event')}
+                onClick={() => navigate('/blog/launch-event-blog')}
                 sx={{ cursor: 'pointer' }}
             >
                 <Stack 

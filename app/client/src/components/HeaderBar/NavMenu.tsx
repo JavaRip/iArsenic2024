@@ -66,7 +66,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <NavListItem
                         path='blog'
                         Icon={BookIcon}
-                        label={<TranslatableText english="Blog" bengali="" variant="body1" />}
+                        label={<TranslatableText english="Blog" bengali="ব্লগ" variant="body1" />}
                     />
                     <NavListItem
                         path='landing'
@@ -96,7 +96,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <NavListItem
                         path='usage-charts'
                         Icon={BarChartIcon}
-                        label={<TranslatableText english="Usage Charts" bengali="" variant="body1" />}
+                        label={<TranslatableText english="Usage Charts" bengali="ব্যবহারের চা" variant="body1" />}
                     />
                     {/* <NavListItem
                         path='login'

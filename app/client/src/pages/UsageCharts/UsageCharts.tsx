@@ -144,7 +144,7 @@ export default function Depth(): JSX.Element {
         <>
             <TranslatableText
                 english='Usage Charts'
-                bengali=''
+                bengali='ব্যবহারের চা'
                 mb='1rem'
                 variant='h4'
                 textAlign='center'
@@ -170,7 +170,7 @@ export default function Depth(): JSX.Element {
             <PageCard expandable="1280px">
                 <TranslatableText 
                     english='Usage per day - past 14 days'
-                    bengali=''
+                    bengali="দৈনিক ব্যবহার - গত ১৪ দিন"
                     mb='1rem'
                     textAlign="center"
                     variant='h5' 
@@ -203,7 +203,7 @@ export default function Depth(): JSX.Element {
             <PageCard expandable="1280px">
                 <TranslatableText 
                     english='All Time Cumulative Data'
-                    bengali=''
+                    bengali="সর্বমোট সম্মিলিত তথ্য"
                     mb='1rem'
                     textAlign="center"
                     variant='h5' 

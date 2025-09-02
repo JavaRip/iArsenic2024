@@ -9,6 +9,7 @@ import {
     ForgotPassword,
     Landing,
     LaunchEvent,
+    LaunchEventBlog,
     Login,
     Map,
     MyWells,
@@ -83,6 +84,7 @@ function App() {
                         >
                             <Route path='/blog' component={BlogIndex} />
                             <Route path='/blog/launch-event' component={LaunchEvent} />
+                            <Route path='/blog/launch-event-blog' component={LaunchEventBlog} />
                             <Route path='/briefing' component={Briefing} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
