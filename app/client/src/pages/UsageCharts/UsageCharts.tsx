@@ -234,11 +234,29 @@ export default function Depth(): JSX.Element {
                     variant='h5' 
                 />
                   <LineChart
+                    className="english"
                     xAxis={[{ data: lineLabels, scaleType: "point" }]}
                     series={[
                         { label: "All wells", data: allWellsCumulative },
                         { label: "Geolocated", data: geolocatedWellsCumulative },
                         { label: "Geolocated & Predicted", data: predictedWellsCumulative },
+                    ]}
+                    height={360}
+                    margin={{ left: 48, right: 16, top: 16, bottom: 96 }}
+                    slotProps={{
+                        legend: {
+                            position: { vertical: "bottom", horizontal: "middle" },
+                            direction: "row",
+                        },
+                    }}
+                />
+                <LineChart
+                    className="bengali"
+                    xAxis={[{ data: lineLabels, scaleType: "point" }]}
+                    series={[
+                        { label: "সব নলকূপ", data: allWellsCumulative },
+                        { label: "অবস্থানসহ নলকূপ", data: geolocatedWellsCumulative },
+                        { label: "অবস্থান ও পূর্বাভাস সহ নলকূপ", data: predictedWellsCumulative },
                     ]}
                     height={360}
                     margin={{ left: 48, right: 16, top: 16, bottom: 96 }}
