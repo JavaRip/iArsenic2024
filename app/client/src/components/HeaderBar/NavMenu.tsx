@@ -96,7 +96,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <NavListItem
                         path='usage-charts'
                         Icon={BarChartIcon}
-                        label={<TranslatableText english="Usage Charts" bengali="ব্যবহারের চা" variant="body1" />}
+                        label={<TranslatableText english="Usage Charts" bengali="ব্যবহার পরিসংখ্যান" variant="body1" />}
                     />
                     {/* <NavListItem
                         path='login'
@@ -117,7 +117,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                                 primary={
                                     <TranslatableText
                                         english='ARRP DataViewer'
-                                        bengali='ARRP DataViewer'
+                                        bengali='এআরআরপি ডেটা ভিজ্যুয়ালাইজার'
                                         variant='body1'
                                     />
                                 } 
