@@ -144,7 +144,7 @@ export default function Depth(): JSX.Element {
         <>
             <TranslatableText
                 english='Usage Charts'
-                bengali='ব্যবহারের চা'
+                bengali='ব্যবহার পরিসংখ্যান'
                 mb='1rem'
                 variant='h4'
                 textAlign='center'
@@ -176,6 +176,7 @@ export default function Depth(): JSX.Element {
                     variant='h5' 
                 />
                 <BarChart
+                    className='english'
                     xAxis={[{ data: labels, scaleType: "band" }]}
                     series={[
                         { 
@@ -186,6 +187,30 @@ export default function Depth(): JSX.Element {
                             data: geolocatedBar,
                         }, { 
                             label: "Geolocated & Predicted", 
+                            data: predictedBar,
+                        },
+                    ]}
+                    height={360}
+                    margin={{ left: 48, right: 16, top: 16, bottom: 96 }}
+                    slotProps={{
+                        legend: {
+                            position: { vertical: 'bottom', horizontal: 'middle' },
+                            direction: 'row',
+                        }
+                    }}
+                />
+                <BarChart
+                    className='bengali'
+                    xAxis={[{ data: labels, scaleType: "band" }]}
+                    series={[
+                        { 
+                            label: "সব নলকূপ", 
+                            data: allWellsBar,
+                        }, { 
+                            label: "অবস্থানসহ নলকূপ", 
+                            data: geolocatedBar,
+                        }, { 
+                            label: "অবস্থান ও পূর্বাভাস সহ নলকূপ", 
                             data: predictedBar,
                         },
                     ]}
