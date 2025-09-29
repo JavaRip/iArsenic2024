@@ -121,6 +121,10 @@ export default function MapInterface({
                     backgroundColor: 'white',
                 }}
             >
+                <TranslatableText
+                    english='Data Filter' 
+                    bengali='BENGALI PLACEHOLDEr'
+                />
                 <FormControlLabel
                     control={
                         <Checkbox
@@ -140,6 +144,10 @@ export default function MapInterface({
                         width: '320px',
                     }} 
                 >
+                    <TranslatableText
+                        english='Date Range Filter'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
                     <Slider
                         onChange={handleDateFilterChange}
                         value={

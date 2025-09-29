@@ -78,10 +78,29 @@ export default function Map({
         ...new Set(wells.map(w => (
             String(w.createdAt).split('T')[0]
         )))
-    ]
-    const filteredWells = drinkingOnly
-        ? wells.filter(w => w.wellInUse)
-        : wells;
+    ].sort()
+
+    function toDayString(d: Date | string) {
+        return (d instanceof Date ? d : new Date(d)).toISOString().split("T")[0];
+    }
+
+    const filteredWells = (() => {
+        let list = wells;
+
+        if (drinkingOnly) {
+            list = list.filter(w => w.wellInUse);
+        }
+
+        if (dateRange?.from && dateRange?.to) {
+            const { from, to } = dateRange; // both 'YYYY-MM-DD'
+            list = list.filter(w => {
+                const day = toDayString(w.createdAt);
+                return day >= from && day <= to; // inclusive
+            });
+        }
+
+        return list;
+    })();
 
     return (
         <Stack 
