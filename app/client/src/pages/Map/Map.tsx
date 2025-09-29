@@ -1,16 +1,15 @@
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './map.css';
-import { CircularProgress, Stack, SxProps, Theme } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { LatLngExpression, GeoJSON } from 'leaflet';
-import { Well, WellSchema } from 'iarsenic-types';
-import { RegionTranslations } from '../../types';
-import RegionTranslationsFetcher from '../../utils/RegionTranslationsFetcher';
+import { CircularProgress, Stack, SxProps, Theme, Typography } from '@mui/material';
+import { useState } from 'react';
+import { LatLngExpression } from 'leaflet';
 import Markers from './markers';
 import UpaMap from './upaMap';
-import { useAccessToken } from '../../utils/useAccessToken';
 import MapInterface from './MapInterface';
+import useRegionTranslations from '../../hooks/useRegionTranslations';
+import useInteractiveMap from './hooks/useInteractiveMap';
+import { useWells } from '../../utils/useWells';
 
 type MapProps = {
     containerSx?: SxProps<Theme>;
@@ -25,52 +24,32 @@ export default function Map({
 }: MapProps) {
     const highlightId = new URLSearchParams(window.location.search).get('highlight');
     const position: LatLngExpression = [23.8041, 90.4152];
+    const { 
+        data: regionTranslations, 
+        isLoading: rtLoading, 
+        error: rtError,
+    } = useRegionTranslations()
 
-    const [interactiveMap, setInteractiveMap] = useState<GeoJSON>();
-    const { data: token } = useAccessToken()
-    const [wells, setWells] = useState<Well[]>();
-    const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
-    const [drinkingOnly, setDrinkingOnly] = useState(false); // <-- NEW
+    const {
+        data: interactiveMap,
+        isLoading: imLoading,
+        error: imError,
+    } = useInteractiveMap()
+  
+    const { getWells } = useWells();
+    const {
+        data: wells,
+        isLoading: wellsLoading,
+        error: wellsError,
+    } = getWells()
 
-    async function getInteractiveMap() {
-        const res = await fetch(`/interactive-map.geojson`);
-        const mapData = await res.json();
-        setInteractiveMap(mapData);
-    }
+    const [drinkingOnly, setDrinkingOnly] = useState(false);
+    const [dateRange, setDateRange] = useState<{ 
+        from: string, 
+        to: string,
+    }>()
 
-    async function getPredictionPinData() {
-        const headers: HeadersInit = {}
-        if (token) headers['authorization'] = `Bearer ${token.id}`
-
-        const res = await fetch(`/api/v1/wells`, { headers });
-        if (!res.ok) throw new Error(`Failed to fetch well data:, ${res}`);
-
-        const data = await res.json();
-        const parsedWells = data.wells.map((well: any) =>
-            WellSchema.parse({
-                ...well,
-                createdAt: new Date(well.createdAt),
-            })
-        );
-
-        setWells(parsedWells);
-    }
-
-    async function getRegionTranslations() {
-        const translations = await RegionTranslationsFetcher();
-        setRegionTranslations(translations);
-    }
-
-    useEffect(() => {
-        getRegionTranslations();
-        getInteractiveMap();
-    }, []);
-
-    useEffect(() => {
-        getPredictionPinData();
-    }, []);
-
-    if (!interactiveMap || !regionTranslations || !wells) return (
+    if (imLoading || rtLoading || wellsLoading) return (
         <Stack
             height={hideInterface ? "100%" : '100vh'}
             width="100%"
@@ -81,6 +60,25 @@ export default function Map({
         </Stack>
     );
 
+    if (
+        !wells || !regionTranslations || !interactiveMap ||
+        rtError || imError || wellsError
+    ) return (
+        <Stack
+            height={hideInterface ? "100%" : '100vh'}
+            width="100%"
+            justifyContent="center"
+            alignItems="center"
+        >
+            <Typography>Error loading data for map</Typography>
+        </Stack>
+    )
+
+    const availableDates = [
+        ...new Set(wells.map(w => (
+            String(w.createdAt).split('T')[0]
+        )))
+    ]
     const filteredWells = drinkingOnly
         ? wells.filter(w => w.wellInUse)
         : wells;
@@ -130,7 +128,10 @@ export default function Map({
             {!hideInterface && (
                 <MapInterface
                     drinkingOnly={drinkingOnly}
+                    availableDates={availableDates}
                     setDrinkingOnly={setDrinkingOnly}
+                    dateRange={dateRange}
+                    setDateRange={setDateRange}
                 />
             )}
         </Stack>
