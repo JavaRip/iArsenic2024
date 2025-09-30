@@ -6,6 +6,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { predictionToRiskFactor } from "./utils/predictionToRiskFactor";
 import { RiskFilter } from "./Map";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface MapInterfaceProps {
     drinkingOnly: boolean,
@@ -80,44 +81,52 @@ export default function MapInterface({
                 open={open}
                 variant='persistent'
             >
-                <Stack 
-                    direction='row'
-                >
-                    <Stack
+                <Stack direction='row' justifyContent='space-between'>
+                    <Stack 
                         direction='row'
-                        alignItems='center'
-                        ml={2}
-                        columnGap={3}
-                        onClick={() => setLanguage('english')}
-                        sx={{ cursor: 'pointer' }}
+                        ml='16px'
+                        mt='16px'
                     >
-                        <Button
-                            startIcon={
-                                <Avatar
-                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
-                                    src={`/british.png`}
-                                />
-                            }
-                        />
-                    </Stack>
+                        <Stack
+                            direction='row'
+                            alignItems='center'
+                            ml={2}
+                            columnGap={3}
+                            onClick={() => setLanguage('english')}
+                            sx={{ cursor: 'pointer' }}
+                        >
+                            <Button
+                                startIcon={
+                                    <Avatar
+                                        sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
+                                        src={`/british.png`}
+                                    />
+                                }
+                            />
+                        </Stack>
 
-                    <Stack
-                        direction='row'
-                        alignItems='center'
-                        ml={2}
-                        columnGap={3}
-                        onClick={() => setLanguage('bengali')}
-                        sx={{ cursor: 'pointer' }}
-                    >
-                        <Button
-                            startIcon={
-                                <Avatar
-                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
-                                    src={`/bangladesh.jpg`}
-                                />
-                            }
-                        />
+                        <Stack
+                            direction='row'
+                            alignItems='center'
+                            ml={2}
+                            columnGap={3}
+                            onClick={() => setLanguage('bengali')}
+                            sx={{ cursor: 'pointer' }}
+                        >
+                            <Button
+                                startIcon={
+                                    <Avatar
+                                        sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
+                                        src={`/bangladesh.jpg`}
+                                    />
+                                }
+                            />
+                        </Stack>
                     </Stack>
+                        
+                    <Button onClick={() => setOpen(false)}>
+                        <CloseIcon/>
+                    </Button>
                 </Stack>
 
                 <Box
@@ -126,11 +135,14 @@ export default function MapInterface({
                         right: 0,
                         zIndex: 1000,
                         p: 2,
-                        m: 2,
+                        mb: 2,
+                        ml: 2,
+                        mr: 2,
                         backgroundColor: 'white',
                     }}
                 >
                     <TranslatableText
+                        fontStyle='bold'
                         variant='h5'
                         english='Data Filter' 
                         bengali='BENGALI PLACEHOLDEr'
@@ -149,8 +161,9 @@ export default function MapInterface({
                             />
                         }
                     />
-                    <Stack>
+                    <Stack mt='16px'>
                         <TranslatableText
+                            fontWeight='bold'
                             english="Risk Level"
                             bengali="BENGALI PLACEHOLDER"
                         />
@@ -183,11 +196,13 @@ export default function MapInterface({
                         })}
                     </Stack>
                     <Box
+                        mt='16px'
                         sx={{
                             width: '320px',
                         }} 
                     >
                         <TranslatableText
+                            fontWeight='bold'
                             english='Date Range Filter'
                             bengali='BENGALI PLACEHOLDER'
                         />
