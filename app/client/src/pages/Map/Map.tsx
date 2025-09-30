@@ -10,12 +10,22 @@ import MapInterface from './MapInterface';
 import useRegionTranslations from '../../hooks/useRegionTranslations';
 import useInteractiveMap from './hooks/useInteractiveMap';
 import { useWells } from '../../utils/useWells';
+import { predictionToRiskKey } from './utils/predictionToRiskFactor';
 
 type MapProps = {
     containerSx?: SxProps<Theme>;
     hideInterface?: boolean;
     disablePointerEvents?: boolean;
 };
+
+export type RiskFilter = {
+    rare: boolean,
+    low: boolean,
+    medium: boolean,
+    high: boolean,
+    severe: boolean,
+    unknown: boolean,
+}
 
 export default function Map({ 
     containerSx,
@@ -48,6 +58,15 @@ export default function Map({
         from: string, 
         to: string,
     }>()
+
+    const [riskFilter, setRiskFilter] = useState<RiskFilter>({
+        rare: false,
+        low: false,
+        medium: false,
+        high: false,
+        severe: false,
+        unknown: false,
+    })
 
     if (imLoading || rtLoading || wellsLoading) return (
         <Stack
@@ -87,6 +106,26 @@ export default function Map({
     const filteredWells = (() => {
         let list = wells;
 
+        // only include wells that have prediction
+        list = wells.filter(w =>
+            w.riskAssesment != null &&
+            (w.mouzaGeolocation != null || w.geolocation != null) &&
+            w.division != null &&
+            w.district != null &&
+            w.upazila != null &&
+            w.union != null &&
+            w.mouza != null &&
+            w.staining != null &&
+            w.depth != null
+        );
+
+        list = list.filter((w) => {
+            const key = predictionToRiskKey(w.riskAssesment);
+            const filterRiskLevel = riskFilter[key]
+
+            if (!filterRiskLevel) return true
+        });
+
         if (drinkingOnly) {
             list = list.filter(w => w.wellInUse);
         }
@@ -119,7 +158,7 @@ export default function Map({
                 dragging={!disablePointerEvents}
                 doubleClickZoom={!disablePointerEvents}
                 keyboard={!disablePointerEvents}
-                zoomControl={!hideInterface}
+                zoomControl={false}
                 style={{ 
                     height: '100%',
                     width: '100%',
@@ -136,7 +175,7 @@ export default function Map({
                     disablePointerEvents={disablePointerEvents}
                     regionTranslations={regionTranslations}
                 />
-                <Markers 
+                <Markers
                     wells={filteredWells} 
                     regionTranslations={regionTranslations} 
                     highlightId={highlightId}
@@ -151,6 +190,8 @@ export default function Map({
                     setDrinkingOnly={setDrinkingOnly}
                     dateRange={dateRange}
                     setDateRange={setDateRange}
+                    riskFilter={riskFilter}
+                    setRiskFilter={setRiskFilter}
                 />
             )}
         </Stack>

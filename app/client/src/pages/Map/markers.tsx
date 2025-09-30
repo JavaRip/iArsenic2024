@@ -6,6 +6,7 @@ import { Typography } from '@mui/material';
 import getMapPin from '../../utils/getMapPin';
 import TranslatableText from '../../components/TranslatableText';
 import { Link } from 'wouter';
+import { predictionToRiskFactor } from './utils/predictionToRiskFactor';
 
 type props = {
     wells: Well[],
@@ -42,40 +43,9 @@ export default function Markers({
         return getMapPin(iconColor);
     }
 
-    function predictionToRiskFactor(
-        prediction: number | undefined
-    ): { english: string, bengali: string } {
-        switch (prediction) {
-            case 0.5:
-                return { english: 'Rare', bengali: 'বিরল' };
-            case 1.5:
-                return { english: 'Low', bengali: 'কম' };
-            case 2.5:
-                return { english: 'Medium', bengali: 'মাঝারি' };
-            case 3.5:
-                return { english: 'High', bengali: 'উচ্চ' };
-            case 4.5:
-                return { english: 'Severe', bengali: 'গুরুতর' };
-            default:
-                return { english: 'Unknown', bengali: 'N/A' };
-        }
-    }
-
-    const filteredWells = wells.filter(w =>
-        w.riskAssesment != null &&
-        (w.mouzaGeolocation != null || w.geolocation != null) &&
-        w.division != null &&
-        w.district != null &&
-        w.upazila != null &&
-        w.union != null &&
-        w.mouza != null &&
-        w.staining != null &&
-        w.depth != null
-    );
-
     return (
         <>
-            {filteredWells.map((w, index) => {
+            {wells.map((w, index) => {
                 return (
                     <Marker 
                         icon={getIcon(w.riskAssesment)} 
@@ -113,7 +83,7 @@ export default function Markers({
                                 <TranslatableText 
                                     variant='body1'
                                     english={`Risk Factor: ${predictionToRiskFactor(w.riskAssesment).english}`}
-                                    bengali={`ঝুঁকির মাত্রা: ${predictionToRiskFactor(w.riskAssesment).bengali}`} // chatgpt generated
+                                    bengali={`ঝুঁকির মাত্রা: ${predictionToRiskFactor(w.riskAssesment).bengali}`}
                                 />
 
                                 <TranslatableText 
