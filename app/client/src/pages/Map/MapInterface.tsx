@@ -143,7 +143,7 @@ export default function MapInterface({
                             }
                             label={
                                 <TranslatableText
-                                    english="Well in use"
+                                    english="Well in use Only"
                                     bengali="নলকূপ ব্যবহার"
                                 />
                             }
@@ -161,7 +161,7 @@ export default function MapInterface({
                             label={
                                 <TranslatableText
                                     english="Geolocated Only"
-                                    bengali=""
+                                    bengali="BENGALI PLACEHOLDER"
                                 />
                             }
                         />

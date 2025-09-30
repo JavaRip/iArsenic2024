@@ -61,12 +61,12 @@ export default function Map({
     }>()
 
     const [riskFilter, setRiskFilter] = useState<RiskFilter>({
-        rare: false,
-        low: false,
-        medium: false,
-        high: false,
-        severe: false,
-        unknown: false,
+        rare: true,
+        low: true,
+        medium: true,
+        high: true,
+        severe: true,
+        unknown: true,
     })
 
     if (imLoading || rtLoading || wellsLoading) return (
@@ -124,7 +124,7 @@ export default function Map({
             const key = predictionToRiskKey(w.riskAssesment);
             const filterRiskLevel = riskFilter[key]
 
-            if (!filterRiskLevel) return true
+            if (filterRiskLevel) return true
         });
 
         if (geolocatedOnly) {
