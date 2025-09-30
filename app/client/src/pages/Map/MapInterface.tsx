@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, Checkbox, Avatar, Button, Stack, Slider, Drawer, Fab } from "@mui/material";
+import { Box, FormControlLabel, Checkbox, Avatar, Button, Stack, Slider, Drawer, Fab, Typography } from "@mui/material";
 import { useLanguage } from "../../utils/useLanguage";
 import TranslatableText from "../../components/TranslatableText";
 import { useState } from "react";
@@ -7,6 +7,7 @@ import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import { predictionToRiskFactor } from "./utils/predictionToRiskFactor";
 import { RiskFilter } from "./Map";
 import CloseIcon from '@mui/icons-material/Close';
+import { navigate } from "wouter/use-browser-location";
 
 interface MapInterfaceProps {
     drinkingOnly: boolean,
@@ -16,6 +17,8 @@ interface MapInterfaceProps {
     setDateRange: (dates: { from: string, to: string }) => void
     riskFilter: RiskFilter
     setRiskFilter: React.Dispatch<React.SetStateAction<RiskFilter>>;
+    geolocatedOnly: boolean
+    setGeolocatedOnly: (value: boolean) => void
 }
 
 export default function MapInterface({ 
@@ -26,6 +29,8 @@ export default function MapInterface({
     setDateRange,
     riskFilter,
     setRiskFilter,
+    geolocatedOnly,
+    setGeolocatedOnly,
 }: MapInterfaceProps) {
     const { setLanguage } = useLanguage();
     const [open, setOpen] = useState(false)
@@ -81,51 +86,30 @@ export default function MapInterface({
                 open={open}
                 variant='persistent'
             >
-                <Stack direction='row' justifyContent='space-between'>
-                    <Stack 
-                        direction='row'
-                        ml='16px'
-                        mt='16px'
+                <Stack
+                    height='48px'
+                    direction='row'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    sx={{
+                        bgcolor: 'primary.main',
+                        color: 'secondary.main',
+                    }}
+                >
+                    <Typography 
+                        onClick={() => navigate(`/`)}
+                        ml='16px' 
+                        variant='h6'
+                        sx={{
+                            cursor: 'pointer',
+                        }}
                     >
-                        <Stack
-                            direction='row'
-                            alignItems='center'
-                            ml={2}
-                            columnGap={3}
-                            onClick={() => setLanguage('english')}
-                            sx={{ cursor: 'pointer' }}
-                        >
-                            <Button
-                                startIcon={
-                                    <Avatar
-                                        sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
-                                        src={`/british.png`}
-                                    />
-                                }
-                            />
-                        </Stack>
-
-                        <Stack
-                            direction='row'
-                            alignItems='center'
-                            ml={2}
-                            columnGap={3}
-                            onClick={() => setLanguage('bengali')}
-                            sx={{ cursor: 'pointer' }}
-                        >
-                            <Button
-                                startIcon={
-                                    <Avatar
-                                        sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
-                                        src={`/bangladesh.jpg`}
-                                    />
-                                }
-                            />
-                        </Stack>
-                    </Stack>
-                        
-                    <Button onClick={() => setOpen(false)}>
-                        <CloseIcon/>
+                        iArsenic
+                    </Typography>
+                    <Button 
+                        onClick={() => setOpen(false)}
+                    >
+                        <CloseIcon sx={{ color: 'secondary.main' }} />
                     </Button>
                 </Stack>
 
@@ -135,32 +119,53 @@ export default function MapInterface({
                         right: 0,
                         zIndex: 1000,
                         p: 2,
-                        mb: 2,
                         ml: 2,
                         mr: 2,
                         backgroundColor: 'white',
                     }}
                 >
                     <TranslatableText
-                        fontStyle='bold'
+                        fontWeight='bold'
                         variant='h5'
                         english='Data Filter' 
                         bengali='BENGALI PLACEHOLDEr'
                     />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={drinkingOnly}
-                                onChange={(e) => setDrinkingOnly(e.target.checked)}
-                            />
-                        }
-                        label={
-                            <TranslatableText
-                                english="Well in use"
-                                bengali="নলকূপ ব্যবহার"
-                            />
-                        }
-                    />
+                    <Stack>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    sx={{
+                                        color: 'primary.main'
+                                    }}
+                                    checked={drinkingOnly}
+                                    onChange={(e) => setDrinkingOnly(e.target.checked)}
+                                />
+                            }
+                            label={
+                                <TranslatableText
+                                    english="Well in use"
+                                    bengali="নলকূপ ব্যবহার"
+                                />
+                            }
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    sx={{
+                                        color: 'primary.main'
+                                    }}
+                                    checked={geolocatedOnly}
+                                    onChange={(e) => setGeolocatedOnly(e.target.checked)}
+                                />
+                            }
+                            label={
+                                <TranslatableText
+                                    english="Geolocated Only"
+                                    bengali=""
+                                />
+                            }
+                        />
+                    </Stack>
                     <Stack mt='16px'>
                         <TranslatableText
                             fontWeight='bold'
@@ -176,6 +181,9 @@ export default function MapInterface({
                                     key={val}
                                     control={
                                         <Checkbox
+                                            sx={{
+                                                color: 'primary.main'
+                                            }}
                                             checked={riskFilter[key]}
                                             onChange={(e) => (
                                                 setRiskFilter(prev => ({
@@ -202,11 +210,16 @@ export default function MapInterface({
                         }} 
                     >
                         <TranslatableText
+                            mb='8px'
                             fontWeight='bold'
                             english='Date Range Filter'
                             bengali='BENGALI PLACEHOLDER'
                         />
                         <Slider
+                            sx={{ 
+                                mx: '36px',
+                                width: '240px',
+                            }}
                             onChange={handleDateFilterChange}
                             value={
                                 dateRange == null ?
@@ -221,9 +234,68 @@ export default function MapInterface({
                             max={availableDates.length - 1}
                             valueLabelFormat={(v) => getDateLabel(v)}
                             getAriaValueText={(v) => getDateLabel(v)}
+                            step={1}
+                            marks={[ 
+                                { 
+                                    value: 0, label: getDateLabel(0),
+                                },
+                                { 
+                                    value: availableDates.length - 1, 
+                                    label: getDateLabel(availableDates.length - 1),
+                                }
+                            ]}
                         />
                     </Box>
                 </Box>
+
+                <TranslatableText
+                    ml={2}
+                    my={2}
+                    mt={0}
+                    english='Select Language' 
+                    bengali='ভাষা নির্বাচন করুন'
+                    variant='h6'
+                />
+
+                <Stack>
+                    <Stack
+                        direction='row'
+                        alignItems='center'
+                        ml={2}
+                        columnGap={3}
+                        onClick={() => setLanguage('english')}
+                        sx={{ cursor: 'pointer' }}
+                    >
+                        <Button
+                            startIcon={
+                                <Avatar
+                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
+                                    src={`/british.png`}
+                                />
+                            }
+                        />
+                        <Typography>English</Typography>
+                    </Stack>
+
+                    <Stack
+                        direction='row'
+                        alignItems='center'
+                        ml={2}
+                        columnGap={3}
+                        onClick={() => setLanguage('bengali')}
+                        sx={{ cursor: 'pointer' }}
+                    >
+                        <Button
+                            startIcon={
+                                <Avatar
+                                    sx={{ height: '100%', width: '4rem', borderRadius: '8px' }}
+                                    src={`/bangladesh.jpg`}
+                                />
+                            }
+                        />
+                        <Typography>বাংলা</Typography>
+                    </Stack>
+                </Stack>
             </Drawer>
         </>
     );

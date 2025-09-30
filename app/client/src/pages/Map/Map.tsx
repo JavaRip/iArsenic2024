@@ -54,6 +54,7 @@ export default function Map({
     } = getWells()
 
     const [drinkingOnly, setDrinkingOnly] = useState(false);
+    const [geolocatedOnly, setGeolocatedOnly] = useState(false);
     const [dateRange, setDateRange] = useState<{ 
         from: string, 
         to: string,
@@ -126,6 +127,10 @@ export default function Map({
             if (!filterRiskLevel) return true
         });
 
+        if (geolocatedOnly) {
+            list = list.filter(w => w.geolocation != null);
+        }
+
         if (drinkingOnly) {
             list = list.filter(w => w.wellInUse);
         }
@@ -192,6 +197,8 @@ export default function Map({
                     setDateRange={setDateRange}
                     riskFilter={riskFilter}
                     setRiskFilter={setRiskFilter}
+                    setGeolocatedOnly={setGeolocatedOnly}
+                    geolocatedOnly={geolocatedOnly}
                 />
             )}
         </Stack>
