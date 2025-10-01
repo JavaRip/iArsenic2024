@@ -104,7 +104,7 @@ export default function Map({
         return (d instanceof Date ? d : new Date(d)).toISOString().split("T")[0];
     }
 
-    const filteredWells = (() => {
+    const predictedWells = (() => {
         let list = wells;
 
         // only include wells that have prediction
@@ -119,6 +119,12 @@ export default function Map({
             w.staining != null &&
             w.depth != null
         );
+
+        return list
+    })()
+
+    const filteredWells = (() => {
+        let list = predictedWells
 
         list = list.filter((w) => {
             const key = predictionToRiskKey(w.riskAssesment);
@@ -199,6 +205,8 @@ export default function Map({
                     setRiskFilter={setRiskFilter}
                     setGeolocatedOnly={setGeolocatedOnly}
                     geolocatedOnly={geolocatedOnly}
+                    numWells={filteredWells.length}
+                    totalWells={predictedWells.length}
                 />
             )}
         </Stack>

@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, Checkbox, Avatar, Button, Stack, Slider, Drawer, Fab, Typography, Popover } from "@mui/material";
+import { Box, FormControlLabel, Checkbox, Avatar, Button, Stack, Slider, Drawer, Fab, Typography, Popover, Divider } from "@mui/material";
 import { useLanguage } from "../../utils/useLanguage";
 import TranslatableText from "../../components/TranslatableText";
 import { useState } from "react";
@@ -20,6 +20,8 @@ interface MapInterfaceProps {
     setRiskFilter: React.Dispatch<React.SetStateAction<RiskFilter>>;
     geolocatedOnly: boolean
     setGeolocatedOnly: (value: boolean) => void
+    numWells: number
+    totalWells: number
 }
 
 export default function MapInterface({ 
@@ -32,6 +34,8 @@ export default function MapInterface({
     setRiskFilter,
     geolocatedOnly,
     setGeolocatedOnly,
+    numWells,
+    totalWells,
 }: MapInterfaceProps) {
     const { setLanguage } = useLanguage();
     const [open, setOpen] = useState(false)
@@ -304,6 +308,19 @@ export default function MapInterface({
                     </Box>
                 </Box>
 
+                <Stack justifyItems='center'>
+                    <TranslatableText
+                        ml={2}
+                        my={2}
+                        mt={0}
+                        english={`Showing ${numWells} / ${totalWells} Wells`}
+                        bengali={`${numWells} / ${totalWells}`}
+                        variant='h6'
+                    />
+                </Stack>
+
+                <Divider/>
+
                 <TranslatableText
                     ml={2}
                     my={2}
@@ -311,6 +328,7 @@ export default function MapInterface({
                     english='Select Language' 
                     bengali='ভাষা নির্বাচন করুন'
                     variant='h6'
+                    fontWeight='bold'
                 />
 
                 <Stack>
