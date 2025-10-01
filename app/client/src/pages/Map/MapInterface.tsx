@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, Checkbox, Avatar, Button, Stack, Slider, Drawer, Fab, Typography } from "@mui/material";
+import { Box, FormControlLabel, Checkbox, Avatar, Button, Stack, Slider, Drawer, Fab, Typography, Popover } from "@mui/material";
 import { useLanguage } from "../../utils/useLanguage";
 import TranslatableText from "../../components/TranslatableText";
 import { useState } from "react";
@@ -8,6 +8,7 @@ import { predictionToRiskFactor } from "./utils/predictionToRiskFactor";
 import { RiskFilter } from "./Map";
 import CloseIcon from '@mui/icons-material/Close';
 import { navigate } from "wouter/use-browser-location";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 interface MapInterfaceProps {
     drinkingOnly: boolean,
@@ -34,6 +35,9 @@ export default function MapInterface({
 }: MapInterfaceProps) {
     const { setLanguage } = useLanguage();
     const [open, setOpen] = useState(false)
+
+    const [geoAnchorEl, setGeoAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [drinkAnchorEl, setDrinkAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     function handleDateFilterChange(_: Event, newValue: number | number[]) {
         if (!Array.isArray(newValue)) throw new Error('set dates value is not array')
@@ -131,40 +135,92 @@ export default function MapInterface({
                         bengali='BENGALI PLACEHOLDEr'
                     />
                     <Stack>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    sx={{
-                                        color: 'primary.main'
-                                    }}
-                                    checked={drinkingOnly}
-                                    onChange={(e) => setDrinkingOnly(e.target.checked)}
-                                />
-                            }
-                            label={
-                                <TranslatableText
-                                    english="Well in use Only"
-                                    bengali="নলকূপ ব্যবহার"
-                                />
-                            }
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    sx={{
-                                        color: 'primary.main'
-                                    }}
-                                    checked={geolocatedOnly}
-                                    onChange={(e) => setGeolocatedOnly(e.target.checked)}
-                                />
-                            }
-                            label={
-                                <TranslatableText
-                                    english="Geolocated Only"
-                                    bengali="BENGALI PLACEHOLDER"
-                                />
-                            }
-                        />
+                        <Stack direction='row' justifyContent='space-between'>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        sx={{
+                                            color: 'primary.main'
+                                        }}
+                                        checked={drinkingOnly}
+                                        onChange={(e) => setDrinkingOnly(e.target.checked)}
+                                    />
+                                }
+                                label={
+                                    <TranslatableText
+                                        english="Well In Use Only"
+                                        bengali="নলকূপ ব্যবহার"
+                                    />
+                                }
+                            />
+                            <Button onClick={(e) => setDrinkAnchorEl(e.currentTarget)}>
+                                <HelpOutlineIcon/>
+                            </Button>
+                            <Popover 
+                                id='drinking-popover'
+                                open={Boolean(drinkAnchorEl)}
+                                onClose={() => setDrinkAnchorEl(null)}
+                                anchorEl={drinkAnchorEl}
+                                anchorOrigin={{
+                                    vertical: 'center',
+                                    horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                            >
+                                <Box p={2} maxWidth='360px'>
+                                    <TranslatableText
+                                        english="This filter hides pins, where the user reported that the well is not in active use as a drinking water source."
+                                        bengali="BENGALI PLACEHOLDER"
+                                    />
+                                </Box>
+                            </Popover>
+                        </Stack>
+                        <Stack direction='row' justifyContent='space-between'>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        sx={{
+                                            color: 'primary.main'
+                                        }}
+                                        checked={geolocatedOnly}
+                                        onChange={(e) => setGeolocatedOnly(e.target.checked)}
+                                    />
+                                }
+                                label={
+                                    <TranslatableText
+                                        english="Geolocated Only"
+                                        bengali="BENGALI PLACEHOLDER"
+                                    />
+                                }
+                            />
+                            <Button onClick={(e) => setGeoAnchorEl(e.currentTarget)}>
+                                <HelpOutlineIcon/>
+                            </Button>
+                            <Popover 
+                                id='geolocation-popover'
+                                open={Boolean(geoAnchorEl)}
+                                onClose={() => setGeoAnchorEl(null)}
+                                anchorEl={geoAnchorEl}
+                                anchorOrigin={{
+                                    vertical: 'center',
+                                    horizontal: 'left',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                            >
+                                <Box p={2} maxWidth='360px'>
+                                    <TranslatableText
+                                        english="The pins get their geolocation from two possible sources. Either the centroid of the region entered by the user when generating the prediction, or the geolocation of the device. The geolocation of the device requires the user to be with the well when generating the prediction so if more likely to represent a real well user looking for a risk assesment of their well. This filter removes pins where the geolocation was not reported by the device."
+                                        bengali="BENGALI PLACEHOLDER"
+                                    />
+                                </Box>
+                            </Popover>
+                        </Stack>
                     </Stack>
                     <Stack mt='16px'>
                         <TranslatableText
