@@ -1,12 +1,12 @@
 import { Circle, Marker, Popup } from 'react-leaflet';
 import L, { LatLngExpression } from 'leaflet';
-import { RegionTranslations } from '../../types';
+import { RegionTranslations } from '../../../types';
 import { Well } from 'iarsenic-types';
 import { Typography } from '@mui/material';
-import getMapPin from '../../utils/getMapPin';
-import TranslatableText from '../../components/TranslatableText';
+import getMapPin from '../../../utils/getMapPin';
+import TranslatableText from '../../../components/TranslatableText';
 import { Link } from 'wouter';
-import { predictionToRiskFactor } from './utils/predictionToRiskFactor';
+import { predictionToRiskFactor } from '../utils/predictionToRiskFactor';
 
 type props = {
     wells: Well[],
