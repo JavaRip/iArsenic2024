@@ -43,7 +43,7 @@ from collections import defaultdict
 #  }
 
 # MAX_WORKERS = os.cpu_count()
-MAX_WORKERS = 16
+MAX_WORKERS = 1
 
 # Globals for use by sub processes (reduces memory usage)
 PATCH_LTE_90_DF = None
@@ -494,14 +494,22 @@ def generate_prediction_data(dropdown_data, mou_topo, training_data):
 
     training_data['region_key'] = training_data['Division'] + '-' + training_data['District'] + '-' + training_data['Upazila'] + '-' + training_data['Union'] + '-' + training_data['Mouza']
 
-    # filter geo data with no corresponding training data
-    # so we dont check these regions for training data
-    # when widening
-    geodata_in_training_data = geodata[geodata['region_key'].isin(training_data['region_key'])]
+    training_data = training_data.sample(frac=1, random_state=42).reset_index(drop=True)
+    split_idx = int(len(training_data) * 0.8)
+    train_df = training_data.iloc[:split_idx]
+    test_df = training_data.iloc[split_idx:]
+
+    test_filepath = os.path.join("output", "test_file_20.csv")
+    test_df.to_csv(test_filepath, index=False)
+
+    train_filepath = os.path.join("output", "train_file_20.csv")
+    train_df.to_csv(train_filepath, index=False)
+
+    geodata_in_training_data = geodata[geodata['region_key'].isin(train_df['region_key'])]
 
     run_prediction_jobs(
         dropdown_data,
         geodata_index,
-        training_data,
+        train_df,
         geodata_in_training_data,
     )

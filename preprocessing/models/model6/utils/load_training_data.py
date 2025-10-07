@@ -5,7 +5,7 @@ from pathlib import Path
 def run_training_data_generation():
     project_root = Path(__file__).resolve().parents[4]
     output_path = project_root / 'preprocessing/models/model6/output/training-data.json'
-    command = "npm i && node preprocessing/cli/csv-to-json.js -p data/*.csv -o preprocessing/models/model6/output/training-data.json"
+    command = "npm i && node --max-old-space-size=8192 preprocessing/cli/csv-to-json.js -p preprocessing/models/model6/input_data/* -o preprocessing/models/model6/output/training-data.json"
 
     try:
         subprocess.run(command, shell=True, check=True, cwd=project_root)

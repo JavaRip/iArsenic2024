@@ -17,6 +17,7 @@ firebase-functions/static/
 firebase-functions/firebase-debug.log
 firebase-functions/interactive-map/
 .firebase/
+!.gitkeep
 
 # Logs
 logs

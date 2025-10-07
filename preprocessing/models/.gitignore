@@ -1,4 +1,6 @@
 model6/output
 model6/model**
+model6/m150_10**
+model6/input_data/**
 model6/training-data.json
 __pycache__
