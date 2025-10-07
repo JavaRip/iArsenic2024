@@ -49,7 +49,7 @@ export default function LineChartComponent({ wells }: props) {
                 xAxis={[{ data: lineLabels, scaleType: "point" }]}
                 series={[
                     { label: "সব নলকূপ", data: allWellsCumulative },
-                    { label: "BENGALI PLACEHOLDER", data: predictedWellsCumulative },
+                    { label: "পূর্বাভাসকৃত নলকূপ", data: predictedWellsCumulative },
                     { label: "অবস্থানসহ নলকূপ", data: geolocatedWellsCumulative },
                     { label: "অবস্থান ও পূর্বাভাস সহ নলকূপ", data: geolocatedPredictedWellsCumulative },
                 ]}

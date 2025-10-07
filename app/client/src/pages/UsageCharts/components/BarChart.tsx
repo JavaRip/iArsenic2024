@@ -61,7 +61,7 @@ export default function BarChartComponent({ wells }: props) {
                         label: "সব নলকূপ", 
                         data: allWellsBar,
                     }, { 
-                        label: "BENGALI PLACEHOLDER", 
+                        label: "পূর্বাভাসকৃত নলকূপ", 
                         data: predictedBar,
                     }, { 
                         label: "অবস্থানসহ নলকূপ", 
