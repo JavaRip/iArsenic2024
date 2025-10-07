@@ -1,8 +1,8 @@
 import ReactDOMServer from "react-dom/server";
 import { GeoJSON as GeoJSONComponent } from 'react-leaflet';
 import { GeoJSON } from 'leaflet';
-import { RegionTranslations } from "../../types";
-import TranslatableText from "../../components/TranslatableText";
+import { RegionTranslations } from "../../../types";
+import TranslatableText from "../../../components/TranslatableText";
 
 type props = {
     interactiveMap: GeoJSON,
