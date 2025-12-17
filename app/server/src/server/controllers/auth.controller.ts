@@ -1,7 +1,29 @@
 import { Context } from "koa";
 import { KnownError } from "../errors";
-import { AccessToken, LoginRequestSchema, RegisterRequestSchema } from "iarsenic-types";
+import { AccessToken, LoginRequestSchema } from "iarsenic-types";
 import { AuthService } from "../services";
+import { z } from 'zod';
+
+const BaseRegisterSchema = z.object({
+    units: z.enum(['ft', 'm']).optional(),
+    language: z.enum(['bengali', 'english']).optional(),
+});
+
+export const UsernamePasswordRegisterBodySchema = BaseRegisterSchema.extend({
+    method: z.literal('email_pass'),
+    password: z.string(),
+    email: z.string().email(),
+});
+
+export const GoogleOAuthRegisterBodySchema = BaseRegisterSchema.extend({
+    method: z.literal('google_oauth'),
+    idToken: z.string(),
+});
+
+export const RegisterRequestBodySchema = z.discriminatedUnion('method', [
+    UsernamePasswordRegisterBodySchema,
+    GoogleOAuthRegisterBodySchema,
+]);
 
 export const AuthController = {
     async verifyEmail(ctx: Context): Promise<void> {
@@ -64,26 +86,38 @@ export const AuthController = {
     },
 
     async register(ctx: Context): Promise<void> {
-        console.log('================================')
-        console.log(ctx.request.body)
-        const bodyParseRes = RegisterRequestSchema.safeParse(ctx.request.body);
-    
-        if (!bodyParseRes.success) {
-            throw new KnownError({
-                message: bodyParseRes.error.message,
-                code: 400,
-                name: 'ValidationError',
-            });
+        const body = RegisterRequestBodySchema.parse(ctx.request.body)
+        const method = body.method
+        console.log(body)
+
+        let user, token 
+
+        switch (body.method) {
+            case 'email_pass':
+                ({ user, token } 
+                    = await AuthService.register_email_password(
+                        body.email,
+                        body.password,
+                        body.language ?? 'bengali',
+                        body.units ?? 'ft',
+                    ))
+                break;
+
+            case 'google_oauth':
+                ({ user, token } = 
+                    await AuthService.register_google_oauth(
+                        body.idToken,
+                        body.language ?? 'bengali',
+                        body.units ?? 'ft',
+                    )
+                )
+                break;
+
+            default:
+                throw new Error(
+                    `Invalid registration method ${method}`
+                );
         }
-    
-        const body = bodyParseRes.data;
-    
-        const { user, token } = await AuthService.register(
-            body.email,
-            body.password,
-            body.language,
-            body.units,
-        );
     
         ctx.status = 201;
         ctx.body = { user, token };

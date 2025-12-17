@@ -33,17 +33,31 @@ export const AuthService = {
         throw new Error('Unimplemented')
     },
 
-    async register(
+    async register_email_password(
         email: string,
         password: string,
-        language: string,
-        units: string,
+        language: 'bengali' | 'english',
+        units: 'ft' | 'm',
     ): Promise<{
         user: User,
         token: AccessToken,
     }> {
         console.log(email)
         console.log(password)
+        console.log(language)
+        console.log(units)
+        throw new Error('Unimplemented')
+    },
+
+    async register_google_oauth(
+        idToken: string,
+        language: 'bengali' | 'english',
+        units: 'ft' | 'm',
+    ): Promise<{
+        user: User,
+        token: AccessToken,
+    }> {
+        console.log(idToken)
         console.log(language)
         console.log(units)
         throw new Error('Unimplemented')

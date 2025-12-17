@@ -8,7 +8,7 @@ export default async function loginEmailPassword(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            method: "username_pass",
+            method: "email_pass",
             email,
             password,
         }),
