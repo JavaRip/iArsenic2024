@@ -6,6 +6,7 @@ import user from './user'
 import well from './well'
 import geodata from './geodata'
 import token from './token'
+import auth from './auth'
 
 const routes = new Router({ prefix: '/api/v1' })
 
@@ -13,12 +14,13 @@ const routes = new Router({ prefix: '/api/v1' })
 routes.use(errorHandler)
 
 // mount the sub routes
-routes.use(healthcheck.routes())
-routes.use(user.routes())
-routes.use(self.routes())
-routes.use(well.routes())
+routes.use(auth.routes())
 routes.use(geodata.routes())
+routes.use(healthcheck.routes())
+routes.use(self.routes())
 routes.use(token.routes())
+routes.use(user.routes())
+routes.use(well.routes())
 
 routes.all('(.*)', ctx => {
     ctx.status = 404;

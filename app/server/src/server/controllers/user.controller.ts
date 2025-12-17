@@ -1,4 +1,4 @@
-import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'iarsenic-types'
+import { AccessTokenSchema, UserSchema } from 'iarsenic-types'
 import { KnownError } from '../errors'
 import { Context } from 'koa'
 import { UserService } from '../services'
@@ -75,114 +75,8 @@ export const UserController = {
         ctx.body = { updatedUser };
     },
 
-    async login(ctx: Context): Promise<void> {
-        const loginRequestRes = LoginRequestSchema.safeParse(ctx.request.body)
-
-        if (!loginRequestRes.success) {
-            throw new KnownError({
-                message: loginRequestRes.error.message,
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        const loginRequest = loginRequestRes.data
-
-        const accessToken: AccessToken = await UserService.login(
-            loginRequest.email,
-            loginRequest.password,
-        )
-
-        ctx.status = 200
-        ctx.body = { accessToken }
-    },
-
-    async register(ctx: Context): Promise<void> {
-        const bodyParseRes = RegisterRequestSchema.safeParse(ctx.request.body);
-    
-        if (!bodyParseRes.success) {
-            throw new KnownError({
-                message: bodyParseRes.error.message,
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-    
-        const body = bodyParseRes.data;
-    
-        const { user, token } = await UserService.register(
-            body.email,
-            body.password,
-            body.name,
-            body.language,
-            body.units,
-        );
-    
-        ctx.status = 201;
-        ctx.body = { user, token };
-    },
-
     async deleteUserByToken(ctx: Context): Promise<void> {
         ctx.status = 501
         ctx.body = { error: 'Not Implemented' }
     },
-
-    async verifyEmail(ctx: Context): Promise<void> {
-        const tokenId = ctx.params.token;
-        await UserService.verifyEmail(tokenId);
-
-        ctx.status = 200;
-        ctx.body = { message: 'Email verified successfully' };
-    },
-
-    async forgotPassword(ctx: Context): Promise<void> {
-        const email = (ctx.request.body as { email: string }).email;
-
-        if (!email) {
-            throw new KnownError({
-                message: 'Email is required',
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        await UserService.forgotPassword(email);
-
-        ctx.status = 200;
-        ctx.body = {
-            message: `
-                Password reset email sent if account with email exists
-            `,
-        };
-    },
-
-    async resetPassword(ctx: Context): Promise<void> {
-        const resetTokenId: string = ctx.params.token;
-
-        if (!resetTokenId) {
-            throw new KnownError({
-                message: 'Reset token is required',
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        const newPassword = (ctx.request.body as { newPassword: string }).newPassword;
-
-        if (!newPassword) {
-            throw new KnownError({
-                message: 'New password is required',
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        // Validate the reset token and reset the password
-        await UserService.resetPassword(resetTokenId, newPassword);
-
-        ctx.status = 200;
-        ctx.body = {
-            message: 'Password has been successfully reset.',
-        };
-    }
 }

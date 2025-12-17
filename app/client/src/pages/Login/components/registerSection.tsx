@@ -8,7 +8,6 @@ export default function RegisterSection() {
 
     const [error, setError] = useState<string | null>(null);
     const [registerEmail, setRegisterEmail] = useState("");
-    const [registerUsername, setRegisterUsername] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
 
     const handleRegister = () => {
@@ -39,12 +38,6 @@ export default function RegisterSection() {
             {error && <Typography color="error" mb={2}>{error}</Typography>}
 
             <Stack spacing={2}>
-                <TextField
-                    label="Username"
-                    fullWidth
-                    value={registerUsername}
-                    onChange={(e) => setRegisterUsername(e.target.value)}
-                />
                 <TextField
                     label="Email"
                     type="email"

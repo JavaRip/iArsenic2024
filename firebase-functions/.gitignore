@@ -9,3 +9,4 @@ model5
 .firestore
 shared
 firebase-debug.log
+firebase-export**

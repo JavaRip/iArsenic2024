@@ -1,7 +1,7 @@
 import { AccessToken, AccessTokenSchema } from "iarsenic-types";
 
 export default async function refreshAccessToken(): Promise<AccessToken> {
-    const res = await fetch("/api/auth/refresh", {
+    const res = await fetch("/api/v1/auth/refresh", {
         method: "GET",
         credentials: "include",
     });
