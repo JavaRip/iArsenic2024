@@ -22,7 +22,7 @@ import TranslatableText from '../TranslatableText';
 import { navigate } from 'wouter/use-browser-location';
 import { SvgIconComponent } from '@mui/icons-material';
 import { Avatar, Button, Stack, Typography } from '@mui/material';
-import { useLanguage } from '../../utils/useLanguage';
+import { useLanguage } from '../../hooks/useLanguage';
 
 interface props {
     open: boolean;

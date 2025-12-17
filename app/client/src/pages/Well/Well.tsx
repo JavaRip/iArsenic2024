@@ -4,7 +4,7 @@ import { navigate } from 'wouter/use-browser-location';
 import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useAccessToken } from '../../utils/useAccessToken';
+import { useAccessToken } from '../../hooks/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
 
 export default function Review() {

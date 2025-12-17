@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
-import { useUnits } from "../../utils/useUnits";
+import { useUnits } from "../../hooks/useUnits";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../utils/useWells";
+import { useWells } from "../../hooks/useWells";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');

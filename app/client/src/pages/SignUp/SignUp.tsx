@@ -1,7 +1,7 @@
 import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { IKnownError, RegisterRequestSchema } from 'iarsenic-types';
-import { useLanguage } from '../../utils/useLanguage';
+import { useLanguage } from '../../hooks/useLanguage';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
 

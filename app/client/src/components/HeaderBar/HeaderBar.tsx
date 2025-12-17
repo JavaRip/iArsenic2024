@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 
 import NavMenu from './NavMenu';
-import { useAccessToken } from '../../utils/useAccessToken';
+import { useAccessToken } from '../../hooks/useAccessToken';
 
 export default function HeaderBar(): JSX.Element {
     const [open, setOpen] = useState(false);

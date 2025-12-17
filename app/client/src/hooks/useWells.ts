@@ -1,9 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Well } from 'iarsenic-types';
-import { useAccessToken } from '../utils/useAccessToken';
+import { useAuth } from './useAuth/useAuth';
 
 export function useWells() {
-    const { data: token } = useAccessToken();
+    const auth = useAuth();
+    const { data: token } = auth.getAccessToken
     const queryClient = useQueryClient();
 
     const getWell = (wellId?: string) => {
@@ -14,7 +15,7 @@ export function useWells() {
                 const headers: HeadersInit = {}
 
                 if (token) {
-                    headers.authorization = `Bearer ${token?.id}`
+                    headers.authorization = `Bearer ${token.id}`
                 }
 
                 const res = await fetch(`/api/v1/self/well/${wellId}`, {
@@ -34,7 +35,7 @@ export function useWells() {
                 const headers: HeadersInit = {}
 
                 if (token) {
-                    headers.authorization = `Bearer ${token?.id}`
+                    headers.authorization = `Bearer ${token.id}`
                 }
 
                 const res = await fetch(`/api/v1/wells`, {
@@ -56,7 +57,7 @@ export function useWells() {
                 }
 
                 if (token) {
-                    headers.authorization = `Bearer ${token?.id}`
+                    headers.authorization = `Bearer ${token.id}`
                 }
 
                 const res = await fetch(`/api/v1/self/well/${wellId}`, {
@@ -110,5 +111,10 @@ export function useWells() {
         });
     };
 
-    return { getWell, getWells, updateWell, createWell };
+    return { 
+        getWell,
+        getWells,
+        updateWell,
+        createWell,
+    };
 }

@@ -6,7 +6,7 @@ import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
 import estimateTexts from "../../components/Speedo/estimateTexts";
 import { useRoute } from "wouter";
-import { useAccessToken } from "../../utils/useAccessToken";
+import { useAccessToken } from "../../hooks/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";

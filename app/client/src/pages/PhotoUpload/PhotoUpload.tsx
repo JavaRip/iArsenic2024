@@ -2,7 +2,7 @@ import { Button, Card, Box, Alert, CircularProgress } from "@mui/material";
 import { useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
-import { useAccessToken } from "../../utils/useAccessToken";
+import { useAccessToken } from "../../hooks/useAccessToken";
 import { resizeImage } from "../../utils/resizeImage";
 import { navigate } from "wouter/use-browser-location";
 import PhotoItem from "./PhotoItem";

@@ -1,6 +1,6 @@
 import { Stack, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAccessToken } from "../../utils/useAccessToken";
+import { useAccessToken } from "../../hooks/useAccessToken";
 import EditProfileCard from "./EditProfileCard";
 import ProfileCard from "./ProfileCard";
 import { User } from "iarsenic-types";

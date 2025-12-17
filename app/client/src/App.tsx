@@ -34,7 +34,7 @@ import {
 
 import { HeaderBar } from './components';
 import { useEffect } from 'react';
-import { useLanguage } from './utils/useLanguage';
+import { useLanguage } from './hooks/useLanguage';
 
 const Theme = {
     theme: createTheme({

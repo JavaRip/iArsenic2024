@@ -7,11 +7,11 @@ import BengaliRegionSelector from "./BengaliRegionSelector";
 import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
 import { useRoute } from "wouter";
 import fetchDropdownData from "../../utils/fetchDropdownData";
-import { useAccessToken } from "../../utils/useAccessToken";
+import { useAccessToken } from "../../hooks/useAccessToken";
 import PageCard from "../../components/PageCard";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../utils/useWells";
+import { useWells } from "../../hooks/useWells";
 
 export type RegionErrors = {
     division: boolean;

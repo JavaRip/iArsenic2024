@@ -9,7 +9,7 @@ import Region from './Region';
 import Staining from './Staining';
 import Drinking from './Drinking';
 import Images from './Images';
-import { useAccessToken } from '../../utils/useAccessToken';
+import { useAccessToken } from '../../hooks/useAccessToken';
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from '../../components/TranslatableText';
 

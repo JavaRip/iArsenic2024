@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 import { User, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
-import { useAccessToken } from '../../utils/useAccessToken';
-import { useLanguage } from '../../utils/useLanguage';
-import { useUnits } from '../../utils/useUnits';
+import { useAccessToken } from '../../hooks/useAccessToken';
+import { useLanguage } from '../../hooks/useLanguage';
+import { useUnits } from '../../hooks/useUnits';
 import { useQueryClient } from '@tanstack/react-query';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';

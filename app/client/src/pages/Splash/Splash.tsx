@@ -3,7 +3,7 @@ import Section from './Section';
 import CallToAction from './CallToAction';
 import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
-import { useAccessToken } from '../../utils/useAccessToken';
+import { useAccessToken } from '../../hooks/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
 import MapSection from './MapSection';
 import TheResearchSection from './TheResearchSection';

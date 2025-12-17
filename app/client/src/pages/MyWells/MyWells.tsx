@@ -11,7 +11,7 @@ import { navigate } from 'wouter/use-browser-location';
 import WellCard from './WellCard';
 import fetchDropdownData from '../../utils/fetchDropdownData';
 import { Well, WellSchema } from 'iarsenic-types';
-import { useAccessToken } from '../../utils/useAccessToken';
+import { useAccessToken } from '../../hooks/useAccessToken';
 import Filter from './Filter';
 import TranslatableText from '../../components/TranslatableText';
 

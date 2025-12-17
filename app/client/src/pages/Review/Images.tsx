@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
-import { useAccessToken } from "../../utils/useAccessToken";
+import { useAccessToken } from "../../hooks/useAccessToken";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
 

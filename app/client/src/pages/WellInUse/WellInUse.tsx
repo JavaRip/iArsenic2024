@@ -1,12 +1,12 @@
 import { CircularProgress, FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
-import { useAccessToken } from "../../utils/useAccessToken";
+import { useAccessToken } from "../../hooks/useAccessToken";
 import { navigate } from "wouter/use-browser-location";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../utils/useWells";
+import { useWells } from "../../hooks/useWells";
 
 export default function WellInUse(): JSX.Element {
     const [, params] = useRoute('/well/:id/well-in-use');

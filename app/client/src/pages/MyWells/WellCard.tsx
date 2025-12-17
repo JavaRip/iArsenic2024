@@ -3,7 +3,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import { Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
-import { useAccessToken } from '../../utils/useAccessToken';
+import { useAccessToken } from '../../hooks/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
 
 interface Props {

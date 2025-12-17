@@ -1,7 +1,7 @@
 import { Drawer, Stack, Typography, Button, Divider, Avatar } from "@mui/material";
 import TranslatableText from "../../../../components/TranslatableText";
 import { RiskFilter } from "../../Map";
-import { useLanguage } from "../../../../utils/useLanguage";
+import { useLanguage } from "../../../../hooks/useLanguage";
 import Banner from "./Banner";
 import DataFilter from "./DataFilter/DataFilter";
 
