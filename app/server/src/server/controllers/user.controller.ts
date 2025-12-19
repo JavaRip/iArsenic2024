@@ -4,6 +4,41 @@ import { Context } from 'koa'
 import { UserService } from '../services'
 
 export const UserController = {
+    async getUser(ctx: Context): Promise<void> {
+        const auth = ctx.state.auth
+
+        if (!auth.token) {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+
+        const userId = ctx.params.userId;
+
+        const user = await UserService.getById(auth.user, userId)
+
+        ctx.status = 200;
+        ctx.body = user;
+    },
+
+    async updateUser(/*ctx: Context*/): Promise<void> {
+        throw new KnownError({
+            message: 'Update user unimplemented',
+            code: 501,
+            name: 'Unimplemented',
+        })
+    },
+
+    async deleteUser(/*ctx: Context*/): Promise<void> {
+        throw new KnownError({
+            message: 'Delete user unimplemented',
+            code: 501,
+            name: 'Unimplemented',
+        })
+    },
+
     async getUserByToken(ctx: Context): Promise<void> {
         const auth = ctx.state.auth
 

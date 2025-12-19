@@ -7,8 +7,9 @@ export function useUsers() {
     const { data: token } = auth.getAccessToken
     const queryClient = useQueryClient()
 
-    const getUser = (userId: string) => {
+    const getUser = (userId: string | undefined) => {
         return useQuery<User>({
+            enabled: !!userId,
             queryKey: ['user', userId],
             queryFn: async () => {
                 const headers: HeadersInit = {
@@ -19,7 +20,7 @@ export function useUsers() {
                     headers.authorization = `Bearer ${token.id}`
                 }
 
-                const res = await fetch(`/api/v1/self/user/${userId}`, {
+                const res = await fetch(`/api/v1/user/${userId}`, {
                     method: 'GET',
                     headers,
                 });

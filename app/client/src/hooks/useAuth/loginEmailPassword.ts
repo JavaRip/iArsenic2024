@@ -28,7 +28,7 @@ export default async function loginEmailPassword(
         createdAt: new Date(data.accessToken.createdAt),
         expiresAt: new Date(data.accessToken.expiresAt),
         revokedAt: data.accessToken?.revokedAt ? 
-            new Date(data.accessToken.expiresAt) :
+            new Date(data.accessToken.revokedAt) :
             undefined,
     })
 

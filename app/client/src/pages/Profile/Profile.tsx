@@ -1,35 +1,55 @@
 import { Stack, CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EditProfileCard from "./EditProfileCard";
 import ProfileCard from "./ProfileCard";
-import { User } from "iarsenic-types";
 import { useAuth } from "../../hooks/useAuth/useAuth";
+import { useUsers } from "../../hooks/useUser";
 
 export default function ProfilePage(): JSX.Element {
     const [editMode, setEditMode] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [user, setUser] = useState<User>();
 
     const auth = useAuth()
-    const { data: token } = auth.getAccessToken;
+    const {
+        data: token,
+        isLoading: tokenLoading,
+        isError: tokenIsError,
+        error: tokenError,
+    } = auth.getAccessToken;
 
-    console.log('--')
-    console.log(token)
-    console.log(user)
+    const { getUser } = useUsers()
 
-    useEffect(() => {
-        if (!token) return
-        if (token.user === undefined) return
+    const {
+        data: user,
+        isLoading: userLoading,
+        isError: userIsError,
+        error: userError,
+    } = getUser(token?.userId)
 
-        setUser(token.user)
-    }, [token])
+    if (tokenLoading) {
+        return (
+            <Stack alignItems="center" mt={4}>
+                <CircularProgress />
+            </Stack>
+        )
+    }
 
-    if (!user) {
+    if (tokenIsError || !token) {
+        console.error(tokenError)
+        throw new Error('Cannot show profile user not logged in')
+    }
+
+    if (userLoading) {
         return (
             <Stack alignItems='center' justifyContent='center'>
                 <CircularProgress />
             </Stack>
         );
+    }
+
+    if (userIsError || !user) {
+        console.error(userError)
+        throw new Error('Cannot show profile error loading user')
     }
 
     if (editMode) {
@@ -44,7 +64,6 @@ export default function ProfilePage(): JSX.Element {
                     user={user}
                     setEditMode={setEditMode}
                     setSaving={setSaving}
-                    setUser={setUser}
                 />
             </>
         );

@@ -11,53 +11,30 @@ import { User, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useUnits } from '../../hooks/useUnits';
-import { useQueryClient } from '@tanstack/react-query';
+// import { useQueryClient } from '@tanstack/react-query';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
-import { useAuth } from '../../hooks/useAuth/useAuth';
+// import { useAuth } from '../../hooks/useAuth/useAuth';
 
 interface Props {
     user: User;
     setEditMode: (editMode: boolean) => void;
     setSaving: (saving: boolean) => void;
-    setUser: (user: User) => void;
 }
 
-export default function EditProfileCard({ user, setEditMode, setSaving, setUser }: Props): JSX.Element {
-    const queryClient = useQueryClient()
+export default function EditProfileCard({ user, setEditMode }: Props): JSX.Element {
+    // const queryClient = useQueryClient()
 
     const [name, setName] = useState<string>(user.name);
 
-    const auth = useAuth()
-    const { data: token } = auth.getAccessToken
+    // const auth = useAuth()
+    // const { data: token } = auth.getAccessToken
 
     const { language, setLanguage } = useLanguage();
     const { units, setUnits } = useUnits();
 
     async function saveChanges() {
-        setSaving(true);
-    
-        if (!token) {
-            setSaving(false);
-            throw new Error('Invalid token');
-        }
-    
-        if (language) await setLanguage(language);
-        if (units) await setUnits(units);
-    
-        const updatedUser = { ...user, name, language, units };
-    
-        queryClient.setQueryData(['accessToken'], (prev: typeof token) => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                user: updatedUser,
-            };
-        });
-    
-        setSaving(false);
-        setEditMode(false);
-        setUser(updatedUser);
+        throw new Error('unimplemented')
     }
     
 
@@ -131,7 +108,7 @@ export default function EditProfileCard({ user, setEditMode, setSaving, setUser 
                     variant='body1'
                     english={
                         <>
-                            <strong>Created At:</strong> {user.createdAt.toLocaleDateString()}
+                            <strong>Created At:</strong> {user.createdAt}
                         </>
                     } 
                     bengali='BENGALI PLACEHOLDER'

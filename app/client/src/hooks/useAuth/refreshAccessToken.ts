@@ -11,6 +11,15 @@ export default async function refreshAccessToken(): Promise<AccessToken> {
     }
 
     const data = await res.json();
-    const parsedAccessToken = AccessTokenSchema.parse(data)
+
+    const parsedAccessToken = AccessTokenSchema.parse({
+        ...data,
+        createdAt: new Date(data.createdAt),
+        expiresAt: new Date(data.expiresAt),
+        revokedAt: data?.revokedAt ? 
+            new Date(data.revokedAt) :
+            undefined,
+    })
+
     return parsedAccessToken;
 }

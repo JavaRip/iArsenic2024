@@ -187,7 +187,7 @@ export const AuthService = {
             id: uuidv4(),
             createdAt: new Date(),
             type: "access",
-            userId: refreshToken.id,
+            userId: refreshToken.userId,
             expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
         })
 

@@ -10,7 +10,17 @@ import verifyEmailTemplate from '../emails/templates/verifyEmail';
 const ACCESS_TOKEN_TTL = 1000 * 60 * 60 * 24 * 7
 
 export const UserService = {
-    async getById(userId: string): Promise<User> {
+    async getById(requestingUser: User, userId: string): Promise<User> {
+        if (requestingUser.type !== 'admin') {
+            if (requestingUser.id !== userId) {
+                // allow users to view user profiles of users other than themselves
+            }
+        }
+
+        console.log('================================')
+        console.log(userId)
+        console.log('================================')
+
         const userRes = await UserRepo.findById(userId)
 
         if (userRes == null) {
@@ -21,9 +31,9 @@ export const UserService = {
             });
         }
 
-        const { password, ...user } = userRes
+        delete userRes.password
 
-        return user
+        return userRes
     },
 
     async updateUser(userId: string, userUpdates: Partial<User>): Promise<User> {

@@ -71,7 +71,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                     variant='body1'
                     english={
                         <>
-                            <strong>Created At</strong> {user.createdAt.toLocaleDateString()}
+                            <strong>Created At</strong> {user.createdAt}
                         </>
                     }
                     bengali='BENGALI PLACEHOLDER'

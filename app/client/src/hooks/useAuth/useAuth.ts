@@ -47,7 +47,7 @@ export function useAuth() {
         queryFn: async () => await refreshAccessTokenFn(),
         queryKey: ['auth', 'accessToken'],
         refetchInterval: 1000 * 60 * 10, // 10 minutes
-        refetchOnWindowFocus: true,
+        refetchOnWindowFocus: false,
         retry: false,
         staleTime: 1000 * 60 * 10,
     })
