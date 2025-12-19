@@ -35,6 +35,9 @@ export function useAuth() {
     mutationFn: (data: {
         email: string,
         password: string,
+        language: 'english' | 'bengali',
+        units: 'meters' | 'feet',
+        username: string,
     }) =>
         registerEmailPasswordFn(data),
     });

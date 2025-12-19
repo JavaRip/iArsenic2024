@@ -1,4 +1,8 @@
 import { AbstractToken, AccessToken, User } from 'iarsenic-types';
+import bcrypt from 'bcrypt'
+import { TokenRepo, UserRepo } from '../repositories';
+import { KnownError } from '../errors';
+import uuidv4 from 'uuid4'
 
 export const AuthService = {
     async verifyEmail(
@@ -35,24 +39,63 @@ export const AuthService = {
 
     async register_email_password(
         email: string,
-        password: string,
         language: 'bengali' | 'english',
-        units: 'ft' | 'm',
+        password: string,
+        units: 'feet' | 'meters',
+        username: string,
     ): Promise<{
         user: User,
-        token: AccessToken,
+        accessToken: AccessToken,
+        refreshToken: RefreshToken,
     }> {
-        console.log(email)
-        console.log(password)
-        console.log(language)
-        console.log(units)
-        throw new Error('Unimplemented')
+        const saltRounds = 10;
+        const passHash = await bcrypt.hash(password, saltRounds);
+
+        const existingUser = await UserRepo.findByEmail(
+            email,
+        )
+
+        if (existingUser) {
+            throw new KnownError({
+                name: 'User already exists',
+                message: `User already exists with email ${email}`,
+                code: 403,
+            })
+        }
+
+        const newUser = await UserRepo.create({
+            id: uuidv4(),
+            email: email,
+            emailVerified: false,
+            password: passHash, 
+            name: username,
+            type: 'user',
+            createdAt: new Date(),
+            language: language, 
+            units: units, 
+        })
+
+        const accessToken = TokenRepo.create({
+            id: uuidv4(),
+            createdAt: new Date(),
+            type: "access",
+            userId: newUser.id,
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+        })
+
+        const refreshToken = TokenRepo.create({
+            id: uuidv4(),
+            createdAt: new Date(),
+            type: "refresh",
+            userId: newUser.id,
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        })
     },
 
     async register_google_oauth(
         idToken: string,
         language: 'bengali' | 'english',
-        units: 'ft' | 'm',
+        units: 'feet' | 'meters',
     ): Promise<{
         user: User,
         token: AccessToken,

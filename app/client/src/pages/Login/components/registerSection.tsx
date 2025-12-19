@@ -1,14 +1,19 @@
 import { Typography, Stack, TextField, Button } from "@mui/material";
 import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth/useAuth";
+import { useLanguage } from "../../../hooks/useLanguage";
+import { useUnits } from "../../../hooks/useUnits";
 
 export default function RegisterSection() {
     const auth = useAuth()
     const registerEmailPassword = auth.registerEmailPassword;
+    const { language } = useLanguage()
+    const { units } = useUnits()
 
     const [error, setError] = useState<string | null>(null);
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
+    const [registerName, setRegisterName] = useState("");
 
     const handleRegister = () => {
         setError(null);
@@ -16,6 +21,9 @@ export default function RegisterSection() {
             { 
                 password: registerPassword,
                 email: registerEmail,
+                language,
+                units,
+                username: registerName,
             },
             {
                 onSuccess: () => {
@@ -44,6 +52,13 @@ export default function RegisterSection() {
                     fullWidth
                     value={registerEmail}
                     onChange={(e) => setRegisterEmail(e.target.value)}
+                />
+                <TextField
+                    label="Name"
+                    type="name"
+                    fullWidth
+                    value={registerName}
+                    onChange={(e) => setRegisterName(e.target.value)}
                 />
                 <TextField
                     label="Password"

@@ -5,8 +5,9 @@ import { AuthService } from "../services";
 import { z } from 'zod';
 
 const BaseRegisterSchema = z.object({
-    units: z.enum(['ft', 'm']).optional(),
+    units: z.enum(['feet', 'meters']).optional(),
     language: z.enum(['bengali', 'english']).optional(),
+    username: z.string(),
 });
 
 export const UsernamePasswordRegisterBodySchema = BaseRegisterSchema.extend({
@@ -97,9 +98,10 @@ export const AuthController = {
                 ({ user, token } 
                     = await AuthService.register_email_password(
                         body.email,
-                        body.password,
                         body.language ?? 'bengali',
-                        body.units ?? 'ft',
+                        body.password,
+                        body.units ?? 'feet',
+                        body.username,
                     ))
                 break;
 
@@ -108,7 +110,7 @@ export const AuthController = {
                     await AuthService.register_google_oauth(
                         body.idToken,
                         body.language ?? 'bengali',
-                        body.units ?? 'ft',
+                        body.units ?? 'feet',
                     )
                 )
                 break;
