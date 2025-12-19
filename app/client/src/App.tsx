@@ -33,7 +33,6 @@ import {
 } from './pages';
 
 import { HeaderBar } from './components';
-import { useEffect } from 'react';
 import { useLanguage } from './hooks/useLanguage';
 
 const Theme = {
@@ -52,11 +51,7 @@ const Theme = {
 };
 
 function App() {
-    const { init } = useLanguage();
-
-    useEffect(() => {
-        init();
-    }, [init]);
+    useLanguage();
 
     return (
         <ThemeProvider theme={Theme.theme}>

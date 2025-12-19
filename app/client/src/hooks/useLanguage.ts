@@ -1,43 +1,53 @@
+import { useEffect, useState } from 'react';
 import { useAuth } from './useAuth/useAuth';
+import { useUsers } from './useUser';
 
 const LANGUAGE_KEY = 'language';
 
 export function useLanguage() {
-    const auth = useAuth()
-    const { data: token } = auth.getAccessToken
+    const { data: token } = useAuth().getAccessToken
+    const { updateUser } = useUsers()
 
-    function getLanguage(): 'english' | 'bengali' {
-        const stored = localStorage.getItem(LANGUAGE_KEY) || 'bengali';
-        return stored === 'english' ? 'english' : 'bengali';
-    }
+    const {
+        error,
+        isError,
+        isPending,
+        mutate: updateUserMutate,
+        status,
+    } = updateUser()
 
-    function init() {
-        document.body.className = getLanguage();
-    }
+    const [language, setLanguageState] = useState<'bengali' | 'english'>(() => {
+        const stored = localStorage.getItem(LANGUAGE_KEY) || 'bengali'
+        return stored === 'bengali' ? 'bengali' : 'english'
+    })
 
-    async function setLanguage(language: 'english' | 'bengali') {
-        localStorage.setItem(LANGUAGE_KEY, language);
+    useEffect(() => {
+        const stored = localStorage.getItem(LANGUAGE_KEY);
         document.body.className = language;
+        if (stored && stored !== language) {
+            setLanguageState(stored === 'english' ? 'english' : 'bengali');
+        }
+    }, []);
+
+    async function setLanguage(newLanguage: 'english' | 'bengali') {
+        localStorage.setItem(LANGUAGE_KEY, newLanguage)
+        setLanguageState(newLanguage)
+        document.body.className = newLanguage;
 
         if (token?.user) {
-            const res = await fetch(`/api/v1/self/user`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: `Bearer ${token.id}`,
-                },
-                body: JSON.stringify({ language }),
-            });
-
-            if (!res.ok) {
-                console.error('Failed to update user language:', res);
-            } 
+            updateUserMutate({
+                userId: token.user.id,
+                data: { language: newLanguage },
+            })
         }
     }
 
     return {
-        language: getLanguage(),
+        error,
+        isError,
+        isPending,
         setLanguage,
-        init,
+        status,
+        language,
     };
 }
