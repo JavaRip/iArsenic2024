@@ -121,7 +121,7 @@ export const AuthController = {
                 );
         }
 
-        ctx.cookies.set('refreshToken', JSON.stringify(refreshToken), {
+        ctx.cookies.set('refreshToken', refreshToken.id, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
@@ -146,13 +146,21 @@ export const AuthController = {
 
         const loginRequest = loginRequestRes.data
 
-        const accessToken: AccessToken = await AuthService.login(
+        const { user, accessToken, refreshToken } = await AuthService.login(
             loginRequest.email,
             loginRequest.password,
         )
 
+        ctx.cookies.set('refreshToken', refreshToken.id, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            path: '/api/v1/auth/refresh',
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        })
+
         ctx.status = 200
-        ctx.body = { accessToken }
+        ctx.body = { user, accessToken }
     },
 
     async refresh(ctx: Context): Promise<AccessToken> {

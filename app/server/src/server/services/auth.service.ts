@@ -31,10 +31,67 @@ export const AuthService = {
     async login(
         email: string, 
         password: string,
-    ): Promise<AccessToken> {
-        console.log(email)
-        console.log(password)
-        throw new Error('Unimplemented')
+    ): Promise<{
+        user: User,
+        accessToken: AccessToken,
+        refreshToken: RefreshToken,
+    }> {
+        const existingUser = await UserRepo.findByEmail(
+            email,
+        )
+
+        if (!existingUser) {
+            throw new KnownError({
+                name: 'User not found',
+                message: `User email ${email} not found`,
+                code: 404,
+            })
+        }
+
+        if (!existingUser?.password) {
+            throw new KnownError({
+                name: 'User has no password configured',
+                message: `Try an alternative login method`,
+                code: 400,
+            })
+        }
+
+        const passwordMatch = await bcrypt.compare(
+            password, 
+            existingUser.password
+        );
+
+        if (!passwordMatch) {
+            throw new KnownError({
+                name: 'Invalid credentials',
+                message: `Email and password do not match`,
+                code: 403,
+            });
+        }
+
+        delete existingUser.password
+
+        const accessToken = await TokenRepo.create({
+            id: uuidv4(),
+            createdAt: new Date(),
+            type: "access",
+            userId: existingUser.id,
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+        })
+
+        const refreshToken = await TokenRepo.create({
+            id: uuidv4(),
+            createdAt: new Date(),
+            type: "refresh",
+            userId: existingUser.id,
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        })
+
+        return { 
+            user: existingUser,
+            refreshToken: RefreshTokenSchema.parse(refreshToken), 
+            accessToken: AccessTokenSchema.parse(accessToken),
+        }
     },
 
     async register_email_password(
@@ -74,6 +131,8 @@ export const AuthService = {
             language: language, 
             units: units, 
         })
+
+        delete newUser.password
 
         const accessToken = await TokenRepo.create({
             id: uuidv4(),

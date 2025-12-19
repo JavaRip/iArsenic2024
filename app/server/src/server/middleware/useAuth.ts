@@ -7,10 +7,12 @@ export default async function useAuth(
 ) {
     const bearerAuth = ctx.request.headers['authorization'] as string
     const apiKey = ctx.request.headers['x-api-key'] as string
+    const refreshToken = ctx.cookies.get('refreshToken')
 
     let tokenId
     if (bearerAuth) tokenId = bearerAuth?.split(' ')[1]
     if (apiKey) tokenId = apiKey
+    if (refreshToken) tokenId = refreshToken
 
     if (!tokenId) {
         ctx.state.auth = { user: { type: 'guest' } }
@@ -25,8 +27,12 @@ export default async function useAuth(
         throw Error('token not found')
     }
 
-    if (token.type !== 'access' && token.type !== 'api-key') {
-        throw Error('unexpected token type')
+    if (
+        token.type !== 'access' &&
+        token.type !== 'api-key' &&
+        token.type !== 'refresh'
+    ) {
+        throw Error(`unexpected token type ${token.type}`)
     }
 
     if (

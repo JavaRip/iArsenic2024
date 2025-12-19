@@ -1,7 +1,6 @@
 import { Typography, Stack, TextField, Button } from "@mui/material"
 import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth/useAuth";
-import { AccessToken } from "iarsenic-types";
 
 export default function LoginSection() {
     const auth = useAuth()
@@ -15,16 +14,13 @@ export default function LoginSection() {
         setError(null);
 
         loginEmailPassword.mutate(
-        { email: loginEmail, password: loginPassword },
-        {
-            onSuccess: (token: AccessToken) => {
-                console.log("Logged in, access token:", token);
-            },
-            onError: (err: unknown) => {
-                console.error(err);
-                setError((err as Error).message || "Login failed");
-            },
-        }
+            { email: loginEmail, password: loginPassword },
+            {
+                onError: (err: unknown) => {
+                    console.error(err);
+                    setError((err as Error).message || "Login failed");
+                },
+            }
         );
     };
 

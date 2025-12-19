@@ -16,8 +16,9 @@ export function useAuth() {
             password: string;
         }) =>
             loginEmailPasswordFn(email, password),
-        onSuccess: (accessToken) => {
+        onSuccess: ({ accessToken, user }) => {
             queryClient.setQueryData(['auth', 'accessToken'], accessToken)
+            queryClient.setQueryData(['user', user.id], user)
             getAccessToken.refetch()
         }
     });

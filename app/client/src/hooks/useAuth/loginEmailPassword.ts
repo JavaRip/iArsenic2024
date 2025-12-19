@@ -1,9 +1,12 @@
-import { AccessTokenSchema, AccessToken } from 'iarsenic-types';
+import { AccessTokenSchema, AccessToken, UserSchema, User } from 'iarsenic-types';
 
 export default async function loginEmailPassword(
     email: string,
     password: string,
-): Promise<AccessToken> {
+): Promise<{
+    user: User,
+    accessToken: AccessToken,
+}> {
     const res = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -19,6 +22,20 @@ export default async function loginEmailPassword(
     }
 
     const data = await res.json();
-    const parsedAccessToken = AccessTokenSchema.parse(data)
-    return parsedAccessToken;
+
+    const parsedAccessToken = AccessTokenSchema.parse({
+        ...data.accessToken,
+        createdAt: new Date(data.accessToken.createdAt),
+        expiresAt: new Date(data.accessToken.expiresAt),
+    })
+
+    const parsedUser = UserSchema.parse({
+        ...data.user,
+        createdAt: new Date(data.user.createdAt),
+    })
+
+    return { 
+        accessToken: parsedAccessToken,
+        user: parsedUser,
+    }
 }
