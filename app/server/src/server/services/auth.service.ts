@@ -171,8 +171,26 @@ export const AuthService = {
         throw new Error('Unimplemented')
     },
 
-    async refresh(refreshTokenId: string): Promise<AccessToken> {
-        console.log(refreshTokenId)
-        throw new Error('Unimplemented')
+    async refresh(refreshToken: RefreshToken): Promise<AccessToken> {
+        if (
+            refreshToken.expiresAt < new Date() ||
+            (refreshToken.revokedAt && refreshToken.revokedAt < new Date())
+        ) {
+            throw new KnownError({
+                name: 'Invalid refresh token',
+                message: 'Refresh token expired',
+                code: 403,
+            })
+        }
+
+        const accessToken = await TokenRepo.create({
+            id: uuidv4(),
+            createdAt: new Date(),
+            type: "access",
+            userId: refreshToken.id,
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+        })
+
+        return AccessTokenSchema.parse(accessToken)
     }
 }

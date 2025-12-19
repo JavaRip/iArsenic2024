@@ -27,6 +27,9 @@ export default async function loginEmailPassword(
         ...data.accessToken,
         createdAt: new Date(data.accessToken.createdAt),
         expiresAt: new Date(data.accessToken.expiresAt),
+        revokedAt: data.accessToken?.revokedAt ? 
+            new Date(data.accessToken.expiresAt) :
+            undefined,
     })
 
     const parsedUser = UserSchema.parse({

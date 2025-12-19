@@ -1,6 +1,6 @@
 import { Context } from "koa";
 import { KnownError } from "../errors";
-import { AccessToken, LoginRequestSchema } from '../models';
+import { LoginRequestSchema } from '../models';
 import { AuthService } from "../services";
 import { z } from 'zod';
 
@@ -163,21 +163,23 @@ export const AuthController = {
         ctx.body = { user, accessToken }
     },
 
-    async refresh(ctx: Context): Promise<AccessToken> {
-        const refreshTokenId = ctx.state.auth.token
+    async refresh(ctx: Context): Promise<void> {
+        const refreshToken = ctx.state.auth.token
+        const user = ctx.state.auth.user
 
-        if (!refreshTokenId) {
-            throw new KnownError({
-                message: 'No refresh token',
-                code: 400,
-                name: 'ValidationError',
-            });
+        if (!refreshToken) {
+            throw new Error('No refresh token on ctx')
+        }
+
+        if (!user) {
+            throw new Error('No user on ctx')
         }
 
         const newAccessToken = await AuthService.refresh(
-            refreshTokenId,
+            refreshToken,
         )
 
-        return newAccessToken
+        ctx.status = 200
+        ctx.body = newAccessToken
     }
 }
