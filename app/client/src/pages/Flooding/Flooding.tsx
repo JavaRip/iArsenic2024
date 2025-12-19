@@ -1,16 +1,18 @@
 import { FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
 import { useState } from "react";
 import { useRoute } from "wouter";
-import { useAccessToken } from "../../hooks/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export default function Flooding(): JSX.Element {
     const [, params] = useRoute('/well/:id/flooding');
     const wellId = params?.id;
-    const { data: token } = useAccessToken();
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
 
     const [flooding, setFlooding] = useState<'yes' | 'no'>();
     const [error, setError] = useState<boolean>(false);

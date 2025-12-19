@@ -3,16 +3,18 @@ import ImageIcon from '@mui/icons-material/Image';
 import { Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
-import { useAccessToken } from '../../hooks/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
+import { useAuth } from '../../hooks/useAuth/useAuth';
 
 interface Props {
     well: Well;
 }
 
 export default function WellCard({ well }: Props): JSX.Element {
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
+
     const [thumbnailUrl, setThumbnailUrl] = useState<string>();
-    const { data: token } = useAccessToken()
     
     useEffect(() => {
         async function fetchSignedUrl() {

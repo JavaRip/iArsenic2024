@@ -2,17 +2,20 @@ import { Button, Card, Box, Alert, CircularProgress } from "@mui/material";
 import { useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { AccessToken } from "iarsenic-types";
-import { useAccessToken } from "../../hooks/useAccessToken";
 import { resizeImage } from "../../utils/resizeImage";
 import { navigate } from "wouter/use-browser-location";
 import PhotoItem from "./PhotoItem";
 import ImageIcon from '@mui/icons-material/Image';
 import TranslatableText from "../../components/TranslatableText";
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export default function WellImageUpload(): JSX.Element {
     const [, params] = useRoute('/well/:id/upload-image');
     const wellId = params?.id;
-    const { data: token } = useAccessToken()
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
+
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [success, setSuccess] = useState(false);

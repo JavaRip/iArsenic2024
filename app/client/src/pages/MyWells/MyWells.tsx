@@ -11,9 +11,9 @@ import { navigate } from 'wouter/use-browser-location';
 import WellCard from './WellCard';
 import fetchDropdownData from '../../utils/fetchDropdownData';
 import { Well, WellSchema } from 'iarsenic-types';
-import { useAccessToken } from '../../hooks/useAccessToken';
 import Filter from './Filter';
 import TranslatableText from '../../components/TranslatableText';
+import { useAuth } from '../../hooks/useAuth/useAuth';
 
 export default function MyWells(): JSX.Element {
     const [filterOpen, setFilterOpen] = useState<boolean>(false)
@@ -36,7 +36,8 @@ export default function MyWells(): JSX.Element {
         },
     });
 
-    const { data: token } = useAccessToken()
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
 
     const dropdownQuery = useQuery({
         queryKey: ['dropdownData'],

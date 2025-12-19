@@ -1,10 +1,10 @@
-// src/utils/useLanguage.ts
-import { useAccessToken } from './useAccessToken';
+import { useAuth } from './useAuth/useAuth';
 
 const LANGUAGE_KEY = 'language';
 
 export function useLanguage() {
-    const { data: token } = useAccessToken();
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
 
     function getLanguage(): 'english' | 'bengali' {
         const stored = localStorage.getItem(LANGUAGE_KEY) || 'bengali';

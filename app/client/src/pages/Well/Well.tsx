@@ -4,14 +4,16 @@ import { navigate } from 'wouter/use-browser-location';
 import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useAccessToken } from '../../hooks/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
+import { useAuth } from '../../hooks/useAuth/useAuth';
 
 export default function Review() {
     const [, params] = useRoute('/well/:id');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-    const { data: token } = useAccessToken()
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
 
     function getMissingFields(well: Well): { missingFields: string[], allFieldsMissing: boolean } {
         const requiredFields: (keyof Well)[] = [

@@ -9,12 +9,12 @@ import {
 } from '@mui/material';
 import { User, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
-import { useAccessToken } from '../../hooks/useAccessToken';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useUnits } from '../../hooks/useUnits';
 import { useQueryClient } from '@tanstack/react-query';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
+import { useAuth } from '../../hooks/useAuth/useAuth';
 
 interface Props {
     user: User;
@@ -27,7 +27,9 @@ export default function EditProfileCard({ user, setEditMode, setSaving, setUser 
     const queryClient = useQueryClient()
 
     const [name, setName] = useState<string>(user.name);
-    const { data: token } = useAccessToken();
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
 
     const { language, setLanguage } = useLanguage();
     const { units, setUnits } = useUnits();

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useAccessToken } from './useAccessToken';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from './useAuth/useAuth';
 
 const UNITS_KEY = 'units';
 
 export function useUnits() {
-    const { data: token } = useAccessToken();
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
     const queryClient = useQueryClient();
 
     const [units, setUnitsState] = useState<'meters' | 'feet'>(() => {

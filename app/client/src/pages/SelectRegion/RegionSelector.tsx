@@ -7,11 +7,11 @@ import BengaliRegionSelector from "./BengaliRegionSelector";
 import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
 import { useRoute } from "wouter";
 import fetchDropdownData from "../../utils/fetchDropdownData";
-import { useAccessToken } from "../../hooks/useAccessToken";
 import PageCard from "../../components/PageCard";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from "../../components/TranslatableText";
 import { useWells } from "../../hooks/useWells";
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export type RegionErrors = {
     division: boolean;
@@ -24,7 +24,8 @@ export type RegionErrors = {
 export default function Region(): JSX.Element {
     const [, params] = useRoute('/well/:id/select-region');
     const wellId = params?.id;
-    const { data: token } = useAccessToken();
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
     const { getWell, updateWell } = useWells();
     const { data: well, isLoading } = getWell(wellId);
     const updateWellMutation = updateWell();

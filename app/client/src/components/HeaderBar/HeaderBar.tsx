@@ -4,12 +4,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 
 import NavMenu from './NavMenu';
-import { useAccessToken } from '../../hooks/useAccessToken';
+import { useAuth } from '../../hooks/useAuth/useAuth';
 
 export default function HeaderBar(): JSX.Element {
-    const [open, setOpen] = useState(false);
-    const { data: token } = useAccessToken();
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
     const user = token?.user;
+
+    const [open, setOpen] = useState(false);
 
     return (
         <AppBar sx={{ marginBottom: '2rem', height: '3rem' }} position='static'>

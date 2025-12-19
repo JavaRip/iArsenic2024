@@ -9,15 +9,18 @@ import Region from './Region';
 import Staining from './Staining';
 import Drinking from './Drinking';
 import Images from './Images';
-import { useAccessToken } from '../../hooks/useAccessToken';
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from '../../components/TranslatableText';
+import { useAuth } from '../../hooks/useAuth/useAuth';
 
 export default function Review(): JSX.Element {
     const [, params] = useRoute('/well/:id/review');
     const wellId = params?.id;
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken;
+
     const [well, setWell] = useState<Well>();
-    const { data: token } = useAccessToken();
 
     useEffect(() => {
         async function fetchWell() {

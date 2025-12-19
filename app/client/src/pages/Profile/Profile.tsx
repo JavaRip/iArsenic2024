@@ -1,15 +1,17 @@
 import { Stack, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useAccessToken } from "../../hooks/useAccessToken";
 import EditProfileCard from "./EditProfileCard";
 import ProfileCard from "./ProfileCard";
 import { User } from "iarsenic-types";
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export default function ProfilePage(): JSX.Element {
     const [editMode, setEditMode] = useState(false);
     const [saving, setSaving] = useState(false);
-    const { data: token } = useAccessToken();
     const [user, setUser] = useState<User>();
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken;
 
     console.log('--')
     console.log(token)

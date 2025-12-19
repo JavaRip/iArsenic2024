@@ -6,11 +6,11 @@ import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
 import estimateTexts from "../../components/Speedo/estimateTexts";
 import { useRoute } from "wouter";
-import { useAccessToken } from "../../hooks/useAccessToken";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
 import EmailIcon from '@mui/icons-material/Email';
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 type EstimateTexts = {
     english: {
@@ -30,7 +30,9 @@ export default function Result(): JSX.Element {
     const [speedoValue, setSpeedoValue] = useState<number>();
     const [warningTexts, setWarningTexts] = useState<EstimateTexts>();
     const [loading, setLoading] = useState<boolean>(true);
-    const { data: token } = useAccessToken();
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken;
 
     function setOutput(riskAssesment: RiskAssesment) {
         setSpeedoValue(riskAssesment);

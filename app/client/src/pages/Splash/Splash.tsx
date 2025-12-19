@@ -3,10 +3,10 @@ import Section from './Section';
 import CallToAction from './CallToAction';
 import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
-import { useAccessToken } from '../../hooks/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
 import MapSection from './MapSection';
 import TheResearchSection from './TheResearchSection';
+import { useAuth } from '../../hooks/useAuth/useAuth';
 
 export const sectionFontStyle = {
     color: 'whitesmoke',
@@ -16,7 +16,8 @@ export const sectionFontStyle = {
 };
 
 export default function SplashPage(): JSX.Element {
-    const { data: token } = useAccessToken()
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
     const theme = useTheme();
 
     function handleTryAppClick() {
