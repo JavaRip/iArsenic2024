@@ -17,10 +17,6 @@ export const UserService = {
             }
         }
 
-        console.log('================================')
-        console.log(userId)
-        console.log('================================')
-
         const userRes = await UserRepo.findById(userId)
 
         if (userRes == null) {
