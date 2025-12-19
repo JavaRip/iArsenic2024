@@ -1,4 +1,4 @@
-import { AbstractToken, AccessToken, User } from 'iarsenic-types';
+import { AbstractToken, AccessToken, AccessTokenSchema, RefreshToken, RefreshTokenSchema, User } from '../models';
 import bcrypt from 'bcrypt'
 import { TokenRepo, UserRepo } from '../repositories';
 import { KnownError } from '../errors';
@@ -75,7 +75,7 @@ export const AuthService = {
             units: units, 
         })
 
-        const accessToken = TokenRepo.create({
+        const accessToken = await TokenRepo.create({
             id: uuidv4(),
             createdAt: new Date(),
             type: "access",
@@ -83,13 +83,19 @@ export const AuthService = {
             expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
         })
 
-        const refreshToken = TokenRepo.create({
+        const refreshToken = await TokenRepo.create({
             id: uuidv4(),
             createdAt: new Date(),
             type: "refresh",
             userId: newUser.id,
             expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         })
+
+        return { 
+            user: newUser,
+            refreshToken: RefreshTokenSchema.parse(refreshToken), 
+            accessToken: AccessTokenSchema.parse(accessToken),
+        }
     },
 
     async register_google_oauth(

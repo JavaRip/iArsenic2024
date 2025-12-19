@@ -1,4 +1,4 @@
-import { AccessTokenSchema, UserSchema } from 'iarsenic-types'
+import { AccessTokenSchema, UserSchema } from '../models'
 import { KnownError } from '../errors'
 import { Context } from 'koa'
 import { UserService } from '../services'

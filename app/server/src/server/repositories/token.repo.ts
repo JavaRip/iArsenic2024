@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { AbstractTokenSchema, AbstractToken } from 'iarsenic-types';
+import { AbstractTokenSchema, AbstractToken } from '../models';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 

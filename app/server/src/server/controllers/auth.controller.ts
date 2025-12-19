@@ -1,6 +1,6 @@
 import { Context } from "koa";
 import { KnownError } from "../errors";
-import { AccessToken, LoginRequestSchema } from "iarsenic-types";
+import { AccessToken, LoginRequestSchema } from '../models';
 import { AuthService } from "../services";
 import { z } from 'zod';
 
@@ -91,12 +91,12 @@ export const AuthController = {
         const method = body.method
         console.log(body)
 
-        let user, token 
+        let user, accessToken, refreshToken 
 
         switch (body.method) {
             case 'email_pass':
-                ({ user, token } 
-                    = await AuthService.register_email_password(
+                ({ user, accessToken, refreshToken } =
+                    await AuthService.register_email_password(
                         body.email,
                         body.language ?? 'bengali',
                         body.password,
@@ -105,24 +105,32 @@ export const AuthController = {
                     ))
                 break;
 
-            case 'google_oauth':
-                ({ user, token } = 
-                    await AuthService.register_google_oauth(
-                        body.idToken,
-                        body.language ?? 'bengali',
-                        body.units ?? 'feet',
-                    )
-                )
-                break;
+            // case 'google_oauth':
+            //     ({ user, accessToken, refreshToken } =
+            //         await AuthService.register_google_oauth(
+            //             body.idToken,
+            //             body.language ?? 'bengali',
+            //             body.units ?? 'feet',
+            //         )
+            //     )
+            //     break;
 
             default:
                 throw new Error(
                     `Invalid registration method ${method}`
                 );
         }
+
+        ctx.cookies.set('refreshToken', JSON.stringify(refreshToken), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            path: '/api/v1/auth/refresh',
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        })
     
         ctx.status = 201;
-        ctx.body = { user, token };
+        ctx.body = { user, accessToken };
     },
 
     async login(ctx: Context): Promise<void> {

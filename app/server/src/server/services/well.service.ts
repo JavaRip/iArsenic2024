@@ -1,5 +1,5 @@
 import uuid4 from 'uuid4'
-import { AbstractToken, ModelMessageCode, User, Well, WellSchema } from 'iarsenic-types'
+import { AbstractToken, ModelMessageCode, User, Well, WellSchema } from '../models'
 import { WellRepo } from '../repositories'
 import { KnownError } from '../errors'
 import getSignedUrl from '../utils/signedUrl'
@@ -314,7 +314,7 @@ export const WellService = {
     
         const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
     
-        const signedUrls = await Promise.all(imagePaths.map(path =>
+        const signedUrls = await Promise.all(imagePaths.map((path: string) =>
             getSignedUrl(
                 'read',
                 path,
@@ -366,7 +366,7 @@ export const WellService = {
     
         await deleteFileFromBucket(imagePath);
 
-        const updatedPaths = imagePaths.filter(p => p !== imagePath);
+        const updatedPaths = imagePaths.filter((p: string) => p !== imagePath);
         const updatedWell = {
             ...well,
             imagePaths: updatedPaths,

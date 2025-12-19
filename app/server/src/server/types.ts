@@ -1,4 +1,4 @@
-import { ModelMessageCode } from 'iarsenic-types';
+import { ModelMessageCode } from "./models";
 
 export type QueryTuple = [string, FirebaseFirestore.WhereFilterOp, any];
 

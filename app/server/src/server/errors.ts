@@ -1,4 +1,4 @@
-import { KnownErrorArgs } from 'iarsenic-types'
+import { KnownErrorArgs } from "./models"
 
 export class KnownError extends Error {
     code: number
