@@ -161,12 +161,6 @@ export default function Region(): JSX.Element {
         );
     }
 
-    console.log(well)
-    console.log(dropdownData)
-    console.log(regionTranslations)
-    console.log('--------------------------------')
-    console.log(selectedDivision)
-
     return (
         <WellDataEntryLayout
             title={

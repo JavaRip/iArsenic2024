@@ -57,6 +57,7 @@ export default function Flooding(): JSX.Element {
         )
     }
 
+    console.log(`rendering page with flooding: ${flooding}`)
     return (
         <WellDataEntryLayout
             title={
@@ -88,6 +89,7 @@ export default function Flooding(): JSX.Element {
                     }}
                 >
                     <RadioGroup
+                        key={flooding}
                         name="flooding-selector"
                         value={flooding}
                         onChange={handleFloodingChange}

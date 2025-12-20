@@ -72,6 +72,7 @@ function App() {
                         refetch loop with useWells hook */}
                         <Map />
                     </Route>
+
                     {/* App Pages with HeaderBar and Stack layout */}
                     <Route>
                         <HeaderBar />

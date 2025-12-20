@@ -69,6 +69,8 @@ export default function Depth(): JSX.Element {
             flooding?: false,
         } = { depth };
 
+        // skip flooding page if depth
+        // greater than 15m
         if (depth >= 15) {
             updates.flooding = false
         }
