@@ -1,7 +1,7 @@
 import './server/bootstrap'
 import config from './server/config'
 import cors from '@koa/cors'
-import helmet from 'koa-helmet'
+// import helmet from 'koa-helmet'
 import Koa from 'koa'
 import routes from './server/routes'
 import uuid4 from 'uuid4'
@@ -26,7 +26,6 @@ api.use(async (ctx, next) => {
 
 // middleware
 api.use(cors())
-api.use(helmet())
 api.use(hybridBodyParser())
 
 // mount the routes

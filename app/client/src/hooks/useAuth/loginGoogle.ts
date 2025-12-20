@@ -1,4 +1,4 @@
-import { AccessTokenSchema, AccessToken } from 'iarsenic-types';
+import { AccessToken, AccessTokenSchema, User, UserSchema } from "iarsenic-types";
 
 export default async function loginGoogle({
     // units language & username required because
@@ -11,8 +11,11 @@ export default async function loginGoogle({
     googleIdToken: string;
     language: 'english' | 'bengali';
     units: 'meters' | 'feet';
-}): Promise<AccessToken> {
-    const res = await fetch("/api/v1/auth/login", {
+}): Promise<{
+    user: User;
+    accessToken: AccessToken;
+}> {
+    const res = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -24,10 +27,29 @@ export default async function loginGoogle({
     });
 
     if (!res.ok) {
-        throw new Error('failed to login with google')
+        throw new Error('Failed to login with Google');
     }
 
     const data = await res.json();
-    const parsedAccessToken = AccessTokenSchema.parse(data)
-    return parsedAccessToken;
+
+    // Parse access token and convert dates
+    const parsedAccessToken = AccessTokenSchema.parse({
+        ...data.accessToken,
+        createdAt: new Date(data.accessToken.createdAt),
+        expiresAt: new Date(data.accessToken.expiresAt),
+        revokedAt: data.accessToken?.revokedAt 
+            ? new Date(data.accessToken.revokedAt) 
+            : undefined,
+    });
+
+    // Parse user and convert dates
+    const parsedUser = UserSchema.parse({
+        ...data.user,
+        createdAt: new Date(data.user.createdAt),
+    });
+
+    return {
+        user: parsedUser,
+        accessToken: parsedAccessToken,
+    };
 }

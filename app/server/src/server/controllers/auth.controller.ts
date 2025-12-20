@@ -7,13 +7,13 @@ import { z } from 'zod';
 const BaseRegisterSchema = z.object({
     units: z.enum(['feet', 'meters']).optional(),
     language: z.enum(['bengali', 'english']).optional(),
-    username: z.string(),
 });
 
 export const UsernamePasswordRegisterBodySchema = BaseRegisterSchema.extend({
     method: z.literal('email_pass'),
     password: z.string(),
     email: z.string().email(),
+    username: z.string(),
 });
 
 export const GoogleOAuthRegisterBodySchema = BaseRegisterSchema.extend({
@@ -89,7 +89,6 @@ export const AuthController = {
     async register(ctx: Context): Promise<void> {
         const body = RegisterRequestBodySchema.parse(ctx.request.body)
         const method = body.method
-        console.log(body)
 
         let user, accessToken, refreshToken 
 
