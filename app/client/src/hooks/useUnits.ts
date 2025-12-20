@@ -36,9 +36,9 @@ export function useUnits() {
         localStorage.setItem(UNITS_KEY, newUnits);
         setUnitsState(newUnits);
 
-        if (token?.user) {
+        if (token) {
             updateUserMutate({
-                userId: token.user.id,
+                userId: token.userId,
                 data: { units: newUnits },
             })
         }

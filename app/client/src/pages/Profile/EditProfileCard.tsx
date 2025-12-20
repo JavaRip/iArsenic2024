@@ -11,10 +11,8 @@ import { User, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useUnits } from '../../hooks/useUnits';
-// import { useQueryClient } from '@tanstack/react-query';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
-// import { useAuth } from '../../hooks/useAuth/useAuth';
 
 interface Props {
     user: User;
@@ -23,12 +21,8 @@ interface Props {
 }
 
 export default function EditProfileCard({ user, setEditMode }: Props): JSX.Element {
-    // const queryClient = useQueryClient()
 
     const [name, setName] = useState<string>(user.name);
-
-    // const auth = useAuth()
-    // const { data: token } = auth.getAccessToken
 
     const { language, setLanguage } = useLanguage();
     const { units, setUnits } = useUnits();
@@ -36,7 +30,6 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
     async function saveChanges() {
         throw new Error('unimplemented')
     }
-    
 
     return (
         <Box width='100%'>

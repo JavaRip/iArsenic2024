@@ -1,6 +1,6 @@
 import uuid4 from 'uuid4';
 import { KnownError } from '../errors';
-import { AccessToken, User, UserSchema, validateModel, Language, Units, VerifyEmailTokenSchema, AccessTokenSchema } from '../models';
+import { AccessToken, User, UserSchema, validateModel, Language, Units, VerifyEmailTokenSchema, AccessTokenSchema, AbstractToken } from '../models';
 import { UserRepo, TokenRepo } from '../repositories'
 import bcrypt from 'bcrypt'
 import sendMail from '../emails/sendMail';
@@ -32,7 +32,29 @@ export const UserService = {
         return userRes
     },
 
-    async updateUser(userId: string, userUpdates: Partial<User>): Promise<User> {
+    async updateUser(
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        userId: string, 
+        userUpdates: Partial<User>
+    ): Promise<User> {
+        if (auth.user.type === 'guest') {
+            throw new KnownError({
+                name: 'Unauthorised',
+                message: 'Login to update existing users',
+                code: 403,
+            });
+        }
+
+        if (auth.user.type !== 'admin') {
+            if (auth.user.id !== userId) {
+                throw new KnownError({
+                    name: 'Unauthorised',
+                    message: 'Updating users other than self forbidden',
+                    code: 403,
+                });
+            }
+        }
+
         const user = await UserRepo.findById(userId)
 
         if (user == null) {

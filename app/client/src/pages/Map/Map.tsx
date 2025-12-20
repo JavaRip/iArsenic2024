@@ -7,7 +7,7 @@ import { LatLngExpression } from 'leaflet';
 import Markers from './components/markers';
 import UpaMap from './components/upaMap';
 import MapInterface from './components/MapInterface/MapInterface';
-import useRegionTranslations from '../../hooks/useRegionTranslations';
+import { useRegionTranslations } from '../../hooks/useRegionTranslations';
 import useInteractiveMap from './hooks/useInteractiveMap';
 import { useWells } from '../../hooks/useWells';
 import { predictionToRiskKey } from './utils/predictionToRiskFactor';

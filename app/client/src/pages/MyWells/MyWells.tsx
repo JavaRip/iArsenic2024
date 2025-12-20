@@ -4,12 +4,14 @@ import {
     Button,
     Alert,
     CircularProgress,
+    Stack,
+    Typography,
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { navigate } from 'wouter/use-browser-location';
 
 import WellCard from './WellCard';
-import fetchDropdownData from '../../utils/fetchDropdownData';
+import { useDropdownData } from '../../hooks/useDropdownData';
 import { Well, WellSchema } from 'iarsenic-types';
 import Filter from './Filter';
 import TranslatableText from '../../components/TranslatableText';
@@ -39,11 +41,13 @@ export default function MyWells(): JSX.Element {
     const auth = useAuth()
     const { data: token } = auth.getAccessToken
 
-    const dropdownQuery = useQuery({
-        queryKey: ['dropdownData'],
-        queryFn: fetchDropdownData,
-    });
+    const {
+        data: dropdownData, 
+        isLoading: isDropdownLoading,
+        isError: isDropdownError,
+    } = useDropdownData();
 
+    // TODO add query wells to useWells hook
     const wellsQuery = useQuery<Well[]>({
         queryKey: ['wells', token?.id, queryParams],
         enabled: !!token,
@@ -121,8 +125,20 @@ export default function MyWells(): JSX.Element {
         setQueryParams(Object.fromEntries(params.entries()));
     }, [filters]);
 
-    if (dropdownQuery.isLoading) {
-        return <CircularProgress />;
+    if (isDropdownLoading) {
+        return (
+            <Stack direction="column" alignContent="center" justifyContent="center">
+                <CircularProgress />
+            </Stack>
+        )
+    }
+
+    if (isDropdownError) {
+        return (
+            <Stack>
+                <Typography>Error loading page data</Typography>
+            </Stack>
+        );
     }
 
     const wells = token ? wellsQuery.data : guestWellsQuery.data;
@@ -154,9 +170,9 @@ export default function MyWells(): JSX.Element {
                 />
             </Button>
 
-            {token && dropdownQuery.data && (
+            {token && dropdownData && (
                 <Filter
-                    dropdownData={dropdownQuery.data}
+                    dropdownData={dropdownData}
                     filters={filters}
                     setFilters={setFilters}
                     filterOpen={filterOpen}

@@ -34,9 +34,9 @@ export function useLanguage() {
         setLanguageState(newLanguage)
         document.body.className = newLanguage;
 
-        if (token?.user) {
+        if (token) {
             updateUserMutate({
-                userId: token.user.id,
+                userId: token.userId,
                 data: { language: newLanguage },
             })
         }

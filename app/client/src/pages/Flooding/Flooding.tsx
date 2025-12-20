@@ -1,18 +1,19 @@
-import { FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
-import { useState } from "react";
+import { CircularProgress, FormControl, FormControlLabel, Radio, RadioGroup, Stack } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
-import { useAuth } from "../../hooks/useAuth/useAuth";
+import { useWells } from "../../hooks/useWells";
 
 export default function Flooding(): JSX.Element {
     const [, params] = useRoute('/well/:id/flooding');
     const wellId = params?.id;
 
-    const auth = useAuth()
-    const { data: token } = auth.getAccessToken
+    const { getWell, updateWell } = useWells();
+    const { data: well, isLoading } = getWell(wellId);
+    const updateWellMutation = updateWell()
 
     const [flooding, setFlooding] = useState<'yes' | 'no'>();
     const [error, setError] = useState<boolean>(false);
@@ -22,6 +23,14 @@ export default function Flooding(): JSX.Element {
         setError(false);
     }
 
+    useEffect(() => {
+        console.log('--------------------------------')
+        console.log(well)
+        if (flooding === undefined && well?.flooding !== undefined) {
+            setFlooding(well.flooding ? 'yes' : 'no');
+        }
+    }, [well, flooding]);
+
     async function handleNext() {
         if (!flooding) {
             setError(true);
@@ -29,28 +38,25 @@ export default function Flooding(): JSX.Element {
         }
 
         const floodingBool = flooding === 'yes';
-        const body = { flooding: floodingBool };
-        const headers: HeadersInit = {};
 
-        if (token) {
-            headers['authorization'] = `Bearer ${token.id}`;
+        try {
+            await updateWellMutation.mutateAsync({
+            wellId: wellId!,
+            data: { flooding: floodingBool },
+            });
+
+            navigate(`/well/${wellId}/well-in-use`);
+        } catch (err) {
+            console.error('Failed to update well', err);
         }
+    }
 
-        const res = await fetch(`/api/v1/self/well/${wellId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                ...headers,
-            },
-            body: JSON.stringify(body),
-        });
-
-        if (!res.ok) {
-            console.error('Failed to update well:', res);
-            return;
-        }
-
-        navigate(`/well/${wellId}/well-in-use`);
+    if (isLoading) {
+        return (
+            <Stack alignItems='center' justifyContent='center'>
+                <CircularProgress />
+            </Stack>
+        )
     }
 
     return (

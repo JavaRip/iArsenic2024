@@ -51,7 +51,13 @@ export function useWells() {
 
     const updateWell = () => {
         return useMutation({
-            mutationFn: async ({ wellId, data }: { wellId: string; data: Partial<Well> }) => {
+            mutationFn: async ({
+                wellId, 
+                data,
+            }: { 
+                wellId: string;
+                data: Partial<Well>;
+            }) => {
                 const headers: HeadersInit = {
                     'Content-Type': 'application/json',
                 }
@@ -69,9 +75,26 @@ export function useWells() {
                 if (!res.ok) throw new Error('Failed to update well')
                 return res.json()
             },
-            onSuccess: (_data, { wellId }) => {
-                queryClient.invalidateQueries({ queryKey: ['well', wellId] })
-                queryClient.invalidateQueries({ queryKey: ['wells'] })
+            onMutate: async ({ wellId, data }) => {
+                await queryClient.cancelQueries({ queryKey: ['well', wellId] });
+
+                const previousWell = queryClient.getQueryData<Well>([
+                    'well',
+                    wellId,
+                ])
+
+                queryClient.setQueryData<Well>(
+                    ['well', wellId],
+                    (old) => old ? { ...old, ...data } : old,
+                )
+
+                return { previousWell }
+            },
+            onSettled: (updatedWell, _error, { wellId }) => {
+                queryClient.setQueryData(['well', wellId], updatedWell)
+                queryClient.setQueryData<Well[]>(['wells'], (old) =>
+                    old?.map((w) => (w.id === updatedWell.id ? updatedWell : w))
+                );
             },
         });
     };
