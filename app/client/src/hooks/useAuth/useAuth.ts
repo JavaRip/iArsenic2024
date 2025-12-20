@@ -24,8 +24,20 @@ export function useAuth() {
     });
 
     const loginGoogle = useMutation({
-        mutationFn: ({ googleIdToken }: { googleIdToken: string }) =>
-            loginGoogleFn(googleIdToken),
+        mutationFn: ({ 
+            googleIdToken,
+            language,
+            units,
+        }: {
+            googleIdToken: string;
+            language: 'english' | 'bengali',
+            units: 'meters' | 'feet',
+        }) =>
+            loginGoogleFn({
+                googleIdToken,
+                language,
+                units,
+            }),
         onSuccess: (accessToken) => {
             queryClient.setQueryData(['auth', 'accessToken'], accessToken)
             getAccessToken.refetch()
@@ -48,8 +60,9 @@ export function useAuth() {
         queryKey: ['auth', 'accessToken'],
         refetchInterval: 1000 * 60 * 10, // 10 minutes
         refetchOnWindowFocus: false,
+        refetchIntervalInBackground: true,
         retry: false,
-        staleTime: 1000 * 60 * 10,
+        staleTime: 0,
     })
 
     return { 

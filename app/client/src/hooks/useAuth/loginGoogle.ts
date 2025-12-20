@@ -1,14 +1,25 @@
 import { AccessTokenSchema, AccessToken } from 'iarsenic-types';
 
-export default async function loginGoogle(
-    googleIdToken: string,
-): Promise<AccessToken> {
+export default async function loginGoogle({
+    // units language & username required because
+    // login with google button both registers
+    // and logs in simultaneously
+    googleIdToken,
+    language,
+    units,
+}: {
+    googleIdToken: string;
+    language: 'english' | 'bengali';
+    units: 'meters' | 'feet';
+}): Promise<AccessToken> {
     const res = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            method: "google_oauth",
             idToken: googleIdToken,
+            language,
+            method: "google_oauth",
+            units,
         }),
     });
 

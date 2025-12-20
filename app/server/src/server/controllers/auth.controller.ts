@@ -105,15 +105,15 @@ export const AuthController = {
                     ))
                 break;
 
-            // case 'google_oauth':
-            //     ({ user, accessToken, refreshToken } =
-            //         await AuthService.register_google_oauth(
-            //             body.idToken,
-            //             body.language ?? 'bengali',
-            //             body.units ?? 'feet',
-            //         )
-            //     )
-            //     break;
+            case 'google_oauth':
+                ({ user, accessToken, refreshToken } =
+                    await AuthService.register_google_oauth(
+                        body.idToken,
+                        body.language ?? 'bengali',
+                        body.units ?? 'feet',
+                    )
+                )
+                break;
 
             default:
                 throw new Error(

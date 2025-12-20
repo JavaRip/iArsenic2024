@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import GoogleLoginSection from "./components/googleLoginSection";
+// import GoogleLoginSection from "./components/googleLoginSection";
 import LoginSection from "./components/loginSection";
 import RegisterSection from "./components/registerSection";
 import PageCard from "../../components/PageCard";
@@ -11,10 +11,10 @@ export default function Login(): JSX.Element {
                 <PageCard>
                     <LoginSection />
                 </PageCard>
-
+{/* 
                 <PageCard>
                     <GoogleLoginSection />
-                </PageCard>
+                </PageCard> */}
 
                 <PageCard>
                     <RegisterSection />

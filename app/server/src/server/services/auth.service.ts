@@ -1,3 +1,4 @@
+import { OAuth2Client } from "google-auth-library";
 import { AbstractToken, AccessToken, AccessTokenSchema, RefreshToken, RefreshTokenSchema, User } from '../models';
 import bcrypt from 'bcrypt'
 import { TokenRepo, UserRepo } from '../repositories';
@@ -163,12 +164,65 @@ export const AuthService = {
         units: 'feet' | 'meters',
     ): Promise<{
         user: User,
-        token: AccessToken,
+        accessToken: AccessToken,
+        refreshToken: RefreshToken,
     }> {
-        console.log(idToken)
-        console.log(language)
-        console.log(units)
-        throw new Error('Unimplemented')
+        const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+        const ticket = await googleClient.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        if (!payload?.email) {
+            throw new KnownError({
+                name: "Invalid Google token",
+                message: "Google token did not contain an email",
+                code: 400,
+            });
+        }
+
+        const email = payload.email;
+        const username = payload.name || email.split("@")[0];
+
+        let user = await UserRepo.findByEmail(email);
+
+        if (!user) {
+            user = await UserRepo.create({
+                id: uuidv4(),
+                email,
+                emailVerified: payload.email_verified || false,
+                name: username || 'no-username-provided',
+                type: 'user',
+                createdAt: new Date(),
+                language,
+                units,
+            });
+        }
+
+        delete user.password;
+
+        const accessToken = await TokenRepo.create({
+            id: uuidv4(),
+            type: "access",
+            userId: user.id,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 min
+        });
+
+        const refreshToken = await TokenRepo.create({
+            id: uuidv4(),
+            type: "refresh",
+            userId: user.id,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        });
+
+        return {
+            user,
+            accessToken: AccessTokenSchema.parse(accessToken),
+            refreshToken: RefreshTokenSchema.parse(refreshToken),
+        };
     },
 
     async refresh(refreshToken: RefreshToken): Promise<AccessToken> {
