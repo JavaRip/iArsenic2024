@@ -64,7 +64,12 @@ function App() {
                 <Switch>
                     {/* Splash & Map Page */}
                     <Route path='/' component={Splash} />
+                    
                     <Route path='/map'>
+                        {/* Map passed as child component to route
+                        not component parameter because it has props
+                        passing with arrow function caused infinite
+                        refetch loop with useWells hook */}
                         <Map />
                     </Route>
                     {/* App Pages with HeaderBar and Stack layout */}

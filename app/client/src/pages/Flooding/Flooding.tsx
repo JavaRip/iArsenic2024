@@ -24,8 +24,6 @@ export default function Flooding(): JSX.Element {
     }
 
     useEffect(() => {
-        console.log('--------------------------------')
-        console.log(well)
         if (flooding === undefined && well?.flooding !== undefined) {
             setFlooding(well.flooding ? 'yes' : 'no');
         }
