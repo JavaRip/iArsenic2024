@@ -120,12 +120,13 @@ export const AuthController = {
                 );
         }
 
-        ctx.cookies.set('refreshToken', refreshToken.id, {
+        ctx.cookies.set('__session', refreshToken.id, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/api/v1/auth/refresh',
+            secure: process.env.NODE_ENV !== 'local',
+            sameSite: 'lax',
+            path: '/',
             maxAge: 30 * 24 * 60 * 60 * 1000,
+            secureProxy: true,
         })
     
         ctx.status = 201;
@@ -150,12 +151,13 @@ export const AuthController = {
             loginRequest.password,
         )
 
-        ctx.cookies.set('refreshToken', refreshToken.id, {
+        ctx.cookies.set('__session', refreshToken.id, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/api/v1/auth/refresh',
+            secure: process.env.NODE_ENV !== 'local',
+            sameSite: 'lax',
+            path: '/',
             maxAge: 30 * 24 * 60 * 60 * 1000,
+            secureProxy: true,
         })
 
         ctx.status = 200

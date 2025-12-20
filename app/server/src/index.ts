@@ -13,6 +13,7 @@ import hybridBodyParser from './server/middleware/hybridBodyParser'
 const isServerless = !!process.env.GCLOUD_PROJECT;
 
 const api = new Koa();
+api.proxy = true;
 const staticDir = path.resolve(__dirname, 'static');
 
 api.use(async (ctx, next) => {

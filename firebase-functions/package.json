@@ -7,7 +7,7 @@
     "serve:dev": "cp .env.staging .env && firebase emulators:start --import='.firestore' --export-on-exit",
     "shell": "firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "rm -rf static && firebase deploy",
     "logs": "firebase functions:log",
     "watch-app": "nodemon --watch ../app/client/src --watch ../app/server/src --ext ts,tsx --exec \"npm --prefix ../app/server run build:firebase\""
   },
