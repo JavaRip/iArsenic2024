@@ -8,7 +8,7 @@ self.get('/refresh', useAuth, async ctx => AuthController.refresh(ctx))
 self.post('/forgot-password', async ctx => AuthController.forgotPassword(ctx))
 self.post('/login', async ctx => AuthController.login(ctx))
 self.post('/register', async ctx => AuthController.register(ctx))
-self.get('/reset-password/:token', async ctx => AuthController.forgotPassword(ctx))
+self.post('/reset-password/:token', async ctx => AuthController.resetPassword(ctx))
 self.get('/verify-email/:token', async ctx => AuthController.verifyEmail(ctx))
 
 export default self

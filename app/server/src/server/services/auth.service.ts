@@ -45,9 +45,45 @@ export const AuthService = {
         resetTokenId: string, 
         newPassword: string,
     ): Promise<void> {
-        console.log(resetTokenId)
-        console.log(newPassword)
-        throw new Error('Unimplemented')
+        const token = await TokenRepo.findById(resetTokenId);
+
+        if (!token) {
+            throw new KnownError({
+                name: 'Invalid token',
+                message: 'Password reset token not found',
+                code: 404,
+            });
+        }
+
+        if (token.expiresAt < new Date()) {
+            throw new KnownError({
+                name: 'Token expired',
+                message: 'Password reset token has expired',
+                code: 403,
+            });
+        }
+
+        const user = await UserRepo.findById(token.userId);
+        if (!user) {
+            throw new KnownError({
+                name: 'User not found',
+                message: 'User associated with this reset token does not exist',
+                code: 404,
+            });
+        }
+
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        await UserRepo.update({
+            ...user,
+            password: hashedPassword,
+        });
+
+        await TokenRepo.update({
+            ...token,
+            revokedAt: new Date(),
+        });
     },
 
     async login(

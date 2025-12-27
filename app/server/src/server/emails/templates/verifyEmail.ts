@@ -14,7 +14,7 @@ export default function verifyEmailTemplate(
                 </p>
                 <p>
                     <a href="${Config.baseUrl}/verify-email/${token.id}"
-                       style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                       style="background-color: #154734; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
                         Verify Email Address
                     </a>
                 </p>

@@ -67,7 +67,6 @@ export const WellRepo: IWellRepo = {
     },
 
     async update(well: Well): Promise<void> {
-        console.log(well)
         const wellRef = db.collection('well');
     
         const querySnapshot = await wellRef.where('id', '==', well.id).get();

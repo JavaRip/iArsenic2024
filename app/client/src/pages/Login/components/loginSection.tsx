@@ -135,7 +135,6 @@ export default function LoginSection() {
             <Stack
                 spacing={2}
             >
-
                 <TextField
                     label="Email"
                     type="email"

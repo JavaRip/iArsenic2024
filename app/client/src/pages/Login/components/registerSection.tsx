@@ -7,6 +7,7 @@ import { useUnits } from "../../../hooks/useUnits";
 export default function RegisterSection() {
     const auth = useAuth()
     const registerEmailPassword = auth.registerEmailPassword;
+
     const { language } = useLanguage()
     const { units } = useUnits()
 
@@ -38,14 +39,14 @@ export default function RegisterSection() {
     };
 
     return (
-        <>
+        <Stack width="100%" alignItems="center" justifyContent="center">
             <Typography variant="h5" mb={2}>
                 Register
             </Typography>
 
             {error && <Typography color="error" mb={2}>{error}</Typography>}
 
-            <Stack spacing={2}>
+            <Stack spacing={2} mb={4}>
                 <TextField
                     label="Email"
                     type="email"
@@ -77,6 +78,6 @@ export default function RegisterSection() {
                     {registerEmailPassword.isPending ? "Registering..." : "Register"}
                 </Button>
             </Stack>
-        </>
+        </Stack>
     )
 }

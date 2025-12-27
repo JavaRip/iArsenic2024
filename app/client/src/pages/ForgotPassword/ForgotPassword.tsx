@@ -1,7 +1,8 @@
-import { Button, Card, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import TranslatableText from "../../components/TranslatableText";
 import { useAuth } from "../../hooks/useAuth/useAuth";
+import PageCard from "../../components/PageCard";
 
 export default function ForgotPassword(): JSX.Element {
     const [email, setEmail] = useState<string>('');
@@ -9,7 +10,7 @@ export default function ForgotPassword(): JSX.Element {
     const [success, setSuccess] = useState<boolean>(false);
 
     const auth = useAuth()
-    const { resetPassword } = auth
+    const { forgotPassword } = auth
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
         setEmail(event.target.value);
@@ -17,7 +18,7 @@ export default function ForgotPassword(): JSX.Element {
 
     async function handlePasswordReset() {
         try {
-            await resetPassword.mutateAsync(email);
+            await forgotPassword.mutateAsync(email);
             setSuccess(true);
         } catch (err: unknown) {
             console.error(err);
@@ -30,20 +31,8 @@ export default function ForgotPassword(): JSX.Element {
     }
 
     return (
-        <>
-            <Card
-                variant='outlined'
-                sx={{
-                    margin: '0 1rem 1rem 1rem',
-                    padding: '1rem',
-                    width: '100%',
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                    pb: '2rem',
-                }}
-            >
+        <Stack width="100%" alignItems="center" justifyContent="center">
+            <PageCard>
                 <TranslatableText 
                     mb='1rem'
                     textAlign="center"
@@ -52,23 +41,32 @@ export default function ForgotPassword(): JSX.Element {
                     bengali='BENGALI PLACEHOLDER'
                 />
 
+                {error && (
+                    <TranslatableText
+                        variant='body1'
+                        error={true}
+                        english={error}
+                        bengali='BENGALI PLACEHOLDER'
+                    />
+                )}
+
                 {success ? (
                     <TranslatableText
                         variant='body1'
                         english={`
-                            If a account exists with this email,
-                            a password reset link has been sent to it.
+                            Reset email password sent successfully.
+                            Email may take 30 minutes or more to arrive,
+                            please check spam and junk mail.
                         `}
                         bengali='BENGALI PLACEHOLDER'
                     />
                 ) : (
-                    <>
+                    <Stack spacing={2}>
                         <TextField
                             type="email"
                             value={email}
                             onChange={handleEmailChange}
-                            sx={{ width: '85%' }}
-                            disabled={resetPassword.isPending}
+                            disabled={forgotPassword.isPending}
                             label={
                                 <TranslatableText 
                                     variant='body1'
@@ -79,33 +77,25 @@ export default function ForgotPassword(): JSX.Element {
                         />
 
                         <Button
-                            sx={{ width: '90%', height: '3rem' }}
+                            sx={{ height: '4rem' }}
+                            fullWidth
                             variant='contained'
                             onClick={handlePasswordReset}
-                            disabled={resetPassword.isPending || !email}
+                            disabled={forgotPassword.isPending || !email}
                         >
                             <TranslatableText 
                                 variant='body1'
                                 english={
-                                    resetPassword.isPending ?
+                                    forgotPassword.isPending ?
                                         'Sending...' :
                                         'Send Reset Link'
                                 }
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </Button>
-
-                        {error && (
-                            <TranslatableText
-                                variant='body1'
-                                error={true}
-                                english={error}
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        )}
-                    </>
+                    </Stack>
                 )}
-            </Card>
-        </>
+            </PageCard>
+        </Stack>
     );
 }

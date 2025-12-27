@@ -3,6 +3,7 @@ import loginEmailPasswordFn from "./loginEmailPassword";
 import loginGoogleFn from "./loginGoogle";
 import refreshAccessTokenFn from "./refreshAccessToken";
 import registerEmailPasswordFn from "./registerEmailPassword";
+import forgotPasswordFn from "./forgotPassword";
 import resetPasswordFn from "./resetPassword";
 
 export function useAuth() {
@@ -66,11 +67,25 @@ export function useAuth() {
         staleTime: 0,
     })
 
+    const forgotPassword = useMutation({
+        mutationFn: (email: string) => forgotPasswordFn(email),
+    });
+
     const resetPassword = useMutation({
-        mutationFn: (email: string) => resetPasswordFn(email),
+        mutationFn: ({
+            resetPasswordToken,
+            newPassword,
+        } : {
+            resetPasswordToken: string,
+            newPassword: string,
+        }) => resetPasswordFn(
+            resetPasswordToken,
+            newPassword,
+        ),
     });
 
     return { 
+        forgotPassword,
         getAccessToken,
         loginEmailPassword,
         loginGoogle,
