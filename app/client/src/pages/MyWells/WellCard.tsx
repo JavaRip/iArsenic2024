@@ -1,10 +1,10 @@
 import { Card, Box } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
-import { Well } from 'iarsenic-types';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
 import TranslatableText from '../../components/TranslatableText';
 import { useAuth } from '../../hooks/useAuth/useAuth';
+import { Well } from '../../models';
 
 interface Props {
     well: Well;

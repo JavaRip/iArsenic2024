@@ -12,10 +12,10 @@ import { navigate } from 'wouter/use-browser-location';
 
 import WellCard from './WellCard';
 import { useDropdownData } from '../../hooks/useDropdownData';
-import { Well, WellSchema } from 'iarsenic-types';
 import Filter from './Filter';
 import TranslatableText from '../../components/TranslatableText';
 import { useAuth } from '../../hooks/useAuth/useAuth';
+import { Well, WellSchema } from '../../models';
 
 export default function MyWells(): JSX.Element {
     const [filterOpen, setFilterOpen] = useState<boolean>(false)

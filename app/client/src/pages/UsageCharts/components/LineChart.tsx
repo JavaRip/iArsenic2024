@@ -2,7 +2,7 @@ import { LineChart } from "@mui/x-charts";
 import PageCard from "../../../components/PageCard";
 import TranslatableText from "../../../components/TranslatableText";
 import getLineChartData from "../utils/getLineChartData";
-import { Well } from "iarsenic-types";
+import { Well } from "../../../models";
 
 interface props {
     wells: Well[]

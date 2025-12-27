@@ -1,9 +1,9 @@
 import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
-import { Well } from "iarsenic-types";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
 import { useRegionTranslations } from "../../hooks/useRegionTranslations";
+import { Well } from "../../models";
 
 interface props {
     well: Well;

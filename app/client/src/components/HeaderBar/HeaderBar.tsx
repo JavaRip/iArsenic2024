@@ -1,17 +1,28 @@
-import { AppBar, Stack, Typography, Box, IconButton } from '@mui/material';
+import { AppBar, Stack, Typography, Box, IconButton, Button, Avatar } from '@mui/material';
 import { navigate } from 'wouter/use-browser-location';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import NavMenu from './NavMenu';
 import { useAuth } from '../../hooks/useAuth/useAuth';
+import TranslatableText from '../TranslatableText';
+import { useUsers } from '../../hooks/useUser';
 
 export default function HeaderBar(): JSX.Element {
     const auth = useAuth()
     const { data: token } = auth.getAccessToken
-    const user = token?.user;
+    const { getUser } = useUsers()
+
+    const {
+        data: user,
+        // isLoading: userLoading,
+        // isError: userIsError,
+        // error: userError,
+    } = getUser(token?.userId)
 
     const [open, setOpen] = useState(false);
+    console.log(user)
 
     return (
         <AppBar sx={{ marginBottom: '2rem', height: '3rem' }} position='static'>
@@ -52,35 +63,42 @@ export default function HeaderBar(): JSX.Element {
                 </Stack>
 
                 <Box>
-                    {/* {user ? (
+                    {user && (
                         <Button
                             variant='outlined'
-                            sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
-                            onClick={() => {
-                                deleteAccessToken();
-                                navigate(`/`);
-                                window.location.reload();
+                            onClick={() => navigate('/profile')}
+                            sx={{
+                                padding: '8px',
+                                minWidth: 'auto',
+                                color: 'whitesmoke',
+                                borderColor: 'whitesmoke',
                             }}
                         >
                             <TranslatableText
                                 variant='body1'
-                                english='Logout'
-                                bengali='লগআউট' // chatgpt generated
+                                english='My Account'
+                                bengali='BENGALI PLACEHOLDER'
                             />
+                            {
+                                user.avatarUrl ?
+                                    <Avatar 
+                                        src={user.avatarUrl}
+                                        sx={{
+                                            height: '28px',
+                                            width: '28px',
+                                            mr: '12px',
+                                        }}
+                                    /> :
+                                    <AccountCircleIcon 
+                                        sx={{
+                                            height: '28px',
+                                            width: '28px',
+                                            mr: '12px',
+                                        }}
+                                    />
+                            }
                         </Button>
-                    ) : (
-                        <Button
-                            variant='outlined'
-                            sx={{ padding: '8px', minWidth: 'auto', color: 'whitesmoke', borderColor: 'whitesmoke' }}
-                            onClick={() => navigate('/login')}
-                        >
-                            <TranslatableText
-                                variant='body1'
-                                english='Login'
-                                bengali='লগইন করুন' // chatgpt generated
-                            />
-                        </Button>
-                    )} */}
+                    )}
                 </Box>
             </Stack>
         </AppBar>

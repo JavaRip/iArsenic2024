@@ -1,4 +1,4 @@
-import { AccessToken, AccessTokenSchema, User, UserSchema } from "iarsenic-types";
+import { AccessToken, AccessTokenSchema, User, UserSchema } from "../../models";
 
 export default async function loginGoogle({
     // units language & username required because

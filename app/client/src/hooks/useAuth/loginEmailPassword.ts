@@ -1,4 +1,4 @@
-import { AccessTokenSchema, AccessToken, UserSchema, User } from 'iarsenic-types';
+import { User, AccessToken, AccessTokenSchema, UserSchema } from "../../models";
 
 export default async function loginEmailPassword(
     email: string,

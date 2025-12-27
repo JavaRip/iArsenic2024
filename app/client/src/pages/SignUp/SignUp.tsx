@@ -1,9 +1,9 @@
 import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
-import { IKnownError, RegisterRequestSchema } from 'iarsenic-types';
 import { useLanguage } from '../../hooks/useLanguage';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
+import { RegisterRequestSchema, IKnownError } from '../../models';
 
 export default function SignUp(): JSX.Element {
     const { language } = useLanguage()

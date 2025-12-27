@@ -7,12 +7,12 @@ import {
     FormControl,
     InputLabel
 } from '@mui/material';
-import { User, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useUnits } from '../../hooks/useUnits';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
+import { User, LanguageSchema, UnitsSchema } from '../../models';
 
 interface Props {
     user: User;

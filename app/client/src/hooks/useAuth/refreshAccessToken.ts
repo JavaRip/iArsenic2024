@@ -1,4 +1,4 @@
-import { AccessToken, AccessTokenSchema } from "iarsenic-types";
+import { AccessToken, AccessTokenSchema } from "../../models";
 
 export default async function refreshAccessToken(): Promise<AccessToken> {
     const res = await fetch("/api/v1/auth/refresh", {

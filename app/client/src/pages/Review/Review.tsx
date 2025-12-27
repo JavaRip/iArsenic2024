@@ -1,7 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import Depth from './Depth';
 import Flooding from './Flooding';
@@ -12,6 +11,7 @@ import Images from './Images';
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from '../../components/TranslatableText';
 import { useAuth } from '../../hooks/useAuth/useAuth';
+import { Well } from '../../models';
 
 export default function Review(): JSX.Element {
     const [, params] = useRoute('/well/:id/review');

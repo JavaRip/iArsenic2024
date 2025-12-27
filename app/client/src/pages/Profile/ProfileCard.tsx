@@ -1,8 +1,8 @@
 import { Box, Button } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
-import { User } from 'iarsenic-types';
 import PageCard from '../../components/PageCard';
 import TranslatableText from '../../components/TranslatableText';
+import { User } from '../../models';
 
 interface Props {
     user: User;

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Well } from 'iarsenic-types';
 import { useAuth } from './useAuth/useAuth';
+import { Well } from '../models';
 
 export function useWells() {
     const auth = useAuth();

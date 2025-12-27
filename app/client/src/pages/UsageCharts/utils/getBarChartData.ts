@@ -1,4 +1,4 @@
-import { Well } from "iarsenic-types"
+import { Well } from "../../../models"
 
 export default function getBarChartData(wells: Well[]) {
     const labels = []

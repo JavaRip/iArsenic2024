@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useAuth } from "./useAuth/useAuth"
-import { User } from "iarsenic-types"
+import { User } from "../models"
 
 export function useUsers() {
     const auth = useAuth()
