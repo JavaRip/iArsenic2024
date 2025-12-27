@@ -19,6 +19,9 @@ export default function verifyEmailTemplate(
                     </a>
                 </p>
                 <p>
+                    Note that this link is valid for 30 days.
+                </p>
+                <p>
                     If you did not request this, please ignore this email.
                 </p>
             </body>

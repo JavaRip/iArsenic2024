@@ -1,5 +1,5 @@
 import { OAuth2Client } from "google-auth-library";
-import { AbstractToken, AccessToken, AccessTokenSchema, RefreshToken, RefreshTokenSchema, ResetPasswordToken, User } from '../models';
+import { AccessToken, AccessTokenSchema, RefreshToken, RefreshTokenSchema, ResetPasswordToken, User, VerifyEmailToken } from '../models';
 import bcrypt from 'bcrypt'
 import { TokenRepo, UserRepo } from '../repositories';
 import { KnownError } from '../errors';
@@ -7,13 +7,49 @@ import uuidv4 from 'uuid4'
 import resetPasswordTemplate from "../emails/templates/resetPassword";
 import { UserService } from "./user.service";
 import sendMail from "../emails/sendMail";
+import verifyEmailTemplate from "../emails/templates/verifyEmail";
 
 export const AuthService = {
     async verifyEmail(
-        tokenId: string,
-    ): Promise<AbstractToken> {
-        console.log(tokenId)
-        throw new Error('Unimplemented')
+        verifyEmailTokenId: string,
+    ): Promise<void> {
+        const token = await TokenRepo.findById(verifyEmailTokenId);
+
+        if (!token) {
+            throw new KnownError({
+                name: 'Invalid token',
+                message: 'Verify email token not found',
+                code: 404,
+            });
+        }
+
+        if (token.expiresAt < new Date()) {
+            throw new KnownError({
+                name: 'Token expired',
+                message: 'Password reset token has expired',
+                code: 403,
+            });
+        }
+
+        const user = await UserRepo.findById(token.userId);
+
+        if (!user) {
+            throw new KnownError({
+                name: 'User not found',
+                message: 'User associated with this verify token does not exist',
+                code: 404,
+            });
+        }
+
+        await UserRepo.update({
+            ...user,
+            emailVerified: true,
+        });
+
+        await TokenRepo.update({
+            ...token,
+            revokedAt: new Date(),
+        });
     },
 
     async forgotPassword(
@@ -208,6 +244,25 @@ export const AuthService = {
             expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         })
 
+        const verifyEmailToken = await TokenRepo.create({
+            id: uuidv4(),
+            type: "verify-email",
+            userId: newUser.id,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        })
+
+        const mailBody = verifyEmailTemplate(
+            (verifyEmailToken as VerifyEmailToken),
+            newUser.name, 
+        )
+
+        await sendMail(
+            newUser.email,
+            'Verify iArsenic Email',
+            mailBody,
+        )
+
         return { 
             user: newUser,
             refreshToken: RefreshTokenSchema.parse(refreshToken), 
@@ -274,6 +329,25 @@ export const AuthService = {
             createdAt: new Date(),
             expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         });
+
+        const verifyEmailToken = await TokenRepo.create({
+            id: uuidv4(),
+            type: "verify-email",
+            userId: user.id,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        })
+
+        const mailBody = verifyEmailTemplate(
+            (verifyEmailToken as VerifyEmailToken),
+            user.name, 
+        )
+
+        await sendMail(
+            user.email,
+            'Verify iArsenic Email',
+            mailBody,
+        )
 
         return {
             user,

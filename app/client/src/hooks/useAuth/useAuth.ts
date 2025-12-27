@@ -5,6 +5,7 @@ import refreshAccessTokenFn from "./refreshAccessToken";
 import registerEmailPasswordFn from "./registerEmailPassword";
 import forgotPasswordFn from "./forgotPassword";
 import resetPasswordFn from "./resetPassword";
+import verifyEmailFn from "./verifyEmail"
 
 export function useAuth() {
     const queryClient = useQueryClient();
@@ -18,11 +19,11 @@ export function useAuth() {
             password: string;
         }) =>
             loginEmailPasswordFn(email, password),
-        onSuccess: ({ accessToken, user }) => {
-            queryClient.setQueryData(['auth', 'accessToken'], accessToken)
-            queryClient.setQueryData(['user', user.id], user)
-            getAccessToken.refetch()
-        }
+            onSuccess: ({ accessToken, user }) => {
+                queryClient.setQueryData(['auth', 'accessToken'], accessToken)
+                queryClient.setQueryData(['user', user.id], user)
+                getAccessToken.refetch()
+            }
     });
 
     const loginGoogle = useMutation({
@@ -84,6 +85,16 @@ export function useAuth() {
         ),
     });
 
+    const verifyEmail = useMutation({
+        mutationFn: ({
+            verifyEmailToken,
+        } : {
+            verifyEmailToken: string,
+        }) => verifyEmailFn(
+            verifyEmailToken,
+        ),
+    });
+
     return { 
         forgotPassword,
         getAccessToken,
@@ -91,5 +102,6 @@ export function useAuth() {
         loginGoogle,
         registerEmailPassword,
         resetPassword,
+        verifyEmail,
     };
 }

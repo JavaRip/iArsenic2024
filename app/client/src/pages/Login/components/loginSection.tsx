@@ -197,10 +197,17 @@ export default function LoginSection() {
             </Typography>
 
             <Stack spacing={2} mb={4}>
-                <div ref={googleBtnRef} />
 
-                {loginGoogle.isPending && (
-                    <CircularProgress />
+                {loginGoogle.isPending ? (
+                    <Stack
+                        direction="column"
+                        alignContent="center"
+                        justifyContent="center"
+                    >
+                        <CircularProgress />
+                    </Stack>
+                ) : (
+                    <div ref={googleBtnRef} />
                 )}
             </Stack>
         </>

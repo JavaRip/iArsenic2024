@@ -62,6 +62,7 @@ export const UserRepo: IUserRepo = {
 
         const createdUser = {
             ...doc,
+            email: user.email.toLowerCase(),
             createdAt: doc.createdAt.toDate(),
         }
 
