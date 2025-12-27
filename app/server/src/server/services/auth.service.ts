@@ -296,6 +296,7 @@ export const AuthService = {
 
         const email = payload.email;
         const username = payload.name || email.split("@")[0];
+        const avatarUrl = payload.picture;
 
         let user = await UserRepo.findByEmail(email);
 
@@ -309,6 +310,7 @@ export const AuthService = {
                 createdAt: new Date(),
                 language,
                 units,
+                avatarUrl,
             });
         }
 
