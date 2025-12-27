@@ -1,9 +1,12 @@
 import { OAuth2Client } from "google-auth-library";
-import { AbstractToken, AccessToken, AccessTokenSchema, RefreshToken, RefreshTokenSchema, User } from '../models';
+import { AbstractToken, AccessToken, AccessTokenSchema, RefreshToken, RefreshTokenSchema, ResetPasswordToken, User } from '../models';
 import bcrypt from 'bcrypt'
 import { TokenRepo, UserRepo } from '../repositories';
 import { KnownError } from '../errors';
 import uuidv4 from 'uuid4'
+import resetPasswordTemplate from "../emails/templates/resetPassword";
+import { UserService } from "./user.service";
+import sendMail from "../emails/sendMail";
 
 export const AuthService = {
     async verifyEmail(
@@ -16,8 +19,26 @@ export const AuthService = {
     async forgotPassword(
         email: string,
     ): Promise<void> {
-        console.log(email)
-        throw new Error('Unimplemented')
+        const user = await UserService.getByEmail(email)
+
+        const resetToken = await TokenRepo.create({
+            id: uuidv4(),
+            userId: user.id,
+            createdAt: new Date(),
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+            type: 'reset-password',
+        })
+
+        const emailBody = resetPasswordTemplate(
+            resetToken as ResetPasswordToken,
+            user.name,
+        )
+
+        await sendMail(
+            email,
+            'Reset iArsenic Password',
+            emailBody,
+        )
     },
 
     async resetPassword(

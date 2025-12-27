@@ -1,47 +1,32 @@
 import { Button, Card, TextField } from "@mui/material";
 import { useState } from "react";
 import TranslatableText from "../../components/TranslatableText";
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export default function ForgotPassword(): JSX.Element {
     const [email, setEmail] = useState<string>('');
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
+
+    const auth = useAuth()
+    const { resetPassword } = auth
 
     function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
         setEmail(event.target.value);
     }
 
     async function handlePasswordReset() {
-        setIsSubmitting(true);
-        setError(null);
-
         try {
-            const response = await fetch('/api/v1/user/forgot-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email }),
-            });
-
-            if (response.ok) {
-                setSuccess(true);
+            await resetPassword.mutateAsync(email);
+            setSuccess(true);
+        } catch (err: unknown) {
+            console.error(err);
+            if (err instanceof Error && (err as any).knownError) {
+                setError(err.message);
             } else {
-                const resBody = await response.json();
-                console.error(resBody);
-
-                if (resBody.knownError) {
-                    setError(resBody.message);
-                } else {
-                    setError('Failed to send reset link.');
-                }
+                setError("Failed to send reset link.");
             }
-        } catch (error) {
-            setError('An error occurred. Please try again later.');
-        } finally {
-            setIsSubmitting(false);
-        }
+        } 
     }
 
     return (
@@ -83,7 +68,7 @@ export default function ForgotPassword(): JSX.Element {
                             value={email}
                             onChange={handleEmailChange}
                             sx={{ width: '85%' }}
-                            disabled={isSubmitting}
+                            disabled={resetPassword.isPending}
                             label={
                                 <TranslatableText 
                                     variant='body1'
@@ -97,11 +82,15 @@ export default function ForgotPassword(): JSX.Element {
                             sx={{ width: '90%', height: '3rem' }}
                             variant='contained'
                             onClick={handlePasswordReset}
-                            disabled={isSubmitting || !email}
+                            disabled={resetPassword.isPending || !email}
                         >
                             <TranslatableText 
                                 variant='body1'
-                                english={isSubmitting ? 'Sending...' : 'Send Reset Link'}
+                                english={
+                                    resetPassword.isPending ?
+                                        'Sending...' :
+                                        'Send Reset Link'
+                                }
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </Button>

@@ -3,6 +3,7 @@ import loginEmailPasswordFn from "./loginEmailPassword";
 import loginGoogleFn from "./loginGoogle";
 import refreshAccessTokenFn from "./refreshAccessToken";
 import registerEmailPasswordFn from "./registerEmailPassword";
+import resetPasswordFn from "./resetPassword";
 
 export function useAuth() {
     const queryClient = useQueryClient();
@@ -44,16 +45,16 @@ export function useAuth() {
         }
     })
 
-  const registerEmailPassword = useMutation({
-    mutationFn: (data: {
-        email: string,
-        password: string,
-        language: 'english' | 'bengali',
-        units: 'meters' | 'feet',
-        username: string,
-    }) =>
-        registerEmailPasswordFn(data),
-    });
+    const registerEmailPassword = useMutation({
+        mutationFn: (data: {
+            email: string,
+            password: string,
+            language: 'english' | 'bengali',
+            units: 'meters' | 'feet',
+            username: string,
+        }) =>
+            registerEmailPasswordFn(data),
+        });
 
     const getAccessToken = useQuery({
         queryFn: async () => await refreshAccessTokenFn(),
@@ -65,10 +66,15 @@ export function useAuth() {
         staleTime: 0,
     })
 
+    const resetPassword = useMutation({
+        mutationFn: (email: string) => resetPasswordFn(email),
+    });
+
     return { 
         getAccessToken,
         loginEmailPassword,
         loginGoogle,
         registerEmailPassword,
+        resetPassword,
     };
 }

@@ -1,6 +1,7 @@
 import config from '../config';
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
+import { KnownError } from '../errors';
 
 const MailConfigSchema = z.object({
     from: z.string(),
@@ -43,7 +44,11 @@ export default async function sendMail(
         console.log('Email Sent Successfully');
         return
     } catch (error) {
-        console.error('Error sending mail:', error);
-        throw error;
+        console.error(error)
+        throw new KnownError({
+            message: `Failed to send reset password email to ${to}`,
+            code: 500,
+            name: 'ResetPasswordEmailFailedToSend',
+        });
     }
 }

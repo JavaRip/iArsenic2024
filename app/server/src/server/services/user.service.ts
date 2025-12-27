@@ -32,6 +32,22 @@ export const UserService = {
         return userRes
     },
 
+    async getByEmail(email: string): Promise<User> {
+        const userRes = await UserRepo.findByEmail(email)
+
+        if (userRes == null) {
+            throw new KnownError({
+                message: 'User not found',
+                code: 404,
+                name: 'UserNotFoundError',
+            });
+        }
+
+        delete userRes.password
+
+        return userRes
+    },
+
     async updateUser(
         auth: { user: User | { type: 'guest' }, token: AbstractToken },
         userId: string, 

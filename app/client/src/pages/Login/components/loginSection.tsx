@@ -165,6 +165,15 @@ export default function LoginSection() {
                         'Login'
                     )}
                 </Button>
+
+                <Button
+                    sx={{ height: '4rem' }}
+                    variant='outlined'
+                    onClick={() => navigate('/forgot-password')}
+                    fullWidth
+                >
+                    Forgot Password
+                </Button>
             </Stack>
 
             <Divider />
