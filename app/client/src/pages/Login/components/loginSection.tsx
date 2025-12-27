@@ -25,6 +25,17 @@ export default function LoginSection() {
 
     async function handleLogin() {
         setAuthenticating(true);
+        setError(null)
+
+        if (loginEmail == "") {
+            setError('Please provide email')
+            return
+        }
+
+        if (loginPassword == "") {
+            setError('Please provide password')
+            return
+        }
 
         try {
             loginEmailPassword.mutate(
@@ -55,11 +66,9 @@ export default function LoginSection() {
                     language,
                     units,
                 }, {
-                    onSuccess: () => {
-                        console.log("Google login success");
-                    },
                     onError: (err) => {
                         console.error("Google login failed", err);
+                        setError((err as Error).message || "Login failed");
                     },
                 });
             },
@@ -175,7 +184,13 @@ export default function LoginSection() {
                 </Button>
             </Stack>
 
-            <Divider />
+            <Divider
+                sx={{
+                    width: '100%',
+                    marginTop: 2,
+                    marginBottom: 2,
+                }}
+            />
 
             <Typography variant="h5" mb={2}>
                 Login with Google

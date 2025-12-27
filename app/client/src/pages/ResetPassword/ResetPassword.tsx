@@ -5,6 +5,7 @@ import TranslatableText from "../../components/TranslatableText";
 import PageCard from "../../components/PageCard";
 import { useAuth } from "../../hooks/useAuth/useAuth";
 import { navigate } from "wouter/use-browser-location";
+import validatePassword from "../../utils/validateNewPassword";
 
 export default function ResetPassword(): JSX.Element {
     const [, params] = useRoute('/reset-password/:token');
@@ -24,23 +25,6 @@ export default function ResetPassword(): JSX.Element {
 
     function handleConfirmPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
         setConfirmPassword(event.target.value);
-    }
-
-    // TODO create single function for this
-    function validatePassword(password: string): string | null {
-        if (password.length < 8) {
-            return "Password must be at least 8 characters long.";
-        }
-
-        if (!/[A-Z]/.test(password)) {
-            return "Password must contain at least one uppercase letter.";
-        }
-
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            return "Password must contain at least one special character.";
-        }
-
-        return null;
     }
 
     async function handlePasswordReset() {
@@ -67,6 +51,12 @@ export default function ResetPassword(): JSX.Element {
             await resetPassword.mutateAsync({
                 resetPasswordToken,
                 newPassword,
+            },
+            {
+                onError: (err: unknown) => {
+                    console.error(err)
+                    setError((err as Error).message || "Reset Failed")
+                }
             })
         } catch (err: unknown) {
             console.error(err)
