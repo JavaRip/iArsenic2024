@@ -18,7 +18,19 @@ export default async function loginEmailPassword(
     });
 
     if (!res.ok) {
-        throw new Error("Login failed");
+        const body = await res.json();
+
+        const error = new Error(body.message || "Login failed") as Error & {
+            name?: string;
+            knownError?: boolean;
+            requestId?: string;
+        };
+
+        error.name = body.name;
+        error.knownError = body.knownError;
+        error.requestId = body.requestId;
+
+        throw error;
     }
 
     const data = await res.json();

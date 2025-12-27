@@ -109,7 +109,9 @@ export default function LoginSection() {
             </Typography>
 
             {error && (
-                <Typography color="error" mb={2}>{error}</Typography>
+                <Typography color="error" mb={2}>
+                    {error}
+                </Typography>
             )}
 
             {(
