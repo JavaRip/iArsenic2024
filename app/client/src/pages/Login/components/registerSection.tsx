@@ -68,6 +68,7 @@ export default function RegisterSection() {
                     onChange={(e) => setRegisterPassword(e.target.value)}
                 />
                 <Button
+                    sx={{ height: '4rem' }}
                     variant="contained"
                     fullWidth
                     onClick={handleRegister}

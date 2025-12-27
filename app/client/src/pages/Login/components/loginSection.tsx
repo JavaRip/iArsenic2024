@@ -1,6 +1,10 @@
-import { Typography, Stack, TextField, Button } from "@mui/material"
-import { useState } from "react";
+import { Typography, Stack, TextField, Button, CircularProgress } from "@mui/material"
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth/useAuth";
+import { useUnits } from "../../../hooks/useUnits";
+import { useLanguage } from "../../../hooks/useLanguage";
+import Divider from '@mui/material/Divider';
+import { navigate } from "wouter/use-browser-location";
 
 export default function LoginSection() {
     const auth = useAuth()
@@ -9,20 +13,94 @@ export default function LoginSection() {
     const [error, setError] = useState<string | null>(null);
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
+    const [progress, setProgress] = useState(0);
 
-    const handleLogin = () => {
-        setError(null);
+    const [authenticating, setAuthenticating] = useState(false)
 
-        loginEmailPassword.mutate(
-            { email: loginEmail, password: loginPassword },
-            {
-                onError: (err: unknown) => {
-                    console.error(err);
-                    setError((err as Error).message || "Login failed");
-                },
-            }
-        );
+    const { language } = useLanguage()
+    const { units } = useUnits()
+    
+    const loginGoogle = auth.loginGoogle;
+    const googleBtnRef = useRef<HTMLDivElement | null>(null);
+
+    async function handleLogin() {
+        setAuthenticating(true);
+
+        try {
+            loginEmailPassword.mutate(
+                { email: loginEmail, password: loginPassword },
+                {
+                    onError: (err: unknown) => {
+                        console.error(err);
+                        setError((err as Error).message || "Login failed");
+                    },
+                }
+            );
+        } finally {
+            setAuthenticating(false)
+        }
     };
+
+    useEffect(() => {
+        /* global google */
+        if (!window.google || !googleBtnRef.current) return;
+
+        google.accounts.id.initialize({
+            client_id: import.meta.env.VITE_PUBLIC_GOOGLE_CLIENT_ID!,
+            callback: (response: { credential: string }) => {
+                const googleIdToken = response.credential;
+
+                loginGoogle.mutate({ 
+                    googleIdToken,
+                    language,
+                    units,
+                }, {
+                    onSuccess: () => {
+                        console.log("Google login success");
+                    },
+                    onError: (err) => {
+                        console.error("Google login failed", err);
+                    },
+                });
+            },
+        });
+
+        google.accounts.id.renderButton(googleBtnRef.current, {
+            type: 'standard',
+            theme: "filled_blue",
+            size: "large",
+            width: 240,
+        });
+    }, [loginGoogle]);
+
+    useEffect(() => {
+        if (
+            !loginEmailPassword.isSuccess &&
+            !loginGoogle.isSuccess
+        ) return;
+
+        setProgress(0);
+
+        const start = Date.now();
+        const duration = 2000;
+
+        const interval = setInterval(() => {
+            const elapsed = Date.now() - start;
+            const percent = Math.min((elapsed / duration) * 100, 100);
+            setProgress(percent);
+
+            if (percent === 100) {
+                clearInterval(interval);
+                navigate("/landing");
+            }
+        }, 64);
+
+        return () => clearInterval(interval);
+    }, [
+        loginEmailPassword.isSuccess,
+        loginGoogle.isSuccess,
+        navigate,
+    ]);
 
     return (
         <>
@@ -30,9 +108,32 @@ export default function LoginSection() {
                 Login
             </Typography>
 
-            {error && <Typography color="error" mb={2}>{error}</Typography>}
+            {error && (
+                <Typography color="error" mb={2}>{error}</Typography>
+            )}
 
-            <Stack spacing={2} mb={4}>
+            {(
+                loginEmailPassword.isSuccess ||
+                loginGoogle.isSuccess
+            ) && (
+                <Stack direction='row' justifyContent='center'>
+                    <Typography mb={2} mr={2} color="primary">
+                        Login Successful
+                    </Typography>
+
+                    <CircularProgress
+                        variant="determinate"
+                        size={24}
+                        thickness={4}
+                        value={progress}
+                    />
+                </Stack>
+            )}
+
+            <Stack
+                spacing={2}
+            >
+
                 <TextField
                     label="Email"
                     type="email"
@@ -40,6 +141,7 @@ export default function LoginSection() {
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
                 />
+
                 <TextField
                     label="Password"
                     type="password"
@@ -47,14 +149,34 @@ export default function LoginSection() {
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                 />
+
                 <Button
-                    variant="contained"
-                    fullWidth
-                    onClick={handleLogin}
+                    sx={{ height: '4rem' }}
+                    variant='contained'
                     disabled={loginEmailPassword.isPending}
+                    onClick={handleLogin}
+                    fullWidth
                 >
-                    {loginEmailPassword.isPending ? "Logging in..." : "Login"}
+                    {authenticating ? (
+                        <CircularProgress />
+                    ): (
+                        'Login'
+                    )}
                 </Button>
+            </Stack>
+
+            <Divider />
+
+            <Typography variant="h5" mb={2}>
+                Login with Google
+            </Typography>
+
+            <Stack spacing={2} mb={4}>
+                <div ref={googleBtnRef} />
+
+                {loginGoogle.isPending && (
+                    <CircularProgress />
+                )}
             </Stack>
         </>
     )

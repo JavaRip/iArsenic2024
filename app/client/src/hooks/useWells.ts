@@ -90,6 +90,14 @@ export function useWells() {
 
                 return { previousWell }
             },
+            onError: (_err, { wellId }, context) => {
+                if (context?.previousWell) {
+                    queryClient.setQueryData(
+                        ['well', wellId],
+                        context.previousWell
+                    );
+                }
+            },
             onSettled: (updatedWell, _error, { wellId }) => {
                 queryClient.setQueryData(['well', wellId], updatedWell)
                 queryClient.setQueryData<Well[]>(['wells'], (old) =>
