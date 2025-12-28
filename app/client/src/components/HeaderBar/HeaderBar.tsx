@@ -1,4 +1,4 @@
-import { AppBar, Stack, Typography, Box, IconButton, Button, Avatar } from '@mui/material';
+import { AppBar, Stack, Typography, Box, IconButton, Button, Avatar, CircularProgress } from '@mui/material';
 import { navigate } from 'wouter/use-browser-location';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
@@ -16,7 +16,7 @@ export default function HeaderBar(): JSX.Element {
 
     const {
         data: user,
-        // isLoading: userLoading,
+        isLoading: userLoading,
         // isError: userIsError,
         // error: userError,
     } = getUser(token?.userId)
@@ -62,59 +62,80 @@ export default function HeaderBar(): JSX.Element {
                 </Stack>
 
                 <Box>
-                    {user ? (
-                        <Button
-                            variant='outlined'
-                            onClick={() => navigate('/profile')}
-                            sx={{
-                                padding: '8px',
-                                minWidth: 'auto',
-                                color: 'whitesmoke',
-                                borderColor: 'whitesmoke',
-                            }}
-                        >
-                            <TranslatableText
-                                variant='body1'
-                                english='My Account'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                            {
-                                user.avatarUrl ?
-                                    <Avatar 
-                                        src={user.avatarUrl}
-                                        sx={{
-                                            height: '28px',
-                                            width: '28px',
-                                            ml: '12px',
-                                        }}
-                                    /> :
-                                    <AccountCircleIcon 
-                                        sx={{
-                                            height: '28px',
-                                            width: '28px',
-                                            ml: '12px',
-                                        }}
+                    {(() => {
+                        if (userLoading) {
+                            return (
+                                <Button
+                                    variant='outlined'
+                                    onClick={() => navigate('/profile')}
+                                    sx={{
+                                        padding: '8px',
+                                        minWidth: 'auto',
+                                        color: 'whitesmoke',
+                                        borderColor: 'whitesmoke',
+                                    }}
+                                >
+                                    <CircularProgress />
+                                </Button>
+                            )
+                        } else if (user) {
+                            return (
+                                <Button
+                                    variant='outlined'
+                                    onClick={() => navigate('/profile')}
+                                    sx={{
+                                        padding: '8px',
+                                        minWidth: 'auto',
+                                        color: 'whitesmoke',
+                                        borderColor: 'whitesmoke',
+                                    }}
+                                >
+                                    <TranslatableText
+                                        variant='body1'
+                                        english='My Account'
+                                        bengali='BENGALI PLACEHOLDER'
                                     />
-                            }
-                        </Button>
-                    ) : (
-                        <Button
-                            variant='outlined'
-                            onClick={() => navigate('/login')}
-                            sx={{
-                                padding: '8px',
-                                minWidth: 'auto',
-                                color: 'whitesmoke',
-                                borderColor: 'whitesmoke',
-                            }}
-                        >
-                            <TranslatableText
-                                variant='body1'
-                                english='Login'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </Button>
-                    )}
+                                    {
+                                        user.avatarUrl ?
+                                            <Avatar 
+                                                src={user.avatarUrl}
+                                                sx={{
+                                                    height: '28px',
+                                                    width: '28px',
+                                                    ml: '12px',
+                                                }}
+                                            /> :
+                                            <AccountCircleIcon 
+                                                sx={{
+                                                    height: '28px',
+                                                    width: '28px',
+                                                    ml: '12px',
+                                                }}
+                                            />
+                                    }
+                                </Button>
+                            )
+                        } else {
+                            return (
+                                <Button
+                                    variant='outlined'
+                                    onClick={() => navigate('/login')}
+                                    sx={{
+                                        padding: '8px',
+                                        minWidth: 'auto',
+                                        color: 'whitesmoke',
+                                        borderColor: 'whitesmoke',
+                                    }}
+                                >
+                                    <TranslatableText
+                                        variant='body1'
+                                        english='Login'
+                                        bengali='BENGALI PLACEHOLDER'
+                                    />
+                                </Button>
+                            )
+                        }
+                    })()}
                 </Box>
             </Stack>
         </AppBar>

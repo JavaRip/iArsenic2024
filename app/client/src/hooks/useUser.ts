@@ -77,7 +77,15 @@ export function useUsers() {
             // Optimistically update cache
             queryClient.setQueryData<User>(
                 ['user', userId],
-                (old) => old ? { ...old, ...data } : old,
+                (old) => {
+                    return old 
+                        ? UserSchema.parse({ 
+                            ...old, 
+                            ...data,
+                            createdAt: new Date(old.createdAt),
+                        }) : 
+                        old
+                    }
             );
 
             // Return context for rollback
