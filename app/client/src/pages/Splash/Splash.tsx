@@ -6,7 +6,6 @@ import { navigate } from 'wouter/use-browser-location';
 import TranslatableText from '../../components/TranslatableText';
 import MapSection from './MapSection';
 import TheResearchSection from './TheResearchSection';
-import { useAuth } from '../../hooks/useAuth/useAuth';
 
 export const sectionFontStyle = {
     color: 'whitesmoke',
@@ -16,13 +15,10 @@ export const sectionFontStyle = {
 };
 
 export default function SplashPage(): JSX.Element {
-    const auth = useAuth()
-    const { data: token } = auth.getAccessToken
     const theme = useTheme();
 
     function handleTryAppClick() {
-        if (token) navigate(`/my-wells`);
-        else navigate(`/landing`);
+        navigate(`/landing`);
     }
 
     return (

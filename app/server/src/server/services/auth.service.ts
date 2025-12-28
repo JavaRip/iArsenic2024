@@ -58,9 +58,6 @@ export const AuthService = {
     ): Promise<void> {
         // TODO setup repo queries so we can
         // find an revoke all user tokens
-        console.log('================================')
-        console.log(token)
-        console.log('================================')
         await TokenRepo.update({
             ...token,
             revokedAt: new Date(),
@@ -327,6 +324,26 @@ export const AuthService = {
                 units,
                 avatarUrl,
             });
+
+            const verifyEmailToken = await TokenRepo.create({
+                id: uuidv4(),
+                type: "verify-email",
+                userId: user.id,
+                createdAt: new Date(),
+                expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+            })
+
+
+            const mailBody = verifyEmailTemplate(
+                (verifyEmailToken as VerifyEmailToken),
+                user.name, 
+            )
+
+            await sendMail(
+                user.email,
+                'Verify iArsenic Email',
+                mailBody,
+            )
         }
 
         delete user.password;
@@ -346,25 +363,6 @@ export const AuthService = {
             createdAt: new Date(),
             expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         });
-
-        const verifyEmailToken = await TokenRepo.create({
-            id: uuidv4(),
-            type: "verify-email",
-            userId: user.id,
-            createdAt: new Date(),
-            expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
-        })
-
-        const mailBody = verifyEmailTemplate(
-            (verifyEmailToken as VerifyEmailToken),
-            user.name, 
-        )
-
-        await sendMail(
-            user.email,
-            'Verify iArsenic Email',
-            mailBody,
-        )
 
         return {
             user,

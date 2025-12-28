@@ -101,7 +101,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                     variant='body1'
                     english={
                         <>
-                            <strong>Created At:</strong> {user.createdAt}
+                            <strong>Created At:</strong> {user.createdAt.toLocaleDateString()}
                         </>
                     } 
                     bengali='BENGALI PLACEHOLDER'
