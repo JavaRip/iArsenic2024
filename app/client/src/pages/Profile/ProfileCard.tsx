@@ -1,8 +1,11 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import PageCard from '../../components/PageCard';
 import TranslatableText from '../../components/TranslatableText';
 import { User } from '../../models';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../../hooks/useAuth/useAuth';
+import { navigate } from 'wouter/use-browser-location';
 
 interface Props {
     user: User;
@@ -10,6 +13,18 @@ interface Props {
 }
 
 export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
+    const logout = useAuth().logout
+
+    async function handleLogout() {
+        try {
+            await logout.mutateAsync();
+            navigate('/landing');
+            location.reload()
+        } catch (err) {
+            console.error('Logout failed', err);
+        }
+    };
+
     return (
         <Box width='100%'>
            <TranslatableText 
@@ -71,7 +86,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                     variant='body1'
                     english={
                         <>
-                            <strong>Created At</strong> {user.createdAt}
+                            <strong>Member Since</strong> {user.createdAt.toLocaleDateString()}
                         </>
                     }
                     bengali='BENGALI PLACEHOLDER'
@@ -99,7 +114,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                     bengali='BENGALI PLACEHOLDER'
                 />
 
-                <Box width='100%'>
+                <Stack width='100%' direction='row' justifyContent='space-between'>
                     <Button
                         variant='outlined'
                         startIcon={<CreateIcon />}
@@ -113,7 +128,25 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                             bengali='BENGALI PLACEHOLDER'
                         />
                     </Button>
-                </Box>
+
+                    <Button
+                        variant='outlined'
+                        startIcon={<LogoutIcon sx={{ color: 'error.main' }} />}
+                        sx={{ 
+                            mt: 2,
+                            borderColor: 'error.main',
+                            color: 'error.main',
+                        }}
+                        onClick={handleLogout}
+                    >
+                        <TranslatableText 
+                            width='100%'
+                            variant='body1'
+                            english='Logout'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </Button>
+                </Stack>
             </PageCard>
         </Box>
     );

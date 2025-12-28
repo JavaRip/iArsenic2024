@@ -72,7 +72,7 @@ export default function Review(): JSX.Element {
             }
             nextText={
                 <TranslatableText
-                    english="Review"
+                    english="Result"
                     bengali="ফলাফল দেখুন"
                 />
             }

@@ -6,6 +6,7 @@ import registerEmailPasswordFn from "./registerEmailPassword";
 import forgotPasswordFn from "./forgotPassword";
 import resetPasswordFn from "./resetPassword";
 import verifyEmailFn from "./verifyEmail"
+import logoutFn from "./logout"
 
 export function useAuth() {
     const queryClient = useQueryClient();
@@ -95,6 +96,18 @@ export function useAuth() {
         ),
     });
 
+    const logout = useMutation({
+        mutationFn: () => logoutFn(),
+        onSuccess: () => {
+            queryClient.removeQueries({ queryKey: ['auth', 'accessToken'] });
+            queryClient.removeQueries({ queryKey: ['user'] });
+            queryClient.clear();
+        },
+        onError: (err: unknown) => {
+            console.error("Logout failed", err);
+        },
+    });
+
     return { 
         forgotPassword,
         getAccessToken,
@@ -103,5 +116,6 @@ export function useAuth() {
         registerEmailPassword,
         resetPassword,
         verifyEmail,
+        logout,
     };
 }

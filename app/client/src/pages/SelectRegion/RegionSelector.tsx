@@ -139,8 +139,8 @@ export default function Region(): JSX.Element {
     if (
         isWellLoading || 
         isDropdownLoading || 
-        isTranslationsLoading ||
-        !selectedDivision
+        isTranslationsLoading
+        // !selectedDivision
     ) {
         return (
             <Stack direction="column" alignContent="center" justifyContent="center">

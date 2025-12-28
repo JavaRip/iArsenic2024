@@ -22,7 +22,6 @@ export default function HeaderBar(): JSX.Element {
     } = getUser(token?.userId)
 
     const [open, setOpen] = useState(false);
-    console.log(user)
 
     return (
         <AppBar sx={{ marginBottom: '2rem', height: '3rem' }} position='static'>
@@ -63,7 +62,7 @@ export default function HeaderBar(): JSX.Element {
                 </Stack>
 
                 <Box>
-                    {user && (
+                    {user ? (
                         <Button
                             variant='outlined'
                             onClick={() => navigate('/profile')}
@@ -86,17 +85,34 @@ export default function HeaderBar(): JSX.Element {
                                         sx={{
                                             height: '28px',
                                             width: '28px',
-                                            mr: '12px',
+                                            ml: '12px',
                                         }}
                                     /> :
                                     <AccountCircleIcon 
                                         sx={{
                                             height: '28px',
                                             width: '28px',
-                                            mr: '12px',
+                                            ml: '12px',
                                         }}
                                     />
                             }
+                        </Button>
+                    ) : (
+                        <Button
+                            variant='outlined'
+                            onClick={() => navigate('/login')}
+                            sx={{
+                                padding: '8px',
+                                minWidth: 'auto',
+                                color: 'whitesmoke',
+                                borderColor: 'whitesmoke',
+                            }}
+                        >
+                            <TranslatableText
+                                variant='body1'
+                                english='Login'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
                         </Button>
                     )}
                 </Box>

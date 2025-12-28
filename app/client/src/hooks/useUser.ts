@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useAuth } from "./useAuth/useAuth"
-import { User } from "../models"
+import { User, UserSchema } from "../models"
 
 export function useUsers() {
     const auth = useAuth()
@@ -26,7 +26,13 @@ export function useUsers() {
                 });
 
                 if (!res.ok) throw new Error('Failed to fetch user')
-                return res.json()
+
+                const user = await res.json()
+
+                return UserSchema.parse({
+                    ...user,
+                    createdAt: new Date(user.createdAt),
+                })
             }
         })
     }

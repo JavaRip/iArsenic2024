@@ -3,7 +3,7 @@
   "description": "Cloud Functions for Firebase",
   "scripts": {
     "serve": "firebase emulators:start",
-    "serve:local": "cp .env.production .env && firebase functions:config:set env.src='.env.local' && firebase emulators:start --import='.firestore' --export-on-exit",
+    "serve:local": "cp .env.local .env && firebase functions:config:set env.src='.env.local' && firebase emulators:start --import='.firestore' --export-on-exit",
     "serve:dev": "cp .env.staging .env && firebase emulators:start --import='.firestore' --export-on-exit",
     "shell": "firebase functions:shell",
     "start": "npm run shell",

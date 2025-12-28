@@ -17,7 +17,10 @@ export default async function useAuth(
     } else if (apiKey) {
         tokenId = apiKey;
         tokenType = 'api-key';
-    } else if (ctx.path === '/api/v1/auth/refresh') {
+    } else if (
+        ctx.path === '/api/v1/auth/refresh' ||
+        ctx.path === '/api/v1/auth/logout'
+    ) {
         tokenId = ctx.cookies.get('__session');
         tokenType = 'refresh';
     }

@@ -52,6 +52,21 @@ export const AuthService = {
         });
     },
 
+    async logout(
+        // user: User,
+        token: RefreshToken,
+    ): Promise<void> {
+        // TODO setup repo queries so we can
+        // find an revoke all user tokens
+        console.log('================================')
+        console.log(token)
+        console.log('================================')
+        await TokenRepo.update({
+            ...token,
+            revokedAt: new Date(),
+        })
+    },
+
     async forgotPassword(
         email: string,
     ): Promise<void> {
@@ -144,8 +159,8 @@ export const AuthService = {
 
         if (!existingUser?.password) {
             throw new KnownError({
-                name: 'User has no password configured',
-                message: `Try an alternative login method`,
+                name: 'NoPasswordInPasswordLogin',
+                message: `No password configured. Please login with Google`,
                 code: 400,
             })
         }

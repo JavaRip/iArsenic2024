@@ -35,6 +35,29 @@ export const AuthController = {
         ctx.body = { message: 'Email verified successfully' };
     },
 
+    async logout(ctx: Context): Promise<void> {
+        // const user = ctx.state.auth.user
+        const token = ctx.state.auth.token
+
+        // const parsedUser = UserSchema.parse(user)
+
+        await AuthService.logout(
+            // parsedUser,
+            token,
+        );
+
+        ctx.cookies.set('__session', '', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== 'local',
+            sameSite: 'lax',
+            expires: new Date(0),
+            path: '/',
+        });
+
+        ctx.status = 200;
+        ctx.body = { message: 'User logged out successfully' };
+    },
+
     async forgotPassword(ctx: Context): Promise<void> {
         const email = (ctx.request.body as { email: string }).email;
 
@@ -169,7 +192,12 @@ export const AuthController = {
         const user = ctx.state.auth.user
 
         if (!refreshToken) {
-            throw new Error('No refresh token on ctx')
+            throw new KnownError({
+                message: 'No refresh token on ctx',
+                name: 'NoRefreshToken',
+                code: 403,
+            }
+            )
         }
 
         if (!user) {
