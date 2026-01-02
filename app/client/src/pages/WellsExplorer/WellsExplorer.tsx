@@ -17,6 +17,9 @@ import { useWells } from '../../hooks/useWells/useWells';
 import { FiltersType } from './FiltersType';
 import { useUsers } from '../../hooks/useUsers/useUsers';
 import applyFilter from './utils/applyFilter';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import getWellsFn from '../../hooks/useWells/getWells'
+import { Well } from '../../models';
 
 export default function WellsExplorer(): JSX.Element {
     const [page, setPage] = useState<number>(1)
@@ -46,14 +49,9 @@ export default function WellsExplorer(): JSX.Element {
         },
     });
 
-    const { createWell, getWells } = useWells();
+    const { createWell } = useWells();
     const createWellMutation = createWell();
-    const { 
-        data: wells,
-        isLoading: wellsLoading,
-        isError: isWellsError,
-        error: wellsError
-    } = getWells();
+
 
     const auth = useAuth()
     const { 
@@ -62,6 +60,23 @@ export default function WellsExplorer(): JSX.Element {
         isError: isTokenError,
         error: tokenError,
     } = auth.getAccessToken
+
+    // custom useWells query implementation
+    // to prevent wells from refreshing
+    // and resetting pagination
+    const { 
+        data: wells,
+        isLoading: wellsLoading,
+        isError: isWellsError,
+        error: wellsError
+    } = useQuery<Well[]>({
+        queryKey: ['wells'],
+        queryFn: () => getWellsFn(token),
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        staleTime: Infinity,
+    });
 
     const {
         data: dropdownData, 
@@ -151,7 +166,7 @@ export default function WellsExplorer(): JSX.Element {
         filters,
         wells!,
         user?.id,
-    )
+    ).reverse() // show most recent at top of list
 
     const totalPages = Math.ceil(filteredWells.length / pageSize)
 
@@ -182,6 +197,12 @@ export default function WellsExplorer(): JSX.Element {
                     setFilterOpen={setFilterOpen}
                 />
             )}
+
+            <TranslatableText
+                variant='h5'
+                english={`Selected ${filteredWells.length} / ${wells!.length} wells`}
+                bengali='BENGALI PLACEHOLDER' 
+            />
 
             <Box
                 sx={{ 

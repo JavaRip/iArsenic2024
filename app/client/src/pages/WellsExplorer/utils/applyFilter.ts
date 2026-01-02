@@ -21,8 +21,9 @@ export default function applyFilter(
         }
 
         if (filters.flooding !== 'any') {
-            if (w.flooding && (filters.flooding === 'no')) return false
-            if (!w.flooding && (filters.flooding === 'yes')) return false
+            if (w.flooding === true && (filters.flooding === 'no')) return false
+            if (w.flooding === false && (filters.flooding === 'yes')) return false
+            if (w.flooding === undefined) return false
         }
 
         if (filters.staining !== 'any') {

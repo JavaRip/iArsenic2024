@@ -169,9 +169,25 @@ export default function Filter({
                         }
                     />
 
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={filters.ownWells}
+                                onChange={() => handleCheckboxChange('ownWells')}
+                            />
+                        }
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Own Wells Only'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    />
+
                     <TextField
                         select
-                        value={filters.flooding}
+                        value={filters.guestWells}
                         onChange={(e) => handleTextChange('guestWells', e.target.value)}
                         fullWidth
                         label={
