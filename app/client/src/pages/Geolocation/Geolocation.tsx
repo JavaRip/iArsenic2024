@@ -11,7 +11,7 @@ import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
 import GeolocationButton from "./GeolocationButton";
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 
 export type RegionErrors = {
     withWell: boolean;

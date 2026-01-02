@@ -1,5 +1,5 @@
 import { Button, CircularProgress, Stack, Typography } from "@mui/material";
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 import TranslatableText from "../../components/TranslatableText";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BarChartComponent from "./components/BarChart";

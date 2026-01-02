@@ -90,7 +90,6 @@ export function useUsers() {
                             ? UserSchema.parse({ 
                                 ...old, 
                                 ...updates,
-                                createdAt: new Date(old.createdAt),
                             }) : 
                             old
                     }

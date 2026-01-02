@@ -5,7 +5,7 @@ import { navigate } from "wouter/use-browser-location";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export default function WellInUse(): JSX.Element {

@@ -5,7 +5,7 @@ import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 
 export default function Flooding(): JSX.Element {
     const [, params] = useRoute('/well/:id/flooding');

@@ -9,7 +9,7 @@ import UpaMap from './components/upaMap';
 import MapInterface from './components/MapInterface/MapInterface';
 import { useRegionTranslations } from '../../hooks/useRegionTranslations';
 import useInteractiveMap from './hooks/useInteractiveMap';
-import { useWells } from '../../hooks/useWells';
+import { useWells } from '../../hooks/useWells/useWells';
 import { predictionToRiskKey } from './utils/predictionToRiskFactor';
 
 type MapProps = {

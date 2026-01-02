@@ -8,7 +8,7 @@ import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
 import estimateTexts from "../../components/Speedo/estimateTexts";
 import EmailIcon from '@mui/icons-material/Email';
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 import { useEffect, useState } from "react";
 
 type EstimateTexts = {

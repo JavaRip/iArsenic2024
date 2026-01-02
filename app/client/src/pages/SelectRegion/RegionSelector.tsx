@@ -8,7 +8,7 @@ import { useRoute } from "wouter";
 import PageCard from "../../components/PageCard";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 import { useDropdownData } from "../../hooks/useDropdownData";
 import { useRegionTranslations } from "../../hooks/useRegionTranslations";
 

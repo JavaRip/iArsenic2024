@@ -5,7 +5,7 @@ import { useRoute } from "wouter";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 import { Staining, UtensilStaining, StainingSchema, UtensilStainingSchema } from "../../models";
 
 export default function StainingPage(): JSX.Element {

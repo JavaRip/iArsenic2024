@@ -6,7 +6,7 @@ import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import { useUnits } from "../../hooks/useUnits";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../hooks/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
