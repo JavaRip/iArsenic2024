@@ -3,7 +3,7 @@ import { useState } from "react";
 import EditProfileCard from "./EditProfileCard";
 import ProfileCard from "./ProfileCard";
 import { useAuth } from "../../hooks/useAuth/useAuth";
-import { useUsers } from "../../hooks/useUser";
+import { useUsers } from "../../hooks/useUsers/useUsers";
 
 export default function ProfilePage(): JSX.Element {
     const [editMode, setEditMode] = useState(false);

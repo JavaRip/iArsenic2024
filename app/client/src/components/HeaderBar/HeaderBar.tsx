@@ -7,7 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NavMenu from './NavMenu';
 import { useAuth } from '../../hooks/useAuth/useAuth';
 import TranslatableText from '../TranslatableText';
-import { useUsers } from '../../hooks/useUser';
+import { useUsers } from '../../hooks/useUsers/useUsers';
 
 export default function HeaderBar(): JSX.Element {
     const auth = useAuth()

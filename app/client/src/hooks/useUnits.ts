@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from './useAuth/useAuth';
-import { useUsers } from './useUser';
+import { useUsers } from './useUsers/useUsers';
 
 const UNITS_KEY = 'units';
 

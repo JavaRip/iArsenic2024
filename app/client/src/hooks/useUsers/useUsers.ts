@@ -1,39 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { useAuth } from "./useAuth/useAuth"
-import { User, UserSchema } from "../models"
+import { useAuth } from "../useAuth/useAuth"
+import { User, UserSchema } from "../../models"
+import getUserFn from './getUser'
+import updateUserFn from './updateUser'
 
 export function useUsers() {
     const auth = useAuth()
     const { data: token } = auth.getAccessToken
     const queryClient = useQueryClient()
 
-    const getUser = (userId: string | undefined) => {
+    const getUser = (userId?: string) => {
         return useQuery<User>({
-            enabled: !!userId,
             queryKey: ['user', userId],
-            queryFn: async () => {
-                const headers: HeadersInit = {
-                    'Content-Type': 'application/json',
-                }
-
-                if (token) {
-                    headers.authorization = `Bearer ${token.id}`
-                }
-
-                const res = await fetch(`/api/v1/user/${userId}`, {
-                    method: 'GET',
-                    headers,
-                });
-
-                if (!res.ok) throw new Error('Failed to fetch user')
-
-                const user = await res.json()
-
-                return UserSchema.parse({
-                    ...user,
-                    createdAt: new Date(user.createdAt),
-                })
-            }
+            enabled: !!userId,
+            queryFn: () => getUserFn(token, userId!)
         })
     }
 
@@ -46,30 +26,11 @@ export function useUsers() {
                 userId: string;
                 updates: Partial<User>;
             }): Promise<User> => {
-                const headers: HeadersInit = {
-                    'Content-Type': 'application/json',
-                };
-
-                if (token) {
-                    headers.authorization = `Bearer ${token.id}`;
-                }
-
-                const res = await fetch(`/api/v1/user/${userId}`, {
-                    method: 'PATCH',
-                    headers,
-                    body: JSON.stringify(updates),
-                });
-
-                if (!res.ok) throw new Error('Failed to update user');
-
-                const data = await res.json()
-
-                const validatedUser = UserSchema.parse({
-                    ...data,
-                    createdAt: new Date((data as User).createdAt)
-                })
-
-                return validatedUser;
+                return updateUserFn(
+                    token,
+                    userId,
+                    updates,
+                )
             },
             // ✅ OPTIMISTIC UPDATE
             onMutate: async ({ userId, updates }) => {

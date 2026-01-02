@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../useAuth/useAuth';
-import { Well, WellSchema } from '../../models';
+import { Well } from '../../models';
 import getWellFn from './getWell'
 import getWellsFn from './getWells'
 import createWellFn from './createWell'
