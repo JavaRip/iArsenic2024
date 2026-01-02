@@ -16,6 +16,7 @@ import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } fr
 import { FiltersType } from './FiltersType';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
+import DepthSlider from './filter/DepthSlider';
 
 interface props {
     dropdownData: DropdownDivision[];
@@ -50,6 +51,20 @@ export default function Filter({
             ...filters,
             [field]: value,
         });
+    }
+
+    function setDepthRange({
+        from,
+        to,
+    }: {
+        from: number,
+        to: number,
+    }) {
+        setFilters({
+            ...filters,
+            aboveDepth: from,
+            belowDepth: to,
+        })
     }
 
     return (
@@ -136,6 +151,86 @@ export default function Filter({
                         }
                     />
 
+                    <TextField
+                        select
+                        value={filters.flooding}
+                        onChange={(e) => handleTextChange('flooding', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Flooding'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="true">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Yes'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="false">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='No'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        value={filters.staining}
+                        onChange={(e) => handleTextChange('staining', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Staining'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="red">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Red'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="black">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Black'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <DepthSlider 
+                        setDepthRange={setDepthRange} 
+                        depthRange={{
+                            from: filters.aboveDepth,
+                            to: filters.belowDepth,
+                        }}
+                    />
+
                     <Divider />
 
                     <TranslatableText 
@@ -214,77 +309,6 @@ export default function Filter({
 
                     <Divider />
 
-                    <TextField
-                        select
-                        value={filters.flooding}
-                        onChange={(e) => handleTextChange('flooding', e.target.value)}
-                        fullWidth
-                        label={
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Flooding'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        }
-                    >
-                        <MenuItem value="">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Any'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="true">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Yes'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="false">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='No'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                    </TextField>
-
-                    <TextField
-                        select
-                        value={filters.staining}
-                        onChange={(e) => handleTextChange('staining', e.target.value)}
-                        fullWidth
-                        label={
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Staining'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        }
-                    >
-                        <MenuItem value="">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Any'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="red">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Red'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="black">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Black'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                    </TextField>
                 </Stack>
             </Collapse>
         </PageCard>

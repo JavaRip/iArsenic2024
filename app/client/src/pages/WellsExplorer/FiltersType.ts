@@ -1,12 +1,14 @@
 export type FiltersType = {
     wellInUse: boolean;
-    flooding: string;
-    staining: string;
+    flooding: 'any' | 'yes' | 'no';
+    staining: 'any' | 'black' | 'red';
     geolocated: boolean;
     hasImages: boolean;
     complete: boolean;
-    aboveDepth: string;
-    belowDepth: string;
+    aboveDepth: number;
+    belowDepth: number;
+    ownWells: boolean;
+    guestWells: 'only' | 'exclude' | 'any'
     region: {
         division: string;
         district: string;

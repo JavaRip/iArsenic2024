@@ -1,12 +1,11 @@
+export { BlogIndex, LaunchEvent, LaunchEventBlog } from './Blog';
 export { default as Briefing } from './Briefing';
 export { default as Depth } from './Depth';
 export { default as Flooding } from './Flooding';
 export { default as ForgotPassword } from './ForgotPassword';
 export { default as Landing } from './Landing';
-export { BlogIndex, LaunchEvent, LaunchEventBlog } from './Blog';
 export { default as Login } from './Login';
 export { default as Map } from './Map';
-export { default as MyWells } from './MyWells';
 export { default as PhotoUpload } from './PhotoUpload';
 export { default as PrivacyPolicy } from './PrivacyPolicy';
 export { default as Profile } from './Profile';
@@ -24,3 +23,4 @@ export { default as UsageCharts } from './UsageCharts';
 export { default as VerifyEmail } from './VerifyEmail';
 export { default as Well } from './Well';
 export { default as WellInUse } from './WellInUse';
+export { default as WellsExplorer } from './WellsExplorer';
