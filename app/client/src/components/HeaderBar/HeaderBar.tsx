@@ -1,4 +1,4 @@
-import { AppBar, Stack, Typography, Box, IconButton, Button, Avatar, CircularProgress } from '@mui/material';
+import { AppBar, Stack, Typography, Box, IconButton, Button, Avatar } from '@mui/material';
 import { navigate } from 'wouter/use-browser-location';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
@@ -11,7 +11,10 @@ import { useUsers } from '../../hooks/useUser';
 
 export default function HeaderBar(): JSX.Element {
     const auth = useAuth()
-    const { data: token } = auth.getAccessToken
+    const { 
+        data: token,
+        isLoading: tokenLoading,
+    } = auth.getAccessToken
     const { getUser } = useUsers()
 
     const {
@@ -63,20 +66,9 @@ export default function HeaderBar(): JSX.Element {
 
                 <Box>
                     {(() => {
-                        if (userLoading) {
+                        if (userLoading || tokenLoading) {
                             return (
-                                <Button
-                                    variant='outlined'
-                                    onClick={() => navigate('/profile')}
-                                    sx={{
-                                        padding: '8px',
-                                        minWidth: 'auto',
-                                        color: 'whitesmoke',
-                                        borderColor: 'whitesmoke',
-                                    }}
-                                >
-                                    <CircularProgress />
-                                </Button>
+                                <></>
                             )
                         } else if (user) {
                             return (

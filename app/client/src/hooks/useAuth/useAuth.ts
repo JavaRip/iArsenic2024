@@ -18,13 +18,12 @@ export function useAuth() {
         }: { 
             email: string;
             password: string;
-        }) =>
-            loginEmailPasswordFn(email, password),
-            onSuccess: ({ accessToken, user }) => {
-                queryClient.setQueryData(['auth', 'accessToken'], accessToken)
-                queryClient.setQueryData(['user', user.id], user)
-                getAccessToken.refetch()
-            }
+        }) => loginEmailPasswordFn(email, password),
+        onSuccess: ({ accessToken, user }) => {
+            queryClient.setQueryData(['auth', 'accessToken'], accessToken)
+            queryClient.setQueryData(['user', user.id], user)
+            getAccessToken.refetch()
+        }
     });
 
     const loginGoogle = useMutation({

@@ -23,6 +23,12 @@ export default async function useAuth(
     ) {
         tokenId = ctx.cookies.get('__session');
         tokenType = 'refresh';
+
+        if (!tokenId) {
+            ctx.status = 300
+            ctx.body = { message: `No token provided for ${ctx.path}` }
+            return
+        }
     }
 
     if (!tokenId) {

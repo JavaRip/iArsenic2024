@@ -77,7 +77,11 @@ export const UserRepo: IUserRepo = {
         const docRef = snapshot.docs[0]?.ref;
         if (!docRef) throw new Error(`User with id ${user.id} not found`);
 
-        await docRef.set(user, { merge: true });
+        const cleanUser = Object.fromEntries(
+            Object.entries(user).filter(([_, v]) => v !== undefined)
+        )
+
+        await docRef.set(cleanUser, { merge: true });
     },
 
     async del(id: string): Promise<void> {

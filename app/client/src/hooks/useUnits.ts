@@ -39,7 +39,7 @@ export function useUnits() {
         if (token) {
             updateUserMutate({
                 userId: token.userId,
-                data: { units: newUnits },
+                updates: { units: newUnits },
             })
         }
     }

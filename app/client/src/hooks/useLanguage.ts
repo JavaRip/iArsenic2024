@@ -37,7 +37,7 @@ export function useLanguage() {
         if (token) {
             updateUserMutate({
                 userId: token.userId,
-                data: { language: newLanguage },
+                updates: { language: newLanguage },
             })
         }
     }

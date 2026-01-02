@@ -39,8 +39,8 @@ export default function Flooding(): JSX.Element {
 
         try {
             await updateWellMutation.mutateAsync({
-            wellId: wellId!,
-            data: { flooding: floodingBool },
+                wellId: wellId!,
+                data: { flooding: floodingBool },
             });
 
             navigate(`/well/${wellId}/well-in-use`);
@@ -57,7 +57,6 @@ export default function Flooding(): JSX.Element {
         )
     }
 
-    console.log(`rendering page with flooding: ${flooding}`)
     return (
         <WellDataEntryLayout
             title={

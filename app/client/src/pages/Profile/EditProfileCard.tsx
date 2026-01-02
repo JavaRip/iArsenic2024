@@ -31,10 +31,6 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
         throw new Error('unimplemented')
     }
 
-    console.log('================================')
-    console.log(user)
-    console.log('================================')
-
     return (
         <Box width='100%'>
             <TranslatableText 
