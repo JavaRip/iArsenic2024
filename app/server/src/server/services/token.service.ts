@@ -1,5 +1,5 @@
 import uuid4 from 'uuid4';
-import { AbstractToken, User } from 'iarsenic-types';
+import { AbstractToken, User } from '../models';
 import { TokenRepo } from '../repositories';
 import { KnownError } from '../errors';
 

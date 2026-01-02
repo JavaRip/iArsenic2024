@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useAccessToken } from './useAccessToken';
-import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from './useAuth/useAuth';
+import { useUsers } from './useUsers/useUsers';
 
 const UNITS_KEY = 'units';
 
 export function useUnits() {
-    const { data: token } = useAccessToken();
-    const queryClient = useQueryClient();
+    const { data: token } = useAuth().getAccessToken
+    const { updateUser } = useUsers()
+
+    const {
+        error,
+        isError,
+        isPending,
+        mutate: updateUserMutate,
+        status,
+    } = updateUser()
 
     const [units, setUnitsState] = useState<'meters' | 'feet'>(() => {
         const stored = localStorage.getItem(UNITS_KEY) || 'feet';
@@ -20,26 +28,29 @@ export function useUnits() {
         }
     }, []);
 
+    function getUnits() {
+        return units
+    }
+
     async function setUnits(newUnits: 'meters' | 'feet') {
         localStorage.setItem(UNITS_KEY, newUnits);
         setUnitsState(newUnits);
 
-        if (token?.user) {
-            await fetch(`/api/v1/self/user`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: `Bearer ${token.id}`,
-                },
-                body: JSON.stringify({ units: newUnits }),
-            });
-
-            queryClient.invalidateQueries({ queryKey: ['accessToken'] });
+        if (token) {
+            updateUserMutate({
+                userId: token.userId,
+                updates: { units: newUnits },
+            })
         }
     }
 
     return {
-        units,
+        error,
+        getUnits,
+        isError,
+        isPending,
         setUnits,
+        status,
+        units,
     };
 }

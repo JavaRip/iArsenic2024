@@ -1,17 +1,19 @@
 import { Box, Card, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useAccessToken } from '../../utils/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
+import { useAuth } from '../../hooks/useAuth/useAuth';
+import { Well } from '../../models';
 
 export default function Review() {
     const [, params] = useRoute('/well/:id');
     const wellId = params?.id;
     const [well, setWell] = useState<Well>();
-    const { data: token } = useAccessToken()
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken
 
     function getMissingFields(well: Well): { missingFields: string[], allFieldsMissing: boolean } {
         const requiredFields: (keyof Well)[] = [

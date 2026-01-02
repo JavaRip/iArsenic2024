@@ -1,5 +1,5 @@
 import Config from '../../config';
-import { ResetPasswordToken } from 'iarsenic-types';
+import { ResetPasswordToken } from '../../models';
 
 export default function resetPasswordTemplate(
     token: ResetPasswordToken,
@@ -17,7 +17,7 @@ export default function resetPasswordTemplate(
                 </p>
                 <p>
                     <a href="${Config.baseUrl}/reset-password/${token.id}"
-                       style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                       style="background-color: #154734; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
                         Reset Password
                     </a>
                 </p>

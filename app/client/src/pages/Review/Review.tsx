@@ -1,7 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { navigate } from 'wouter/use-browser-location';
-import { Well } from 'iarsenic-types';
 import { useRoute } from 'wouter';
 import Depth from './Depth';
 import Flooding from './Flooding';
@@ -9,15 +8,19 @@ import Region from './Region';
 import Staining from './Staining';
 import Drinking from './Drinking';
 import Images from './Images';
-import { useAccessToken } from '../../utils/useAccessToken';
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from '../../components/TranslatableText';
+import { useAuth } from '../../hooks/useAuth/useAuth';
+import { Well } from '../../models';
 
 export default function Review(): JSX.Element {
     const [, params] = useRoute('/well/:id/review');
     const wellId = params?.id;
+
+    const auth = useAuth()
+    const { data: token } = auth.getAccessToken;
+
     const [well, setWell] = useState<Well>();
-    const { data: token } = useAccessToken();
 
     useEffect(() => {
         async function fetchWell() {
@@ -69,7 +72,7 @@ export default function Review(): JSX.Element {
             }
             nextText={
                 <TranslatableText
-                    english="Review"
+                    english="Result"
                     bengali="ফলাফল দেখুন"
                 />
             }

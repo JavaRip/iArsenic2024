@@ -1,6 +1,6 @@
-import { Well } from "iarsenic-types";
 import PageCard from "../../../components/PageCard";
 import TranslatableText from "../../../components/TranslatableText";
+import { Well } from "../../../models";
 import getBarChartData from "../utils/getBarChartData";
 import { BarChart } from "@mui/x-charts";
 

@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { Well, WellSchema } from 'iarsenic-types';
+import { Well, WellSchema } from '../models';
 import db from '../db';
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
@@ -67,7 +67,6 @@ export const WellRepo: IWellRepo = {
     },
 
     async update(well: Well): Promise<void> {
-        console.log(well)
         const wellRef = db.collection('well');
     
         const querySnapshot = await wellRef.where('id', '==', well.id).get();

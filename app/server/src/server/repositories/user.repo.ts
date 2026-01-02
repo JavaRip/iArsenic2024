@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { User, UserSchema } from 'iarsenic-types';
+import { User, UserSchema } from '../models';
 import db from '../db';
 
 export interface IUserRepo extends Repository<User> {
@@ -62,6 +62,7 @@ export const UserRepo: IUserRepo = {
 
         const createdUser = {
             ...doc,
+            email: user.email.toLowerCase(),
             createdAt: doc.createdAt.toDate(),
         }
 
@@ -76,7 +77,11 @@ export const UserRepo: IUserRepo = {
         const docRef = snapshot.docs[0]?.ref;
         if (!docRef) throw new Error(`User with id ${user.id} not found`);
 
-        await docRef.set(user, { merge: true });
+        const cleanUser = Object.fromEntries(
+            Object.entries(user).filter(([_, v]) => v !== undefined)
+        )
+
+        await docRef.set(cleanUser, { merge: true });
     },
 
     async del(id: string): Promise<void> {

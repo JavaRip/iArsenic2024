@@ -1,100 +1,100 @@
 import { useState, useEffect } from "react";
-import { CircularProgress, Box, Alert } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { useRoute } from "wouter";
 import TranslatableText from "../../components/TranslatableText";
+import { navigate } from "wouter/use-browser-location";
+import { useAuth } from "../../hooks/useAuth/useAuth";
 
 export default function Review() {
     const [, params] = useRoute('/verify-email/:id');
-    const verifyEmailTokenId = params?.id;
+    const verifyEmailToken = params?.id;
 
-    // State to handle loading, success, and error status
-    const [loading, setLoading] = useState(true);
-    const [success, setSuccess] = useState<boolean | null>(null);
+    const auth = useAuth()
+    const { verifyEmail } = auth
+
+    const [error, setError] = useState<string | null>(null);
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        async function verifyEmail(tokenId: string) {
-            try {
-                const result = await fetch(
-                    `/api/v1/user/verify-email/${tokenId}`
-                );
-
-                if (!result.ok) {
-                    console.error('Failed to verify email:', result);
-                    setSuccess(false);
-                    return;
-                }
-
-                const data = await result.json();
-                console.log(data);
-                setSuccess(true); // Email verified successfully
-            } catch (error) {
-                console.error('Error verifying email:', error);
-                setSuccess(false);
-            } finally {
-                setLoading(false); // Stop loading when done
+        async function verifyEmailEffect() {
+            if (!verifyEmailToken) {
+                setError('No verify email token in url')
+                return
             }
+
+            await verifyEmail.mutateAsync({ verifyEmailToken })
         }
 
-        if (verifyEmailTokenId) {
-            verifyEmail(verifyEmailTokenId);
-            console.log('Verifying email...');
-        } else {
-            console.log('No token provided');
-            setLoading(false); // No token, so stop loading
-        }
-    }, [verifyEmailTokenId]);
+        verifyEmailEffect()
+    }, [verifyEmailToken])
+
+    useEffect(() => {
+        if (
+            !verifyEmail.isSuccess
+        ) return
+
+        setProgress(0)
+
+        const start = Date.now()
+        const duration = 2000
+
+        const interval = setInterval(() => {
+            const elapsed = Date.now() - start
+            const percent = Math.min((elapsed / duration) * 100, 100);
+            setProgress(percent);
+
+            if (percent === 100) {
+                clearInterval(interval);
+                navigate("/login");
+            }
+        }, 64)
+
+        return () => clearInterval(interval);
+    }, [
+        verifyEmail.isSuccess,
+        navigate,
+    ])
 
     return (
-        <>
-            <TranslatableText
-                variant="h4" 
-                gutterBottom 
-                textAlign="center"
+        <Stack width="100%" alignItems="center" justifyContent="center">
+            <TranslatableText 
+                mb='1rem' 
+                textAlign='center' 
+                variant='h4'
                 english='Verify Email'
                 bengali='BENGALI PLACEHOLDER'
             />
 
-            <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" mt={4}>
-                {loading && (
-                    <CircularProgress />
-                )}
+            {error && (
+                <TranslatableText 
+                    mb='1rem' 
+                    textAlign='center' 
+                    color='error'
+                    error={true}
+                    english={error}
+                    bengali='BENGALI PLACEHOLDER'
+                />
+            )}
 
-                {!loading && success === true && (
-                    <Alert severity="success">
-                        <TranslatableText
-                            variant="body1" 
-                            gutterBottom 
-                            textAlign="center"
-                            english='Email verified successfully!'
-                            bengali='BENGALI PLACEHOLDER'
-                        />
-                    </Alert>
-                )}
+            {verifyEmail.isSuccess && (
+                <Stack direction='row' justifyContent='center'>
+                    <TranslatableText 
+                        mb={2}
+                        mr={2}
+                        color='primary'
+                        textAlign='center' 
+                        english='Password reset successfully'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
 
-                {!loading && success === false && (
-                    <Alert severity="error">
-                        <TranslatableText
-                            variant="body1" 
-                            gutterBottom 
-                            textAlign="center"
-                            english='Something went wrong. Failed to verify email.'
-                            bengali='BENGALI PLACEHOLDER'
-                        />
-                    </Alert>
-                )}
-
-                {!loading && success === null && (
-                    <Alert severity="warning">
-                        <TranslatableText
-                            variant="body1" 
-                            gutterBottom 
-                            textAlign="center"
-                            english='No token provided for email verification.'
-                            bengali='BENGALI PLACEHOLDER'
-                        />
-                    </Alert>
-                )}
-            </Box>
-        </>
+                    <CircularProgress
+                        variant="determinate"
+                        size={24}
+                        thickness={4}
+                        value={progress}
+                    />
+                </Stack>
+            )}
+        </Stack>
     );
 }

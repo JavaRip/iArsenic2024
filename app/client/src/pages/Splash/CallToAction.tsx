@@ -1,6 +1,6 @@
 import { Box, useTheme, Button, Avatar, Typography } from '@mui/material';
 import TranslatableText from '../../components/TranslatableText';
-import { useLanguage } from '../../utils/useLanguage';
+import { useLanguage } from '../../hooks/useLanguage';
 
 const sectionStyle = {
     display: 'flex',

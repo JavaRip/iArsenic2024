@@ -2,7 +2,7 @@ import { Button, CircularProgress, Link, List, ListItem } from "@mui/material";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
 import config from '../../config'
-import { useWells } from "../../utils/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 import { navigate } from "wouter/use-browser-location";
 
 export default function Landing(): JSX.Element {

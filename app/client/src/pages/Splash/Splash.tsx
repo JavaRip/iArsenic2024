@@ -3,7 +3,6 @@ import Section from './Section';
 import CallToAction from './CallToAction';
 import Credits from './Credits';
 import { navigate } from 'wouter/use-browser-location';
-import { useAccessToken } from '../../utils/useAccessToken';
 import TranslatableText from '../../components/TranslatableText';
 import MapSection from './MapSection';
 import TheResearchSection from './TheResearchSection';
@@ -16,12 +15,10 @@ export const sectionFontStyle = {
 };
 
 export default function SplashPage(): JSX.Element {
-    const { data: token } = useAccessToken()
     const theme = useTheme();
 
     function handleTryAppClick() {
-        if (token) navigate(`/my-wells`);
-        else navigate(`/landing`);
+        navigate(`/landing`);
     }
 
     return (

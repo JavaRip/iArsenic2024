@@ -1,5 +1,5 @@
 import { Repository } from './repo.interface';
-import { AbstractTokenSchema, AbstractToken } from 'iarsenic-types';
+import { AbstractTokenSchema, AbstractToken } from '../models';
 import db from '../db';
 import { Timestamp } from 'firebase-admin/firestore';
 
@@ -48,12 +48,24 @@ export const TokenRepo: Repository<AbstractToken> = {
     },
 
     async update(token: AbstractToken): Promise<void> {
-        const snapshot = await db.collection('token').where('id', '==', token.id).get();
+        const snapshot = await db
+            .collection('token')
+            .where('id', '==', token.id)
+            .get();
 
-        if (snapshot.empty) throw new Error(`Token with id ${token.id} not found`);
+        if (snapshot.empty) {
+            throw new Error(`Token with id ${token.id} not found`);
+        }
+
         const docRef = snapshot.docs[0]?.ref;
         if (!docRef) throw new Error(`Token with id ${token.id} not found`);
 
-        await docRef.set(token, { merge: true });
+        // Strip undefined fields as firestore cannot updated
+        // undefined values
+        const cleanToken = Object.fromEntries(
+            Object.entries(token).filter(([_, v]) => v !== undefined)
+        );
+
+        await docRef.set(cleanToken, { merge: true });
     }
 }

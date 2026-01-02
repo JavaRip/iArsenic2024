@@ -18,6 +18,7 @@ export const AbstractTokenSchema = z.object({
         z.literal('verify-email'),
         z.literal('reset-password'),
         z.literal('api-key'),
+        z.literal('refresh'),
     ]),
     revokedAt: z.date().optional(),
 })
@@ -35,6 +36,18 @@ export const AccessTokenSchema = z.object({
 })
 
 export type AccessToken = z.infer<typeof AccessTokenSchema>;
+
+export const RefreshTokenSchema = z.object({
+    id: z.string(),
+    userId: z.string(),
+    createdAt: z.date(),
+    expiresAt: z.date(),
+    type: z.literal('refresh'),
+    revokedAt: z.date().optional(),
+    user: UserSchema.optional(),
+})
+
+export type RefreshToken = z.infer<typeof RefreshTokenSchema>;
 
 export const VerifyEmailTokenSchema = z.object({
     id: z.string(),

@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { AbstractTokenSchema, UserSchema, Well, WellSchema, validateModel } from 'iarsenic-types'
+import { AbstractTokenSchema, UserSchema, Well, WellSchema, validateModel } from '../models'
 import { WellService } from '../services/well.service';
 import { KnownError } from '../errors';
 

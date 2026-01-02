@@ -1,36 +1,39 @@
-import { Box, Button, CircularProgress, Stack } from "@mui/material";
-import { Well } from "iarsenic-types";
+import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
-import RegionTranslationsFetcher from "../../utils/RegionTranslationsFetcher";
-import { useEffect, useState } from "react";
-import { RegionTranslations } from "../../types";
+import { useRegionTranslations } from "../../hooks/useRegionTranslations";
+import { Well } from "../../models";
 
 interface props {
     well: Well;
 }
 
 export default function({ well }: props) {
-    const [rt, setRegionTranslations] = useState<RegionTranslations>();
-
     if (!well?.division) {
-        throw new Error('Missing reion');
+        throw new Error('Missing region');
     }
 
-    async function fetchRegionTranslations() {
-        const translations = await RegionTranslationsFetcher();
-        setRegionTranslations(translations);
-    }
+    const {
+        data: regionTranslations,
+        isLoading: isTranslationsLoading,
+        isError: isTranslationsError,
+    } = useRegionTranslations();
 
-    useEffect(() => {
-        fetchRegionTranslations();
-    }, []);
-
-    if (!rt) {
+    if (isTranslationsLoading) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
                 <CircularProgress />
+            </Stack>
+        );
+    }
+
+    if (
+        isTranslationsError
+    ) {
+        return (
+            <Stack>
+                <Typography>Error loading page data</Typography>
             </Stack>
         );
     }
@@ -51,7 +54,7 @@ export default function({ well }: props) {
                         <strong>Division</strong> {well.division}
                     </>}
                     bengali={<>
-                        <strong>{rt.Divisions.division}</strong> {rt.Divisions[well.division.toLowerCase()]}
+                        <strong>{regionTranslations!.Divisions.division}</strong> {regionTranslations!.Divisions[well.division.toLowerCase()]}
                     </>}
                 />
 
@@ -61,7 +64,7 @@ export default function({ well }: props) {
                         <strong>District</strong> {well.district}
                     </>}
                     bengali={<>
-                        <strong>{rt.Districts.district}</strong> {rt.Districts[(well.district as string).toLowerCase()]}
+                        <strong>{regionTranslations!.Districts.district}</strong> {regionTranslations!.Districts[(well.district as string).toLowerCase()]}
                     </>}
                 />
 
@@ -72,7 +75,7 @@ export default function({ well }: props) {
                         <strong>Upazila</strong> {well.upazila}
                     </>}
                     bengali={<>
-                        <strong>{rt.Upazilas.upazila}</strong> {rt.Upazilas[(well.upazila as string).toLowerCase()]}
+                        <strong>{regionTranslations!.Upazilas.upazila}</strong> {regionTranslations!.Upazilas[(well.upazila as string).toLowerCase()]}
                     </>}
                 />
 
@@ -82,7 +85,7 @@ export default function({ well }: props) {
                         <strong>Union</strong> {well.union}
                     </>}
                     bengali={<>
-                        <strong>{rt.Unions.union}</strong> {rt.Unions[(well.union as string).toLowerCase()]}
+                        <strong>{regionTranslations!.Unions.union}</strong> {regionTranslations!.Unions[(well.union as string).toLowerCase()]}
                     </>}
                 />
 
@@ -92,7 +95,7 @@ export default function({ well }: props) {
                         <strong>Mouza</strong> {well.mouza}
                     </>}
                     bengali={<>
-                        <strong>{rt.Mouzas.mouza}</strong> {rt.Mouzas[(well.mouza as string).toLowerCase()]}
+                        <strong>{regionTranslations!.Mouzas.mouza}</strong> {regionTranslations!.Mouzas[(well.mouza as string).toLowerCase()]}
                     </>}
                 />
 

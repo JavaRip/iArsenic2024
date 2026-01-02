@@ -1,5 +1,5 @@
 import Config from '../../config'
-import { VerifyEmailToken } from 'iarsenic-types'
+import { VerifyEmailToken } from '../../models'
 
 export default function verifyEmailTemplate(
     token: VerifyEmailToken,
@@ -14,9 +14,12 @@ export default function verifyEmailTemplate(
                 </p>
                 <p>
                     <a href="${Config.baseUrl}/verify-email/${token.id}"
-                       style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                       style="background-color: #154734; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
                         Verify Email Address
                     </a>
+                </p>
+                <p>
+                    Note that this link is valid for 30 days.
                 </p>
                 <p>
                     If you did not request this, please ignore this email.

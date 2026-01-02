@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
-import { useUnits } from "../../utils/useUnits";
+import { useUnits } from "../../hooks/useUnits";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../utils/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
 
 export default function Depth(): JSX.Element {
     const [, params] = useRoute('/well/:id/depth');
@@ -69,6 +69,8 @@ export default function Depth(): JSX.Element {
             flooding?: false,
         } = { depth };
 
+        // skip flooding page if depth
+        // greater than 15m
         if (depth >= 15) {
             updates.flooding = false
         }

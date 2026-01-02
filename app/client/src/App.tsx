@@ -33,8 +33,7 @@ import {
 } from './pages';
 
 import { HeaderBar } from './components';
-import { useEffect } from 'react';
-import { useLanguage } from './utils/useLanguage';
+import { useLanguage } from './hooks/useLanguage';
 
 const Theme = {
     theme: createTheme({
@@ -52,11 +51,7 @@ const Theme = {
 };
 
 function App() {
-    const { init } = useLanguage();
-
-    useEffect(() => {
-        init();
-    }, [init]);
+    useLanguage();
 
     return (
         <ThemeProvider theme={Theme.theme}>
@@ -69,7 +64,15 @@ function App() {
                 <Switch>
                     {/* Splash & Map Page */}
                     <Route path='/' component={Splash} />
-                    <Route path='/map' component={() => <Map />} />
+                    
+                    <Route path='/map'>
+                        {/* Map passed as child component to route
+                        not component parameter because it has props
+                        passing with arrow function caused infinite
+                        refetch loop with useWells hook */}
+                        <Map />
+                    </Route>
+
                     {/* App Pages with HeaderBar and Stack layout */}
                     <Route>
                         <HeaderBar />

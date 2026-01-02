@@ -25,7 +25,7 @@ export default function TranslatableText({
     const baseStyle = {
         mb,
         textAlign,
-        color: error ? 'error.main' : rest.color,
+        // color: error ? 'error.main' : rest.color,
         ...sx,
     };
 

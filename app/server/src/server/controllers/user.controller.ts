@@ -1,10 +1,10 @@
-import { AccessToken, AccessTokenSchema, UserSchema, RegisterRequestSchema, LoginRequestSchema } from 'iarsenic-types'
 import { KnownError } from '../errors'
 import { Context } from 'koa'
 import { UserService } from '../services'
+import { UserSchema } from '../models'
 
 export const UserController = {
-    async getUserByToken(ctx: Context): Promise<void> {
+    async getUser(ctx: Context): Promise<void> {
         const auth = ctx.state.auth
 
         if (!auth.token) {
@@ -15,27 +15,18 @@ export const UserController = {
             });
         }
 
-        const user = auth.user
+        const userId = ctx.params.userId;
+
+        const user = await UserService.getById(auth.user, userId)
 
         ctx.status = 200;
-        ctx.body = { ...user };
+        ctx.body = user;
     },
 
-    async updateUserByToken(ctx: Context): Promise<void> {
+    async updateUser(ctx: Context): Promise<void> {
         const auth = ctx.state.auth
 
-        const token = AccessTokenSchema.parse(auth.token);
-        const user = UserSchema.parse(auth.user)
-
-        if (!ctx.request.body) {
-            throw new KnownError({
-                message: 'Request body is required',
-                code: 400,
-                name: 'ValidationError',
-            })
-        }
-
-        if (token.userId !== user.id) {
+        if (!auth.token) {
             throw new KnownError({
                 message: 'Unauthorized',
                 code: 403,
@@ -43,146 +34,28 @@ export const UserController = {
             });
         }
 
-        const userUpdateParseRes = UserSchema.partial().safeParse(
-            ctx.request.body
-        )
+        const userId = ctx.params.userId;
 
-        if (!userUpdateParseRes.success) {
-            throw new KnownError({
-                message: userUpdateParseRes.error.message,
-                code: 400,
-                name: 'ValidationError',
-            });
+        const parsed = UserSchema.partial().safeParse(ctx.request.body);
+
+        let updatedUser
+        if (parsed.success) {
+            updatedUser = await UserService.updateUser(
+                auth,
+                userId,
+                parsed.data,
+            )
         }
-
-        const userUpdates = userUpdateParseRes.data
-
-        // Remove fields that should not be updated by user
-        delete userUpdates.id
-        delete userUpdates.email
-        delete userUpdates.emailVerified
-        delete userUpdates.type
-        delete userUpdates.createdAt
-
-        const updatedUser = await UserService.updateUser(
-            user.id,
-            userUpdates,
-        );
-
-        delete updatedUser.password
-
-        ctx.status = 200;
-        ctx.body = { updatedUser };
-    },
-
-    async login(ctx: Context): Promise<void> {
-        const loginRequestRes = LoginRequestSchema.safeParse(ctx.request.body)
-
-        if (!loginRequestRes.success) {
-            throw new KnownError({
-                message: loginRequestRes.error.message,
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        const loginRequest = loginRequestRes.data
-
-        const accessToken: AccessToken = await UserService.login(
-            loginRequest.email,
-            loginRequest.password,
-        )
 
         ctx.status = 200
-        ctx.body = { accessToken }
+        ctx.body = updatedUser
     },
 
-    async register(ctx: Context): Promise<void> {
-        const bodyParseRes = RegisterRequestSchema.safeParse(ctx.request.body);
-    
-        if (!bodyParseRes.success) {
-            throw new KnownError({
-                message: bodyParseRes.error.message,
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-    
-        const body = bodyParseRes.data;
-    
-        const { user, token } = await UserService.register(
-            body.email,
-            body.password,
-            body.name,
-            body.language,
-            body.units,
-        );
-    
-        ctx.status = 201;
-        ctx.body = { user, token };
+    async deleteUser(/*ctx: Context*/): Promise<void> {
+        throw new KnownError({
+            message: 'Delete user unimplemented',
+            code: 501,
+            name: 'Unimplemented',
+        })
     },
-
-    async deleteUserByToken(ctx: Context): Promise<void> {
-        ctx.status = 501
-        ctx.body = { error: 'Not Implemented' }
-    },
-
-    async verifyEmail(ctx: Context): Promise<void> {
-        const tokenId = ctx.params.token;
-        await UserService.verifyEmail(tokenId);
-
-        ctx.status = 200;
-        ctx.body = { message: 'Email verified successfully' };
-    },
-
-    async forgotPassword(ctx: Context): Promise<void> {
-        const email = (ctx.request.body as { email: string }).email;
-
-        if (!email) {
-            throw new KnownError({
-                message: 'Email is required',
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        await UserService.forgotPassword(email);
-
-        ctx.status = 200;
-        ctx.body = {
-            message: `
-                Password reset email sent if account with email exists
-            `,
-        };
-    },
-
-    async resetPassword(ctx: Context): Promise<void> {
-        const resetTokenId: string = ctx.params.token;
-
-        if (!resetTokenId) {
-            throw new KnownError({
-                message: 'Reset token is required',
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        const newPassword = (ctx.request.body as { newPassword: string }).newPassword;
-
-        if (!newPassword) {
-            throw new KnownError({
-                message: 'New password is required',
-                code: 400,
-                name: 'ValidationError',
-            });
-        }
-
-        // Validate the reset token and reset the password
-        await UserService.resetPassword(resetTokenId, newPassword);
-
-        ctx.status = 200;
-        ctx.body = {
-            message: 'Password has been successfully reset.',
-        };
-    }
 }

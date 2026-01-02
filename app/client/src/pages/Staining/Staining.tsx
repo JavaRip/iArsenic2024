@@ -1,12 +1,12 @@
 import { Collapse, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Box, Typography, CircularProgress } from "@mui/material";
 import { navigate } from "wouter/use-browser-location";
 import { useEffect, useState } from "react";
-import { Staining, StainingSchema, UtensilStaining, UtensilStainingSchema } from 'iarsenic-types';
 import { useRoute } from "wouter";
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import PageCard from "../../components/PageCard";
 import TranslatableText from "../../components/TranslatableText";
-import { useWells } from "../../utils/useWells";
+import { useWells } from "../../hooks/useWells/useWells";
+import { Staining, UtensilStaining, StainingSchema, UtensilStainingSchema } from "../../models";
 
 export default function StainingPage(): JSX.Element {
     const [, params] = useRoute('/well/:id/staining');

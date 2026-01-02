@@ -1,18 +1,23 @@
-import { Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { Button, CircularProgress, Stack, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useRoute } from "wouter";
 import TranslatableText from "../../components/TranslatableText";
 import PageCard from "../../components/PageCard";
+import { useAuth } from "../../hooks/useAuth/useAuth";
+import { navigate } from "wouter/use-browser-location";
+import validatePassword from "../../utils/validateNewPassword";
 
 export default function ResetPassword(): JSX.Element {
     const [, params] = useRoute('/reset-password/:token');
     const resetPasswordToken = params?.token;
 
+    const auth = useAuth()
+    const { resetPassword } = auth
+
     const [newPassword, setNewPassword] = useState<string>();
     const [confirmPassword, setConfirmPassword] = useState<string>();
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<boolean>(false);
+    const [progress, setProgress] = useState(0);
 
     function handleNewPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
         setNewPassword(event.target.value);
@@ -22,61 +27,76 @@ export default function ResetPassword(): JSX.Element {
         setConfirmPassword(event.target.value);
     }
 
-    // TODO create single function for this
-    function validatePassword(password: string): string | null {
-        if (password.length < 10) {
-            return "Password must be at least 10 characters long.";
-        }
-        if (!/[A-Z]/.test(password)) {
-            return "Password must contain at least one uppercase letter.";
-        }
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            return "Password must contain at least one special character.";
-        }
-        return null;
-    }
-
     async function handlePasswordReset() {
-        if (!newPassword) return;
-
-        const passwordError = validatePassword(newPassword);
-        if (passwordError) {
-            setError(passwordError);
-            return;
-        }
-
-        if (newPassword !== confirmPassword) {
-            setError('Passwords do not match.');
-            return;
-        }
-
-        setIsSubmitting(true);
-        setError(null);
-
         try {
-            const response = await fetch(`/api/v1/user/reset-password/${resetPasswordToken}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ newPassword }),
-            });
+            setError(null)
+            if (!newPassword) return;
 
-            if (response.ok) {
-                setSuccess(true);
-            } else {
-                const errorMessage = await response.text();
-                setError(errorMessage || 'Failed to reset password.');
+            if (!resetPasswordToken) {
+                setError('No reset token in url')
+                throw new Error('No reset password token in url')
             }
-        } catch (error) {
-            setError('An error occurred. Please try again later.');
-        } finally {
-            setIsSubmitting(false);
+
+            const passwordError = validatePassword(newPassword);
+            if (passwordError) {
+                setError(passwordError);
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                setError('Passwords do not match.');
+                return;
+            }
+
+            await resetPassword.mutateAsync({
+                resetPasswordToken,
+                newPassword,
+            },
+            {
+                onError: (err: unknown) => {
+                    console.error(err)
+                    setError((err as Error).message || "Reset Failed")
+                }
+            })
+        } catch (err: unknown) {
+            console.error(err)
+            if (err instanceof Error && (err as any).knownError) {
+                setError(err.message);
+            } else {
+                setError("Unable to reset password");
+            }
         }
     }
+
+    useEffect(() => {
+        if (
+            !resetPassword.isSuccess
+        ) return
+
+        setProgress(0)
+
+        const start = Date.now()
+        const duration = 2000
+
+        const interval = setInterval(() => {
+            const elapsed = Date.now() - start
+            const percent = Math.min((elapsed / duration) * 100, 100);
+            setProgress(percent);
+
+            if (percent === 100) {
+                clearInterval(interval);
+                navigate("/login");
+            }
+        }, 64)
+
+        return () => clearInterval(interval);
+    }, [
+        resetPassword.isSuccess,
+        navigate,
+    ])
 
     return (
-        <>
+        <Stack width="100%" alignItems="center" justifyContent="center">
             <PageCard>
                 <TranslatableText 
                     mb='1rem' 
@@ -86,72 +106,89 @@ export default function ResetPassword(): JSX.Element {
                     bengali='BENGALI PLACEHOLDER'
                 />
 
-                {success ? (
+                {error && (
                     <TranslatableText 
                         mb='1rem' 
                         textAlign='center' 
-                        variant='h4'
-                        english='Your password has been reset successfully.'
+                        color='error'
+                        error={true}
+                        english={error}
                         bengali='BENGALI PLACEHOLDER'
                     />
-                ) : (
-                    <>
-                        <TextField
-                            type="password"
-                            value={newPassword}
-                            onChange={handleNewPasswordChange}
-                            sx={{ width: '85%' }}
-                            disabled={isSubmitting}
-                            label={
-                                <TranslatableText 
-                                    mb='1rem' 
-                                    textAlign='center' 
-                                    variant='body1'
-                                    english='New Password'
-                                    bengali='BENGALI PLACEHOLDER'
-                                />
-                            }
+                )}
+
+                {resetPassword.isSuccess && (
+                    <Stack direction='row' justifyContent='center'>
+                        <TranslatableText 
+                            mb={2}
+                            mr={2}
+                            color='primary'
+                            textAlign='center' 
+                            english='Password reset successfully'
+                            bengali='BENGALI PLACEHOLDER'
                         />
 
-                        <TextField
-                            type="password"
-                            value={confirmPassword}
-                            onChange={handleConfirmPasswordChange}
-                            sx={{ width: '85%' }}
-                            disabled={isSubmitting}
-                            label={
-                                <TranslatableText 
-                                    mb='1rem' 
-                                    textAlign='center' 
-                                    variant='body1'
-                                    english='Confirm Password'
-                                    bengali='BENGALI PLACEHOLDER'
-                                />
-                            }
+                        <CircularProgress
+                            variant="determinate"
+                            size={24}
+                            thickness={4}
+                            value={progress}
                         />
+                    </Stack>
+                )}
 
-                        <Button
-                            sx={{ width: '90%', height: '3rem' }}
-                            variant='contained'
-                            onClick={handlePasswordReset}
-                            disabled={isSubmitting || !newPassword || !confirmPassword}
-                        >
-                            {isSubmitting ? 'Resetting...' : 'Reset Password'}
-                        </Button>
-
-                        {error && (
+                <Stack spacing={2}>
+                    <TextField
+                        type="password"
+                        value={newPassword}
+                        onChange={handleNewPasswordChange}
+                        disabled={resetPassword.isPending}
+                        label={
                             <TranslatableText 
                                 mb='1rem' 
                                 textAlign='center' 
-                                variant='h4'
-                                error={true}
-                                english={error}
+                                variant='body1'
+                                english='New Password'
                                 bengali='BENGALI PLACEHOLDER'
                             />
-                        )}
-                    </>
-                )}
+                        }
+                    />
+
+                    <TextField
+                        type="password"
+                        value={confirmPassword}
+                        onChange={handleConfirmPasswordChange}
+                        disabled={resetPassword.isPending}
+                        label={
+                            <TranslatableText 
+                                mb='1rem' 
+                                textAlign='center' 
+                                variant='body1'
+                                english='Confirm Password'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    />
+
+                    <Button
+                        sx={{ height: '4rem' }}
+                        variant='contained'
+                        onClick={handlePasswordReset}
+                        fullWidth
+                        disabled={
+                            resetPassword.isPending ||
+                            !newPassword ||
+                            !confirmPassword
+                        }
+                    >
+                        {
+                            resetPassword.isPending ?
+                                <CircularProgress /> :
+                                'Reset Password'
+                        }
+                    </Button>
+                </Stack>
             </PageCard>
-        </>
+        </Stack>
     );
 }

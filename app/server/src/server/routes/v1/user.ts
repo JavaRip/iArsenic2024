@@ -1,21 +1,11 @@
 import Router from '@koa/router'
 import { UserController } from '../../controllers'
+import { useAuth } from '../../middleware'
 
-const user = new Router({ prefix: '/user' })
+const user = new Router()
 
-user.get('/', (ctx) => {
-    ctx.status = 501
-    ctx.body = {
-        message: 'Not implemented',
-    }
-
-    return
-});
-
-user.post('/login', ctx => UserController.login(ctx));
-user.post('/register', ctx => UserController.register(ctx));
-user.get('/verify-email/:token', ctx => UserController.verifyEmail(ctx));
-user.post('/forgot-password', ctx => UserController.forgotPassword(ctx));
-user.post('/reset-password/:token', ctx => UserController.resetPassword(ctx));
+user.get('/user/:userId', useAuth, async ctx => UserController.getUser(ctx))
+user.patch('/user/:userId', useAuth, async (ctx) => UserController.updateUser(ctx))
+user.delete('/user/:userId', useAuth, async (/*ctx*/) => UserController.deleteUser(/*ctx*/))
 
 export default user

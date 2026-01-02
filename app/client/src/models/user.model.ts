@@ -7,14 +7,15 @@ export const UnitsSchema = z.enum(['meters', 'feet']);
 export type Units = z.infer<typeof UnitsSchema>;
 
 export const UserSchema = z.object({
-    id: z.string(),
+    avatarUrl: z.string().optional(),
+    createdAt: z.date(),
     email: z.string(),
     emailVerified: z.boolean(),
-    password: z.string().optional(),
-    name: z.string(),
-    type: z.enum(['admin', 'user']),
-    createdAt: z.date(),
+    id: z.string(),
     language: LanguageSchema,
+    name: z.string(),
+    password: z.string().optional(),
+    type: z.enum(['admin', 'user']),
     units: UnitsSchema,
 });
 

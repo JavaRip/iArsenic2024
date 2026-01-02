@@ -7,57 +7,29 @@ import {
     FormControl,
     InputLabel
 } from '@mui/material';
-import { User, UnitsSchema, LanguageSchema } from 'iarsenic-types';
 import { useState } from 'react';
-import { useAccessToken } from '../../utils/useAccessToken';
-import { useLanguage } from '../../utils/useLanguage';
-import { useUnits } from '../../utils/useUnits';
-import { useQueryClient } from '@tanstack/react-query';
+import { useLanguage } from '../../hooks/useLanguage';
+import { useUnits } from '../../hooks/useUnits';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
+import { User, LanguageSchema, UnitsSchema } from '../../models';
 
 interface Props {
     user: User;
     setEditMode: (editMode: boolean) => void;
     setSaving: (saving: boolean) => void;
-    setUser: (user: User) => void;
 }
 
-export default function EditProfileCard({ user, setEditMode, setSaving, setUser }: Props): JSX.Element {
-    const queryClient = useQueryClient()
+export default function EditProfileCard({ user, setEditMode }: Props): JSX.Element {
 
     const [name, setName] = useState<string>(user.name);
-    const { data: token } = useAccessToken();
 
     const { language, setLanguage } = useLanguage();
     const { units, setUnits } = useUnits();
 
     async function saveChanges() {
-        setSaving(true);
-    
-        if (!token) {
-            setSaving(false);
-            throw new Error('Invalid token');
-        }
-    
-        if (language) await setLanguage(language);
-        if (units) await setUnits(units);
-    
-        const updatedUser = { ...user, name, language, units };
-    
-        queryClient.setQueryData(['accessToken'], (prev: typeof token) => {
-            if (!prev) return prev;
-            return {
-                ...prev,
-                user: updatedUser,
-            };
-        });
-    
-        setSaving(false);
-        setEditMode(false);
-        setUser(updatedUser);
+        throw new Error('unimplemented')
     }
-    
 
     return (
         <Box width='100%'>

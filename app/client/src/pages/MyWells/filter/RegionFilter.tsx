@@ -1,14 +1,12 @@
-import { MenuItem, Stack, TextField, Button, CircularProgress } from '@mui/material';
+import { MenuItem, Stack, TextField, Button, CircularProgress, Typography } from '@mui/material';
 import {
     DropdownDivision,
     DropdownDistrict,
     DropdownUpazila,
     DropdownUnion,
-    RegionTranslations,
 } from '../../../types';
 import TranslatableText from '../../../components/TranslatableText';
-import { useEffect, useState } from 'react';
-import RegionTranslationsFetcher from '../../../utils/RegionTranslationsFetcher';
+import { useRegionTranslations } from '../../../hooks/useRegionTranslations';
 
 interface Props {
     dropdownData: DropdownDivision[];
@@ -37,8 +35,6 @@ export default function RegionFilter({
     selectedMouza,
     setSelectedMouza,
 }: Props) {
-    const [regionTranslations, setRegionTranslations] = useState<RegionTranslations>();
-
     function clearRegion() {
         setSelectedDivision(null);
         setSelectedDistrict(null);
@@ -47,19 +43,25 @@ export default function RegionFilter({
         setSelectedMouza(null);
     }
 
-    async function fetchRegionTranslations() {
-        const translations = await RegionTranslationsFetcher();
-        setRegionTranslations(translations);
-    }
-    
-    useEffect(() => {
-        fetchRegionTranslations();
-    }, []);
+    const {
+        data: regionTranslations,
+        isLoading: isTranslationsLoading,
+        isError: isTranslationsError,
+    } = useRegionTranslations();
 
-    if (!regionTranslations) {
+
+    if (isTranslationsLoading) {
         return (
             <Stack direction='column' alignContent='center' justifyContent='center'>
                 <CircularProgress />
+            </Stack>
+        );
+    }
+
+    if (isTranslationsError) {
+        return (
+            <Stack>
+                <Typography>Error loading page data</Typography>
             </Stack>
         );
     }
@@ -91,7 +93,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Division'
-                        bengali={regionTranslations.Divisions.division}
+                        bengali={regionTranslations!.Divisions.division}
                     />
                 }
             >
@@ -100,7 +102,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={d.division}
-                            bengali={regionTranslations.Divisions[d.division.toLowerCase()]}
+                            bengali={regionTranslations!.Divisions[d.division.toLowerCase()]}
                         />
                     </MenuItem>
                 ))}
@@ -122,7 +124,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='District'
-                        bengali={regionTranslations.Districts.district}
+                        bengali={regionTranslations!.Districts.district}
                     />
                 }
             >
@@ -131,7 +133,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={d.district}
-                            bengali={regionTranslations.Districts[d.district.toLowerCase()]}
+                            bengali={regionTranslations!.Districts[d.district.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}
@@ -152,7 +154,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Upazila'
-                        bengali={regionTranslations.Upazilas.upazila}
+                        bengali={regionTranslations!.Upazilas.upazila}
                     />
                 }
             >
@@ -161,7 +163,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={u.upazila}
-                            bengali={regionTranslations.Upazilas[u.upazila.toLowerCase()]}
+                            bengali={regionTranslations!.Upazilas[u.upazila.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}
@@ -181,7 +183,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Union'
-                        bengali={regionTranslations.Unions.union}
+                        bengali={regionTranslations!.Unions.union}
                     />
                 }
             >
@@ -190,7 +192,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={u.union}
-                            bengali={regionTranslations.Unions[u.union.toLowerCase()]}
+                            bengali={regionTranslations!.Unions[u.union.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}
@@ -208,7 +210,7 @@ export default function RegionFilter({
                     <TranslatableText 
                         variant='body1' 
                         english='Mouza'
-                        bengali={regionTranslations.Mouzas.mouza}
+                        bengali={regionTranslations!.Mouzas.mouza}
                     />
                 }
             >
@@ -217,7 +219,7 @@ export default function RegionFilter({
                         <TranslatableText 
                             variant='body1' 
                             english={m}
-                            bengali={regionTranslations.Mouzas[m.toLowerCase()]}
+                            bengali={regionTranslations!.Mouzas[m.toLowerCase()]}
                         />
                     </MenuItem>
                 )) || []}

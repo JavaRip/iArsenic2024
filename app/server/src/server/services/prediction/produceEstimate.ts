@@ -1,6 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import { Model6Data } from '../../types';
-import { ModelMessageCode, Well } from 'iarsenic-types';
+import { ModelMessageCode, Well } from '../../models';
 
 // Setup GCS client — assumes Application Default Credentials or service account key
 const storage = new Storage();

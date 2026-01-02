@@ -1,5 +1,5 @@
 import { Context } from 'koa';
-import { AbstractToken } from 'iarsenic-types';
+import { AbstractToken } from '../models';
 import { TokenService } from '../services/token.service';
 
 export const TokenController = {

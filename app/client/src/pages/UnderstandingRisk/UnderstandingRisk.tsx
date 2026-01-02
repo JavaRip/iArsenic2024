@@ -5,9 +5,9 @@ import React, { useState } from "react";
 import EnglishSpeedo from "../../components/Speedo/englishSpeedo";
 import BengaliSpeedo from "../../components/Speedo/bengaliSpeedo";
 import estimateTexts from "../../components/Speedo/estimateTexts";
-import { RiskAssesment } from "iarsenic-types";
 import TranslatableText from "../../components/TranslatableText";
 import PageCard from "../../components/PageCard";
+import { RiskAssesment } from "../../models";
 
 type EstimateTexts = {
     english: {

@@ -16,6 +16,9 @@ export type { VerifyEmailToken } from './token.model';
 export { AbstractTokenSchema } from './token.model';
 export type { AbstractToken } from './token.model';
 
+export { RefreshTokenSchema } from './token.model';
+export type { RefreshToken } from './token.model';
+
 export { UserSchema } from './user.model';
 export type { User } from './user.model';
 
