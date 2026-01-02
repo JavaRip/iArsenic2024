@@ -17,8 +17,11 @@ import { FiltersType } from './FiltersType';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
 import DepthSlider from './filter/DepthSlider';
+import { Well } from '../../models';
+import DateSlider from './filter/DateSlider';
 
 interface props {
+    wells: Well[];
     dropdownData: DropdownDivision[];
     filters: FiltersType;
     setFilters: React.Dispatch<React.SetStateAction<FiltersType>>;
@@ -27,6 +30,7 @@ interface props {
 }
 
 export default function Filter({ 
+    wells,
     dropdownData, 
     filters,
     setFilters,
@@ -51,6 +55,20 @@ export default function Filter({
             ...filters,
             [field]: value,
         });
+    }
+
+    function setDateRange({
+        from,
+        to,
+    }: {
+        from: string, // ISO 8601 string
+        to: string,
+    }) {
+        setFilters({
+            ...filters,
+            afterDate: from,
+            beforeDate: to,
+        })
     }
 
     function setDepthRange({
@@ -154,6 +172,42 @@ export default function Filter({
                     <TextField
                         select
                         value={filters.flooding}
+                        onChange={(e) => handleTextChange('guestWells', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Guest Wells'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="only">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Only'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="exclude">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Exclude'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        value={filters.flooding}
                         onChange={(e) => handleTextChange('flooding', e.target.value)}
                         fullWidth
                         label={
@@ -231,6 +285,22 @@ export default function Filter({
                         }}
                     />
 
+                    <DateSlider 
+                        earliestAvailableDate={
+                            wells[0].createdAt.toISOString().split('T')[0]
+                        }
+                        latestAvailableDate={
+                            wells[
+                                wells.length - 1
+                            ].createdAt.toISOString().split('T')[0]
+                        }
+                        dateRange={{
+                            from: filters.afterDate,
+                            to: filters.beforeDate,
+                        }}
+                        setDateRange={setDateRange} 
+                    />
+
                     <Divider />
 
                     <TranslatableText 
@@ -306,8 +376,6 @@ export default function Filter({
                             }));
                         }}
                     />
-
-                    <Divider />
 
                 </Stack>
             </Collapse>

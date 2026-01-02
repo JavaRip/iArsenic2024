@@ -2,11 +2,19 @@ import { Well } from "../../../models";
 import { FiltersType } from "../FiltersType";
 
 export default function applyFilter(
+    pageMountTimestamp: string | null,
     filters: FiltersType,
     wells: Well[],
     userId: string | undefined,
 ) {
-    return wells.filter(w => {
+    const filteredWells = wells.filter(w => {
+        
+        if (pageMountTimestamp) {
+            if (w.createdAt.toISOString() > pageMountTimestamp) return false
+        }
+
+        if (w.createdAt.toISOString().split('T')[0] > filters.beforeDate) return false
+        if (w.createdAt.toISOString().split('T')[0] < filters.afterDate) return false
 
         if (filters.wellInUse) {
             if (!w.wellInUse) return false
@@ -99,4 +107,6 @@ export default function applyFilter(
 
         return true
     })
+
+    return filteredWells
 }

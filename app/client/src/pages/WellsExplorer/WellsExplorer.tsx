@@ -20,7 +20,8 @@ import applyFilter from './utils/applyFilter';
 
 export default function WellsExplorer(): JSX.Element {
     const [page, setPage] = useState<number>(1)
-    const [pageSize/*, setPageSize*/] = useState<number>(25)
+    const [pageSize] = useState<number>(10)
+    const [pageMountTimestamp] = useState(() => new Date().toISOString())
 
     const [filterOpen, setFilterOpen] = useState<boolean>(false)
     const [filters, setFilters] = useState<FiltersType>({
@@ -34,6 +35,8 @@ export default function WellsExplorer(): JSX.Element {
         belowDepth: 500,
         ownWells: false,
         guestWells: 'any',
+        afterDate: '2024-01-01',
+        beforeDate: new Date().toISOString().split('T')[0],
         region: {
             division: '',
             district: '',
@@ -75,6 +78,28 @@ export default function WellsExplorer(): JSX.Element {
         isError: isUserError,
         error: userError,
     } = getUser(token?.userId)
+
+    useEffect(() => {
+        setPage(1)
+    }, [filters])
+
+    useEffect(() => {
+        if (wells) {
+            // spread required because sort is done in place
+            const sortedWells = [...wells].sort((a, b) => {
+                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            })
+
+            const oldestWell = sortedWells[0]
+            const newestWell = sortedWells[sortedWells.length - 1]
+
+            setFilters({
+                ...filters,
+                beforeDate: newestWell.createdAt.toISOString().split('T')[0],
+                afterDate: oldestWell.createdAt.toISOString().split('T')[0],
+            })
+        }
+    }, [wells])
 
     async function addWell() {
         try {
@@ -121,11 +146,8 @@ export default function WellsExplorer(): JSX.Element {
         );
     }
 
-    useEffect(() => {
-        setPage(1)
-    }, [filters])
-
     const filteredWells = applyFilter(
+        pageMountTimestamp,
         filters,
         wells!,
         user?.id,
@@ -152,6 +174,7 @@ export default function WellsExplorer(): JSX.Element {
 
             {token && dropdownData && (
                 <Filter
+                    wells={wells!}
                     dropdownData={dropdownData}
                     filters={filters}
                     setFilters={setFilters}

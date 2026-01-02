@@ -7,6 +7,8 @@ export type FiltersType = {
     complete: boolean;
     aboveDepth: number;
     belowDepth: number;
+    afterDate: string;
+    beforeDate: string;
     ownWells: boolean;
     guestWells: 'only' | 'exclude' | 'any'
     region: {
