@@ -1,4 +1,4 @@
-import { RiskFilter } from "../Map";
+import { RiskFilter } from "../pages/Map/Map";
 
 export function predictionToRiskFactor(
     prediction: number | undefined

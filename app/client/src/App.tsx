@@ -12,7 +12,6 @@ import {
     LaunchEventBlog,
     Login,
     Map,
-    MyWells,
     PhotoUpload,
     PrivacyPolicy,
     Profile,
@@ -30,6 +29,7 @@ import {
     VerifyEmail,
     Well,
     WellInUse,
+    WellsExplorer
 } from './pages';
 
 import { HeaderBar } from './components';
@@ -86,13 +86,12 @@ function App() {
                             alignItems='center'
                         >
                             <Route path='/blog' component={BlogIndex} />
-                            <Route path='/blog/launch-event' component={LaunchEvent} />
                             <Route path='/blog/launch-event-blog' component={LaunchEventBlog} />
+                            <Route path='/blog/launch-event' component={LaunchEvent} />
                             <Route path='/briefing' component={Briefing} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
                             <Route path='/login' component={Login} />
-                            <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
                             <Route path='/profile' component={Profile} />
                             <Route path='/reset-password/:id' component={ResetPassword} />
@@ -111,6 +110,7 @@ function App() {
                             <Route path='/well/:id/staining' component={Staining} />
                             <Route path='/well/:id/upload-image' component={PhotoUpload} />
                             <Route path='/well/:id/well-in-use' component={WellInUse} />
+                            <Route path='/wells/explorer' component={WellsExplorer} />
                         </Stack>
                     </Route>
                 </Switch>

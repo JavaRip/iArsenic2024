@@ -16,8 +16,12 @@ import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } fr
 import { FiltersType } from './FiltersType';
 import TranslatableText from '../../components/TranslatableText';
 import PageCard from '../../components/PageCard';
+import DepthSlider from './filter/DepthSlider';
+import { Well } from '../../models';
+import DateSlider from './filter/DateSlider';
 
 interface props {
+    wells: Well[];
     dropdownData: DropdownDivision[];
     filters: FiltersType;
     setFilters: React.Dispatch<React.SetStateAction<FiltersType>>;
@@ -26,6 +30,7 @@ interface props {
 }
 
 export default function Filter({ 
+    wells,
     dropdownData, 
     filters,
     setFilters,
@@ -50,6 +55,34 @@ export default function Filter({
             ...filters,
             [field]: value,
         });
+    }
+
+    function setDateRange({
+        from,
+        to,
+    }: {
+        from: string, // ISO 8601 string
+        to: string,
+    }) {
+        setFilters({
+            ...filters,
+            afterDate: from,
+            beforeDate: to,
+        })
+    }
+
+    function setDepthRange({
+        from,
+        to,
+    }: {
+        from: number,
+        to: number,
+    }) {
+        setFilters({
+            ...filters,
+            aboveDepth: from,
+            belowDepth: to,
+        })
     }
 
     return (
@@ -136,6 +169,154 @@ export default function Filter({
                         }
                     />
 
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={filters.ownWells}
+                                onChange={() => handleCheckboxChange('ownWells')}
+                            />
+                        }
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Own Wells Only'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    />
+
+                    <TextField
+                        select
+                        value={filters.guestWells}
+                        onChange={(e) => handleTextChange('guestWells', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Guest Wells'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="only">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Only'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="exclude">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Exclude'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        value={filters.flooding}
+                        onChange={(e) => handleTextChange('flooding', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Flooding'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="true">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Yes'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="false">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='No'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        value={filters.staining}
+                        onChange={(e) => handleTextChange('staining', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Staining'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Any'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="red">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Red'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                        <MenuItem value="black">
+                            <TranslatableText 
+                                variant='body1' 
+                                english='Black'
+                                bengali='BENGALI PLACEHOLDER'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <DepthSlider 
+                        setDepthRange={setDepthRange} 
+                        depthRange={{
+                            from: filters.aboveDepth,
+                            to: filters.belowDepth,
+                        }}
+                    />
+
+                    <DateSlider 
+                        earliestAvailableDate={
+                            wells[0].createdAt.toISOString().split('T')[0]
+                        }
+                        latestAvailableDate={
+                            wells[
+                                wells.length - 1
+                            ].createdAt.toISOString().split('T')[0]
+                        }
+                        dateRange={{
+                            from: filters.afterDate,
+                            to: filters.beforeDate,
+                        }}
+                        setDateRange={setDateRange} 
+                    />
+
                     <Divider />
 
                     <TranslatableText 
@@ -212,79 +393,6 @@ export default function Filter({
                         }}
                     />
 
-                    <Divider />
-
-                    <TextField
-                        select
-                        value={filters.flooding}
-                        onChange={(e) => handleTextChange('flooding', e.target.value)}
-                        fullWidth
-                        label={
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Flooding'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        }
-                    >
-                        <MenuItem value="">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Any'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="true">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Yes'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="false">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='No'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                    </TextField>
-
-                    <TextField
-                        select
-                        value={filters.staining}
-                        onChange={(e) => handleTextChange('staining', e.target.value)}
-                        fullWidth
-                        label={
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Staining'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        }
-                    >
-                        <MenuItem value="">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Any'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="red">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Red'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                        <MenuItem value="black">
-                            <TranslatableText 
-                                variant='body1' 
-                                english='Black'
-                                bengali='BENGALI PLACEHOLDER'
-                            />
-                        </MenuItem>
-                    </TextField>
                 </Stack>
             </Collapse>
         </PageCard>

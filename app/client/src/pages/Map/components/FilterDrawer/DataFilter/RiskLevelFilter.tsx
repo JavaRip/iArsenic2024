@@ -1,7 +1,7 @@
 import { Stack, FormControlLabel, Checkbox } from "@mui/material";
 import TranslatableText from "../../../../../components/TranslatableText";
 import { RiskFilter } from "../../../Map";
-import { predictionToRiskFactor } from "../../../utils/predictionToRiskFactor";
+import { predictionToRiskFactor } from "../../../../../utils/predictionToRiskFactor";
 
 interface props {
     riskFilter: RiskFilter
