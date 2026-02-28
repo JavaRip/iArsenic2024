@@ -29,9 +29,9 @@ interface props {
     setFilterOpen: (open: boolean) => void
 }
 
-export default function Filter({ 
+export default function Filter({
     wells,
-    dropdownData, 
+    dropdownData,
     filters,
     setFilters,
     filterOpen,
@@ -87,14 +87,14 @@ export default function Filter({
 
     return (
         <PageCard>
-            <Box 
-                display="flex" 
-                flexDirection='row' 
+            <Box
+                display="flex"
+                flexDirection='row'
                 justifyContent='space-between'
                 width='100%'
             >
-                <Box 
-                    display='flex' 
+                <Box
+                    display='flex'
                     flexDirection='row'
                     onClick={() => setFilterOpen(!filterOpen)}
                     sx={{
@@ -104,14 +104,14 @@ export default function Filter({
                     <IconButton>
                         <FilterListIcon />
                     </IconButton>
-                    
-                    <TranslatableText 
-                        variant='h6' 
+
+                    <TranslatableText
+                        variant='h6'
                         english='Filters'
                         bengali='BENGALI PLACEHOLDER'
                     />
                 </Box>
-                {/* <Button 
+                {/* <Button
                     variant='outlined'
                     onClick={() => buildQueryParams()}
                 >
@@ -129,8 +129,8 @@ export default function Filter({
                             />
                         }
                         label={
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Geolocated'
                                 bengali='BENGALI PLACEHOLDER'
                             />
@@ -145,8 +145,8 @@ export default function Filter({
                             />
                         }
                         label={
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Includes Images'
                                 bengali='BENGALI PLACEHOLDER'
                             />
@@ -161,8 +161,8 @@ export default function Filter({
                             />
                         }
                         label={
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Complete Well'
                                 bengali='BENGALI PLACEHOLDER'
                             />
@@ -177,8 +177,8 @@ export default function Filter({
                             />
                         }
                         label={
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Own Wells Only'
                                 bengali='BENGALI PLACEHOLDER'
                             />
@@ -191,30 +191,30 @@ export default function Filter({
                         onChange={(e) => handleTextChange('guestWells', e.target.value)}
                         fullWidth
                         label={
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Guest Wells'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         }
                     >
                         <MenuItem value="any">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Any'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </MenuItem>
                         <MenuItem value="only">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Only'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </MenuItem>
                         <MenuItem value="exclude">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Exclude'
                                 bengali='BENGALI PLACEHOLDER'
                             />
@@ -227,30 +227,30 @@ export default function Filter({
                         onChange={(e) => handleTextChange('flooding', e.target.value)}
                         fullWidth
                         label={
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Flooding'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         }
                     >
                         <MenuItem value="any">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Any'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </MenuItem>
                         <MenuItem value="true">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Yes'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </MenuItem>
                         <MenuItem value="false">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='No'
                                 bengali='BENGALI PLACEHOLDER'
                             />
@@ -263,64 +263,68 @@ export default function Filter({
                         onChange={(e) => handleTextChange('staining', e.target.value)}
                         fullWidth
                         label={
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Staining'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         }
                     >
                         <MenuItem value="any">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Any'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </MenuItem>
                         <MenuItem value="red">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Red'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </MenuItem>
                         <MenuItem value="black">
-                            <TranslatableText 
-                                variant='body1' 
+                            <TranslatableText
+                                variant='body1'
                                 english='Black'
                                 bengali='BENGALI PLACEHOLDER'
                             />
                         </MenuItem>
                     </TextField>
 
-                    <DepthSlider 
-                        setDepthRange={setDepthRange} 
+                    <DepthSlider
+                        setDepthRange={setDepthRange}
                         depthRange={{
                             from: filters.aboveDepth,
                             to: filters.belowDepth,
                         }}
                     />
 
-                    <DateSlider 
+                    <DateSlider
                         earliestAvailableDate={
-                            wells[0].createdAt.toISOString().split('T')[0]
+                            wells.length > 0 ?
+                                wells[0].createdAt.toISOString().split('T')[0] :
+                                new Date().toISOString().split('T')[0]
                         }
                         latestAvailableDate={
-                            wells[
-                                wells.length - 1
-                            ].createdAt.toISOString().split('T')[0]
+                            wells.length > 0 ?
+                                wells[
+                                    wells.length - 1
+                                ].createdAt.toISOString().split('T')[0] :
+                                new Date().toISOString().split('T')[0]
                         }
                         dateRange={{
                             from: filters.afterDate,
                             to: filters.beforeDate,
                         }}
-                        setDateRange={setDateRange} 
+                        setDateRange={setDateRange}
                     />
 
                     <Divider />
 
-                    <TranslatableText 
-                        variant='h5' 
+                    <TranslatableText
+                        variant='h5'
                         english='Region'
                         bengali='BENGALI PLACEHOLDER'
                     />

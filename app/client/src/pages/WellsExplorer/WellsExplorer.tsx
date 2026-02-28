@@ -54,7 +54,7 @@ export default function WellsExplorer(): JSX.Element {
 
 
     const auth = useAuth()
-    const { 
+    const {
         data: token,
         isLoading: tokenLoading,
         isError: isTokenError,
@@ -64,7 +64,7 @@ export default function WellsExplorer(): JSX.Element {
     // custom useWells query implementation
     // to prevent wells from refreshing
     // and resetting pagination
-    const { 
+    const {
         data: wells,
         isLoading: wellsLoading,
         isError: isWellsError,
@@ -79,7 +79,7 @@ export default function WellsExplorer(): JSX.Element {
     });
 
     const {
-        data: dropdownData, 
+        data: dropdownData,
         isLoading: isDropdownLoading,
         isError: isDropdownError,
         error: dropdownError,
@@ -99,7 +99,7 @@ export default function WellsExplorer(): JSX.Element {
     }, [filters])
 
     useEffect(() => {
-        if (wells) {
+        if (wells && wells.length > 0) {
             // spread required because sort is done in place
             const sortedWells = [...wells].sort((a, b) => {
                 return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -154,6 +154,17 @@ export default function WellsExplorer(): JSX.Element {
         console.error(userError)
         console.error(tokenError)
 
+        if (tokenError) {
+            return (
+                <Stack>
+                    <TranslatableText
+                        english='Please login to view this page'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
+                </Stack>
+            )
+        }
+
         return (
             <Stack>
                 <Typography>Error loading page data</Typography>
@@ -172,8 +183,8 @@ export default function WellsExplorer(): JSX.Element {
 
     return (
         <>
-            <TranslatableText 
-                english='Wells Explorer' 
+            <TranslatableText
+                english='Wells Explorer'
                 bengali='BENGALI PLACEHOLDER'
                 textAlign='center'
                 variant='h4'
@@ -201,13 +212,13 @@ export default function WellsExplorer(): JSX.Element {
             <TranslatableText
                 variant='h5'
                 english={`Selected ${filteredWells.length} / ${wells!.length} wells`}
-                bengali='BENGALI PLACEHOLDER' 
+                bengali='BENGALI PLACEHOLDER'
             />
 
             <Box
-                sx={{ 
-                    margin: '0 1rem 1rem 1rem', 
-                    padding: '1rem', 
+                sx={{
+                    margin: '0 1rem 1rem 1rem',
+                    padding: '1rem',
                     width: '100%',
                 }}
             >
@@ -216,8 +227,8 @@ export default function WellsExplorer(): JSX.Element {
                 ) ? (
                     <TranslatableText
                         variant='body1'
-                        english='No wells found' 
-                        bengali='BENGALI PLACEHOLDER' 
+                        english='No wells found'
+                        bengali='BENGALI PLACEHOLDER'
                     />
                 ) : (
                     filteredWells

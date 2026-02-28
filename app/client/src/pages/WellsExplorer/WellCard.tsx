@@ -1,4 +1,4 @@
-import { Card, Box, Stack } from '@mui/material';
+import { Card, Box, Stack, Typography } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import { navigate } from 'wouter/use-browser-location';
 import { useEffect, useState } from 'react';
@@ -86,13 +86,15 @@ export default function WellCard({ well }: Props): JSX.Element {
                             if (well.district && well.division) {
                                 return (
                                     <>
-                                        <strong>Region</strong> {well.district} - {well.division}
+                                        <strong>Region</strong> {well.division} - {well.district}
                                     </>
                                 )
                             } else {
                                 return (
                                     <>
-                                        <strong>Region</strong> Not Provided
+                                        <Typography color='error' variant='subtitle2'>
+                                            <strong>Region</strong> Not Provided
+                                        </Typography>
                                     </>
                                 )
                             }
@@ -106,7 +108,9 @@ export default function WellCard({ well }: Props): JSX.Element {
                             if (well.modelOutput === undefined) {
                                 return (
                                     <>
-                                        <strong>Risk Assesment</strong> Missing Data
+                                        <Typography color='error' variant='subtitle2'>
+                                            <strong>Risk Assesment</strong> Missing Data
+                                        </Typography>
                                     </>
                                 )
                             } else {
@@ -140,7 +144,9 @@ export default function WellCard({ well }: Props): JSX.Element {
                             } else {
                                 return (
                                     <>
-                                        <strong>Well in Use</strong> Usage Not Provided
+                                        <Typography color='error' variant='subtitle2'>
+                                            <strong>Well in Use</strong> Usage Not Provided
+                                        </Typography>
                                     </>
                                 )
                             }
@@ -180,7 +186,32 @@ export default function WellCard({ well }: Props): JSX.Element {
                             } else {
                                 return (
                                     <>
-                                        <strong>Staining</strong> Not Provided
+                                        <Typography color='error' variant='subtitle2'>
+                                            <strong>Staining</strong> Not Provided
+                                        </Typography>
+                                    </>
+                                )
+                            }
+                        })()} 
+                        bengali='BENGALI PLACEHOLDER' 
+                        variant='subtitle2'
+                    />
+
+                    <TranslatableText 
+                        english={(() => {
+                            if (well.depth !== undefined) {
+                                return (
+                                    // TODO include conversion for feet
+                                    <>
+                                        <strong>Depth</strong> {well.depth} (meters)
+                                    </>
+                                )
+                            } else {
+                                return (
+                                    <>
+                                        <Typography color='error' variant='subtitle2'>
+                                            <strong>Depth</strong> Not Provided
+                                        </Typography>
                                     </>
                                 )
                             }

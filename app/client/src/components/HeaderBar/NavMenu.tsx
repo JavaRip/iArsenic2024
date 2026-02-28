@@ -15,7 +15,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import LocalDrinkIcon from '@mui/icons-material/LocalDrink';
+import SearchIcon from '@mui/icons-material/Search'
 import PrivacyTipIcon from '@mui/icons-material/PrivacyTip';
 import PublicIcon from '@mui/icons-material/Public';
 import TranslatableText from '../TranslatableText';
@@ -106,21 +106,21 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <ListItem key='powerbi-dash'>
                         <ListItemButton onClick={() => {
                             window.open(
-                                'https://app.powerbi.com/view?r=eyJrIjoiMjA0NWJiMjAtOWNjNi00MzBkLWI2ZjQtYTgyY2I5YzI2M2JmIiwidCI6IjAwNTIzMDdjLTU2NGQtNGZkYy05ODc5LTVhNDQ2Y2Y2Yzc0NiIsImMiOjh9', 
+                                'https://app.powerbi.com/view?r=eyJrIjoiMjA0NWJiMjAtOWNjNi00MzBkLWI2ZjQtYTgyY2I5YzI2M2JmIiwidCI6IjAwNTIzMDdjLTU2NGQtNGZkYy05ODc5LTVhNDQ2Y2Y2Yzc0NiIsImMiOjh9',
                                 '_blank',
                             )?.focus()
                         }}>
                             <ListItemIcon>
                                 <DashboardIcon />
                             </ListItemIcon>
-                            <ListItemText 
+                            <ListItemText
                                 primary={
                                     <TranslatableText
                                         english='ARRP DataViewer'
                                         bengali='এআরআরপি ডেটা ভিজ্যুয়ালাইজার'
                                         variant='body1'
                                     />
-                                } 
+                                }
                             />
                         </ListItemButton>
                     </ListItem>
@@ -142,15 +142,15 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                     <>
                         <Divider />
                         <List>
-                            <NavListItem 
-                                path='profile' 
-                                Icon={AccountCircleIcon} 
+                            <NavListItem
+                                path='profile'
+                                Icon={AccountCircleIcon}
                                 label={<TranslatableText english='My Profile' bengali="আমার প্রোফাইল" variant='body1' />}
                             />
                             <NavListItem
-                                path='my-wells'
-                                Icon={LocalDrinkIcon}
-                                label={<TranslatableText english="My Wells" bengali="আমার কূপসমূহ" variant="body1" />}
+                                path='wells/explorer'
+                                Icon={SearchIcon}
+                                label={<TranslatableText english="Wells Explorer" bengali="BENGALI PLACEHOLDER" variant="body1" />}
                             />
                         </List>
                     </>
@@ -165,13 +165,13 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                             variant='h6'
                         />
                         <List>
-                            <NavListItem 
-                                path='all-users' 
+                            <NavListItem
+                                path='all-users'
                                 Icon={GroupsIcon}
                                 label={<TranslatableText english='All Users' bengali="সকল ব্যবহারকারী" variant='body1' />}
                             />
-                            <NavListItem 
-                                path='all-wells' 
+                            <NavListItem
+                                path='all-wells'
                                 Icon={PublicIcon}
                                 label={<TranslatableText english='All Wells' bengali="সকল নলকূপ" variant='body1' />}
                             />
@@ -183,7 +183,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                 <TranslatableText
                     ml={2}
                     my={2}
-                    english='Select Language' 
+                    english='Select Language'
                     bengali='ভাষা নির্বাচন করুন' // chatgpt generated
                     variant='h6'
                 />
