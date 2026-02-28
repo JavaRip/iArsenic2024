@@ -1,23 +1,26 @@
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress, Stack } from "@mui/material";
 import PageCard from "../../../components/PageCard";
 import TranslatableText from "../../../components/TranslatableText";
-import Map from '../../Map'
 import { RegionTranslations } from "../../../types";
 import { Well } from "../../../models";
 import useInteractiveMap from '../../Map/hooks/useInteractiveMap';
 import { LatLngExpression } from 'leaflet';
 import Markers from '../../Map/components/markers';
 import { navigate } from 'wouter/use-browser-location';
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import GpsOffIcon from '@mui/icons-material/GpsOff';
 
 export default function MapCard(
     {
-        regionTranslations,
         geolocation,
+        geolocationType,
+        regionTranslations,
         well,
     }: {
-        regionTranslations: RegionTranslations,
         geolocation: LatLngExpression,
+        geolocationType: 'mouza' | 'gps'
+        regionTranslations: RegionTranslations,
         well: Well,
     }
 ): JSX.Element {
@@ -86,6 +89,37 @@ export default function MapCard(
                 </MapContainer>
             </Box>
 
+            {(() => {
+                switch(geolocationType) {
+                    case 'gps':
+                        return (
+                            <Stack direction='row' mt='16px'>
+                                <GpsFixedIcon sx={{ color: 'success.main' }} />
+                                <TranslatableText
+                                    color='success.main'
+                                    fontWeight='bold'
+                                    english='Coordinates from GPS (highly accurate)'
+                                    bengali='জিপিএস থেকে প্রাপ্ত স্থানাঙ্ক (অত্যন্ত নির্ভুল)'
+                                    ml='16px'
+                                />
+                            </Stack>
+                        )
+                    case 'mouza':
+                        return (
+                            <Stack direction='row' mt='16px'>
+                                <GpsOffIcon sx={{ color: 'warning.main' }} />
+                                <TranslatableText
+                                    color='warning.main'
+                                    fontWeight='bold'
+                                    english='Coordinates from Mouza (approximate)'
+                                    bengali='মৌজা থেকে প্রাপ্ত স্থানাঙ্ক (আনুমানিক)'
+                                    ml='16px'
+                                />
+                            </Stack>
+                        )
+                }
+            })()}
+
             <Button
                 sx={{ width: '90%', height: '4rem', mt: '1rem' }}
                 variant="outlined"
@@ -97,7 +131,6 @@ export default function MapCard(
                     bengali="মানচিত্রে দেখুন"
                 />
             </Button>
-
         </PageCard>
     )
 }

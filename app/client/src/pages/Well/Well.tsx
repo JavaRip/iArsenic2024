@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { useRoute } from 'wouter';
 import { Well } from '../../models';
 import { useWells } from "../../hooks/useWells/useWells";
@@ -9,6 +9,8 @@ import MissingDataCard from './components/MissingDataCard';
 import RiskAssesmentCard from './components/RiskAssesmentCard';
 import PhotoCard from './components/PhotoCard';
 import { useRegionTranslations } from '../../hooks/useRegionTranslations';
+import TranslatableText from '../../components/TranslatableText';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function WellPage() {
     const [, params] = useRoute('/well/:id');
@@ -53,13 +55,34 @@ export default function WellPage() {
 
     const { missingFields, allFieldsMissing } = getMissingFields(well);
 
+    console.log(missingFields)
+    console.log(allFieldsMissing)
+
     return (
         <>
+            <Button
+                variant='outlined'
+                startIcon={<ArrowBackIcon />}
+                sx={{ alignSelf: 'start' }}
+                onClick={() => window.history.back()}
+            >
+                <TranslatableText
+                    variant='body1'
+                    textAlign='center'
+                    english='Return'
+                    bengali='ফিরে যান' // chatgpt generated
+                />
+            </Button>
+
             <ActionLogCard
                 wellId={wellId}
             />
-            {missingFields && (
-                <MissingDataCard />
+
+            {missingFields.length > 0 && (
+                <MissingDataCard
+                    wellId={wellId}
+                    missingFields={missingFields}
+                />
             )}
 
             {(well.geolocation && well.mouzaGeolocation) && (
@@ -67,6 +90,7 @@ export default function WellPage() {
                     regionTranslations={regionTranslations!}
                     geolocation={well.geolocation || well.mouzaGeolocation}
                     well={well}
+                    geolocationType={well.geolocation ? 'gps' : 'mouza'}
                 />
             )}
 
