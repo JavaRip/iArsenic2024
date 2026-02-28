@@ -10,7 +10,7 @@ export function useUsers() {
     const queryClient = useQueryClient()
 
     const getUser = (userId?: string) => {
-        return useQuery<User>({
+        return useQuery<User | 'guest'>({
             queryKey: ['user', userId],
             enabled: !!userId,
             queryFn: () => getUserFn(token, userId!)
@@ -47,11 +47,11 @@ export function useUsers() {
                 queryClient.setQueryData<User>(
                     ['user', userId],
                     (old) => {
-                        return old 
-                            ? UserSchema.parse({ 
-                                ...old, 
+                        return old
+                            ? UserSchema.parse({
+                                ...old,
                                 ...updates,
-                            }) : 
+                            }) :
                             old
                     }
                 );

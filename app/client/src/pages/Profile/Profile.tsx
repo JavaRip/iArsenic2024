@@ -47,8 +47,9 @@ export default function ProfilePage(): JSX.Element {
         );
     }
 
-    if (userIsError || !user) {
+    if (userIsError || !user || user === 'guest') {
         console.error(userError)
+        console.error(`user: ${user}`)
         throw new Error('Cannot show profile error loading user')
     }
 

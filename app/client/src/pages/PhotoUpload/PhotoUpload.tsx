@@ -31,18 +31,18 @@ export default function WellImageUpload(): JSX.Element {
             if (token) {
                 headers["Authorization"] = `Bearer ${token.id}`;
             }
-    
+
             const wellRes = await fetch(`/api/v1/self/well/${wellId}`, { headers });
             if (!wellRes.ok) return;
-    
+
             const well = await wellRes.json();
             const paths = well.imagePaths || [];
-    
+
             if (paths.length === 0) {
                 setImageUrls([]);
                 return;
             }
-    
+
             const urlsRes = await fetch(`/api/v1/self/well/${wellId}/signed-image-urls`, {
                 method: "POST",
                 headers: {
@@ -51,13 +51,13 @@ export default function WellImageUpload(): JSX.Element {
                 },
                 body: JSON.stringify({ paths })
             });
-    
+
             if (!urlsRes.ok) {
                 const text = await urlsRes.text();
                 console.error("Failed to fetch signed URLs:", text);
                 return;
             }
-    
+
             const { urls } = await urlsRes.json();
             setImageUrls(urls);
         } finally {
@@ -67,7 +67,7 @@ export default function WellImageUpload(): JSX.Element {
 
     async function onImageDelete(path: string) {
         if (!wellId) return;
-    
+
         const headers: HeadersInit = {
             "Content-Type": "application/json"
         };
@@ -75,19 +75,19 @@ export default function WellImageUpload(): JSX.Element {
         if (token) {
             headers["Authorization"] = `Bearer ${token.id}`;
         }
-    
+
         const res = await fetch(`/api/v1/self/well/${wellId}/image`, {
             method: "DELETE",
             headers,
             body: JSON.stringify({ path }),
         });
-    
+
         if (!res.ok) {
             const text = await res.text();
             console.error("Failed to delete image:", text);
             return;
         }
-    
+
         // Refresh well and image URLs after deletion
         await fetchWellAndImages(wellId, token);
     }
@@ -183,11 +183,11 @@ export default function WellImageUpload(): JSX.Element {
 
     return (
         <>
-            <TranslatableText 
+            <TranslatableText
                 variant='h4'
                 textAlign="center"
                 marginBottom='1rem'
-                english='Upload Well Image' 
+                english='Upload Well Image'
                 bengali='BENGALI PLACEHOLDER'
             />
 
@@ -269,11 +269,11 @@ export default function WellImageUpload(): JSX.Element {
                     </Button>
 
                     {success && (
-                        <Alert 
-                            severity="success" 
+                        <Alert
+                            severity="success"
                             sx={{ width: '100%' }}
                         >
-                            <TranslatableText 
+                            <TranslatableText
                                 variant='body1'
                                 english='Image uploaded successfully!'
                                 bengali='BENGALI PLACEHOLDER'
@@ -281,12 +281,12 @@ export default function WellImageUpload(): JSX.Element {
                         </Alert>
                     )}
 
-                    {error && 
-                        <Alert 
-                            severity="error" 
+                    {error &&
+                        <Alert
+                            severity="error"
                             sx={{ width: '100%' }}
                         >
-                            <TranslatableText 
+                            <TranslatableText
                                 variant='body1'
                                 english={error}
                                 bengali='BENGALI PLACEHOLDER'
@@ -304,14 +304,14 @@ export default function WellImageUpload(): JSX.Element {
                     marginBottom: '16px',
                 }}
             >
-                <Box 
-                    width="100%" 
-                    display="flex" 
+                <Box
+                    width="100%"
+                    display="flex"
                     alignItems="center"
                     flexDirection="column"
                 >
-                    <TranslatableText 
-                        variant='h5' 
+                    <TranslatableText
+                        variant='h5'
                         mb='2rem'
                         english='Uploaded Images'
                         bengali='BENGALI PLACEHOLDER'
@@ -320,7 +320,7 @@ export default function WellImageUpload(): JSX.Element {
                     {loadingImages ? (
                         <CircularProgress />
                     ) : imageUrls.length === 0 ? (
-                        <TranslatableText 
+                        <TranslatableText
                             color="text.secondary"
                             english='No images uploaded.'
                             bengali='BENGALI PLACEHOLDER'
@@ -328,10 +328,10 @@ export default function WellImageUpload(): JSX.Element {
                     ) : (
                         <Box flexWrap="wrap" gap="1rem" display="flex" justifyContent="center">
                             {imageUrls.map((url, i) => (
-                                <PhotoItem 
-                                    key={url} 
-                                    url={url} 
-                                    index={i} 
+                                <PhotoItem
+                                    key={url}
+                                    url={url}
+                                    index={i}
                                     onDelete={onImageDelete}
                                 />
                             ))}
@@ -339,7 +339,7 @@ export default function WellImageUpload(): JSX.Element {
                     )}
                 </Box>
             </Card>
-            
+
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
@@ -352,7 +352,7 @@ export default function WellImageUpload(): JSX.Element {
                     navigate(`/well/${wellId}/review`);
                 }}
             >
-                <TranslatableText 
+                <TranslatableText
                     english='Next Step'
                     bengali='BENGALI PLACEHOLDER'
                 />

@@ -17,7 +17,7 @@ import { useWells } from '../../hooks/useWells/useWells';
 import { FiltersType } from './FiltersType';
 import { useUsers } from '../../hooks/useUsers/useUsers';
 import applyFilter from './utils/applyFilter';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import getWellsFn from '../../hooks/useWells/getWells'
 import { Well } from '../../models';
 
@@ -147,7 +147,8 @@ export default function WellsExplorer(): JSX.Element {
         isDropdownError ||
         isWellsError ||
         isUserError ||
-        isTokenError
+        isTokenError ||
+        user === 'guest'
     ) {
         console.error(wellsError)
         console.error(dropdownError)

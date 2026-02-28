@@ -1,6 +1,6 @@
-import { Button, CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { useRoute } from 'wouter';
-import { Well } from '../../models';
+import { User, Well } from '../../models';
 import { useWells } from "../../hooks/useWells/useWells";
 import WellSummaryCard from './components/WellSummaryCard';
 import ActionLogCard from './components/ActionLogCard';
@@ -11,19 +11,33 @@ import PhotoCard from './components/PhotoCard';
 import { useRegionTranslations } from '../../hooks/useRegionTranslations';
 import TranslatableText from '../../components/TranslatableText';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useUsers } from '../../hooks/useUsers/useUsers';
+import { useUnits } from '../../hooks/useUnits';
 
 export default function WellPage() {
     const [, params] = useRoute('/well/:id');
     const wellId = params?.id;
 
     const { getWell } = useWells();
-    const { data: well, isLoading } = getWell(wellId);
+    const {
+        data: well,
+        isLoading: wellLoading,
+        error: wellError,
+    } = getWell(wellId);
 
     const {
         data: regionTranslations,
         isLoading: rtLoading,
         error: rtError,
     } = useRegionTranslations()
+
+    const { getUser } = useUsers()
+    const {
+        data: user,
+        isLoading: userLoading,
+        isError: userIsError,
+        error: userError,
+    } = getUser(well?.userId)
 
     function getMissingFields(well: Well): { missingFields: string[], allFieldsMissing: boolean } {
         const requiredFields: (keyof Well)[] = [
@@ -47,16 +61,31 @@ export default function WellPage() {
         return { missingFields, allFieldsMissing };
     }
 
-    if (!wellId || !well || isLoading || rtLoading) {
+    const { getUnits } = useUnits()
+
+    if (
+        wellLoading ||
+        rtLoading ||
+        userLoading
+    ) {
         return (
             <CircularProgress />
         );
     }
 
-    const { missingFields, allFieldsMissing } = getMissingFields(well);
+    if (!wellId || userIsError || wellError || rtError) {
+        console.error(userError)
+        console.error(wellError)
+        console.error(userError)
 
-    console.log(missingFields)
-    console.log(allFieldsMissing)
+        return (
+            <Stack>
+                <Typography>Error loading page data</Typography>
+            </Stack>
+        );
+    }
+
+    const { missingFields, allFieldsMissing } = getMissingFields(well!);
 
     return (
         <>
@@ -85,21 +114,25 @@ export default function WellPage() {
                 />
             )}
 
-            {(well.geolocation && well.mouzaGeolocation) && (
-                <MapCard
-                    regionTranslations={regionTranslations!}
-                    geolocation={well.geolocation || well.mouzaGeolocation}
-                    well={well}
-                    geolocationType={well.geolocation ? 'gps' : 'mouza'}
+            <WellSummaryCard
+                userEmail={user === 'guest' ? 'guest' : user!.email}
+                well={well!}
+                rt={regionTranslations!}
+                units={getUnits()}
+            />
+
+            {well!.riskAssesment && (
+                <RiskAssesmentCard
+                    riskAssesment={well!.riskAssesment}
                 />
             )}
 
-
-            <WellSummaryCard />
-
-            {well.riskAssesment && (
-                <RiskAssesmentCard
-                    riskAssesment={well.riskAssesment}
+            {(well!.geolocation || well!.mouzaGeolocation) && (
+                <MapCard
+                    regionTranslations={regionTranslations!}
+                    geolocation={well!.geolocation || well!.mouzaGeolocation!}
+                    well={well!}
+                    geolocationType={well!.geolocation ? 'gps' : 'mouza'}
                 />
             )}
 
@@ -107,3 +140,4 @@ export default function WellPage() {
         </>
     );
 }
+
