@@ -3,24 +3,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useEffect, useRef, useState } from "react";
 import TranslatableText from "../../components/TranslatableText";
+import extractPathFromSignedUrl from "../../utils/extractPathFromSignedUrl";
 
 interface Props {
     url: string;
     index: number;
     onDelete: (path: string) => Promise<void>;
 }
-
-function extractPathFromSignedUrl(url: string): string {
-    try {
-        const u = new URL(url);
-        const parts = u.pathname.split('/');
-        const imagePath = parts.slice(2).join('/');
-        return decodeURIComponent(imagePath);
-    } catch (e) {
-        throw new Error("Invalid URL — cannot extract path");
-    }
-}
-
 
 export default function PhotoItem({ url, index, onDelete }: Props) {
     const [deleteState, setDeleteState] = useState<'wait' | 'confirm' | 'deleting'>('wait');

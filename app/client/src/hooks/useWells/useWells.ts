@@ -7,6 +7,7 @@ import createWellFn from './createWell'
 import updateWellFn from './updateWell'
 import getImagesFn from './getImages'
 import addImageFn from './addImage'
+import deleteImageFn from './deleteImage'
 
 export function useWells() {
     const auth = useAuth();
@@ -43,6 +44,33 @@ export function useWells() {
                     ['well-images', wellId],
                     urls
                 )
+
+                queryClient.invalidateQueries({
+                    queryKey: ['well', wellId],
+                })
+            },
+        });
+    }
+
+    const deleteImage = () => {
+        return useMutation({
+            mutationFn: ({
+                wellId,
+                path,
+            }: {
+                wellId: string,
+                path: string,
+            }) => {
+                return deleteImageFn(
+                    token,
+                    wellId,
+                    path,
+                )
+            },
+            onSettled: (_, _error, { wellId }) => {
+                queryClient.invalidateQueries({
+                    queryKey: ['well-images', wellId],
+                })
 
                 queryClient.invalidateQueries({
                     queryKey: ['well', wellId],
@@ -140,6 +168,7 @@ export function useWells() {
 
     return {
         addImage,
+        deleteImage,
         getImages,
         getWell,
         getWells,

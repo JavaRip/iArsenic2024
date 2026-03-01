@@ -5,6 +5,7 @@ import PhotoItem from "../../../components/PhotoItem";
 import { useWells } from "../../../hooks/useWells/useWells";
 import { useRef, useState } from "react";
 import ImageIcon from '@mui/icons-material/Image';
+import extractPathFromSignedUrl from "../../../utils/extractPathFromSignedUrl";
 
 export default function PhotoCard(
     {
@@ -16,11 +17,14 @@ export default function PhotoCard(
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
 
-    async function onImageDelete() {
-        console.warn('onDelete unimplemented')
-    }
+    const { getImages, addImage, deleteImage } = useWells();
 
-    const { getImages, addImage } = useWells();
+    const {
+        mutate: deleteImageMutation,
+        isPending: deleteImagePending,
+        isError: deleteImageIsError,
+        error: deleteImageError,
+    } = deleteImage()
 
     const {
         mutate: addImageMutation,
@@ -37,7 +41,8 @@ export default function PhotoCard(
     } = getImages(wellId);
 
     if (
-        imagesLoading
+        imagesLoading ||
+        deleteImagePending
     ) {
         return (
             <PageCard>
@@ -48,10 +53,12 @@ export default function PhotoCard(
 
     if (
         addImageIsError ||
-        imagesIsError
+        imagesIsError ||
+        deleteImageIsError
     ) {
         console.error(addImageError)
         console.error(imagesError)
+        console.error(deleteImageError)
 
         return (
             <Stack>
@@ -86,7 +93,10 @@ export default function PhotoCard(
                             key={url}
                             url={url}
                             index={i}
-                            onDelete={onImageDelete}
+                            onDelete={async () => {
+                                const path = extractPathFromSignedUrl(url)
+                                deleteImageMutation({ wellId, path })
+                            }}
                         />
                     ))}
                 </Box>
