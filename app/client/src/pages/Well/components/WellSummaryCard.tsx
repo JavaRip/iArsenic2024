@@ -124,15 +124,15 @@ export default function WellSummaryCard(
             </Stack>
 
             <Stack width='100%'>
+                <TranslatableText
+                    variant="body1"
+                    english="Region"
+                    bengali="অঞ্চল"
+                    fontWeight='bold'
+                />
+
                 {well.division ? (
                     <>
-                        <TranslatableText
-                            variant="body1"
-                            english="Region"
-                            bengali="অঞ্চল"
-                            fontWeight='bold'
-                        />
-
                         <TranslatableText
                             variant="body1"
                             english={<>

@@ -3,11 +3,11 @@ import { useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { resizeImage } from "../../utils/resizeImage";
 import { navigate } from "wouter/use-browser-location";
-import PhotoItem from "./PhotoItem";
 import ImageIcon from '@mui/icons-material/Image';
 import TranslatableText from "../../components/TranslatableText";
 import { useAuth } from "../../hooks/useAuth/useAuth";
 import { AccessToken } from "../../models";
+import PhotoItem from "../../components/PhotoItem";
 
 export default function WellImageUpload(): JSX.Element {
     const [, params] = useRoute('/well/:id/upload-image');

@@ -5,11 +5,59 @@ import getWellFn from './getWell'
 import getWellsFn from './getWells'
 import createWellFn from './createWell'
 import updateWellFn from './updateWell'
+import getImagesFn from './getImages'
+import addImageFn from './addImage'
 
 export function useWells() {
     const auth = useAuth();
     const { data: token } = auth.getAccessToken
     const queryClient = useQueryClient();
+
+    const addImage = (
+        fileInputRef: React.RefObject<HTMLInputElement>,
+        setFile: React.Dispatch<React.SetStateAction<File | null>>,
+    ) => {
+        return useMutation({
+            mutationFn: ({
+                wellId,
+                file,
+            }: {
+                wellId: string,
+                file: File,
+            }) => {
+                return addImageFn(
+                    token,
+                    wellId,
+                    file,
+                )
+            },
+            onSuccess: () => {
+                setFile(null);
+
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            },
+            onSettled: (urls, _error, { wellId, file }) => {
+                queryClient.setQueryData(
+                    ['well-images', wellId],
+                    urls
+                )
+
+                queryClient.invalidateQueries({
+                    queryKey: ['well', wellId],
+                })
+            },
+        });
+    }
+
+    const getImages = (wellId?: string) => {
+        return useQuery<string[]>({
+            queryKey: ['well-images', wellId],
+            enabled: !!wellId,
+            queryFn: () => getImagesFn(token, wellId!)
+        })
+    }
 
     const getWell = (wellId?: string) => {
         return useQuery<Well>({
@@ -35,7 +83,7 @@ export function useWells() {
                 wellId,
             }: {
                 data: Partial<Well>,
-                wellId: string, 
+                wellId: string,
             }) => {
                 return updateWellFn(
                     token,
@@ -90,7 +138,9 @@ export function useWells() {
         });
     };
 
-    return { 
+    return {
+        addImage,
+        getImages,
         getWell,
         getWells,
         updateWell,

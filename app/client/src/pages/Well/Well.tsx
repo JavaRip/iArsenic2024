@@ -19,6 +19,7 @@ export default function WellPage() {
     const wellId = params?.id;
 
     const { getWell } = useWells();
+
     const {
         data: well,
         isLoading: wellLoading,
@@ -73,7 +74,12 @@ export default function WellPage() {
         );
     }
 
-    if (!wellId || userIsError || wellError || rtError) {
+    if (
+        !wellId ||
+        userIsError ||
+        wellError ||
+        rtError
+    ) {
         console.error(userError)
         console.error(wellError)
         console.error(userError)
@@ -136,7 +142,9 @@ export default function WellPage() {
                 />
             )}
 
-            <PhotoCard />
+            <PhotoCard
+                wellId={wellId!}
+            />
         </>
     );
 }

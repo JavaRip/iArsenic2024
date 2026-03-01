@@ -7,13 +7,13 @@ export const UserController = {
     async getUser(ctx: Context): Promise<void> {
         const auth = ctx.state.auth
 
-        if (!auth.token) {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
-        }
+        // if (!auth.token) {
+        //     throw new KnownError({
+        //         message: 'Unauthorized',
+        //         code: 403,
+        //         name: 'UnauthorizedError',
+        //     });
+        // }
 
         const userId = ctx.params.userId;
 
