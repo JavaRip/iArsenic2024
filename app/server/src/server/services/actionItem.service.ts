@@ -17,11 +17,12 @@ export const ActionItemService = {
         }
 
         const actionItem = ActionItemSchema.parse({
-            id: createActionItem.id || uuid4(),
             createdAt: new Date(),
-            userId: createActionItem.userId || (auth.user.type === 'guest' ? 'guest' : auth.user.id),
-            resourceId: createActionItem.resourceId,
+            id: createActionItem?.id || uuid4(),
             message: createActionItem.message,
+            resourceId: createActionItem.resourceId,
+            type: createActionItem.type,
+            userId: createActionItem.userId || (auth.user.type === 'guest' ? 'guest' : auth.user.id),
         })
 
         return await ActionItemRepo.create(actionItem)

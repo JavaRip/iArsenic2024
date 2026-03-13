@@ -25,3 +25,4 @@ export { default as Well } from './Well';
 export { default as WellInUse } from './WellInUse';
 export { default as WellsExplorer } from './WellsExplorer';
 export { default as WellActionLog } from './WellActionLog'
+export { default as CreateActionItem } from './CreateActionItem'

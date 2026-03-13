@@ -3,6 +3,9 @@ import { useRoute } from 'wouter';
 import { useActionItems } from '../../hooks/useActionItems/useActionItems';
 import TranslatableText from '../../components/TranslatableText';
 import ActionLogItemCard from './ActionLogItemCard';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import PageCard from '../../components/PageCard';
+import { navigate } from 'wouter/use-browser-location';
 
 export default function WellActionLog() {
     const [, params] = useRoute('/well/:id/action-log');
@@ -40,26 +43,45 @@ export default function WellActionLog() {
     return (
         <>
             <Button
-                sx={{ width: '90%', height: '4rem', mt: '1rem' }}
-                variant="contained"
-                onClick={() => {
-                    console.log('create action item')
-                }}
+                variant='outlined'
+                startIcon={<ArrowBackIcon />}
+                sx={{ alignSelf: 'start' }}
+                onClick={() => window.history.back()}
             >
                 <TranslatableText
-                    variant="body1"
-                    english="Create action item"
-                    bengali="অ্যাকশন আইটেম তৈরি করুন" // chatgpt generated
+                    variant='body1'
+                    english='Return'
+                    bengali='ফিরে যান'
                 />
             </Button>
-            {data!.reverse().map((d) => {
-                return (
-                    <ActionLogItemCard
-                        key={d.id}
-                        actionItem={d}
+
+            <PageCard >
+                <Button
+                    sx={{ width: '90%', height: '4rem', my: '1rem' }}
+                    variant="contained"
+                    onClick={() => {
+                        navigate(`/create-action-item/${wellId}`)
+                    }}
+                >
+                    <TranslatableText
+                        variant="body1"
+                        english="Create action item"
+                        bengali="অ্যাকশন আইটেম তৈরি করুন" // chatgpt generated
                     />
-                )
-            })}
+                </Button>
+            </PageCard>
+
+            {data!
+                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                .map((d) => {
+                    return (
+                        <ActionLogItemCard
+                            key={d.id}
+                            actionItem={d}
+                        />
+                    )
+                }
+            )}
         </>
     );
 }

@@ -4,6 +4,7 @@ import { Stack, ThemeProvider } from '@mui/material';
 import {
     BlogIndex,
     Briefing,
+    CreateActionItem,
     Depth,
     Flooding,
     ForgotPassword,
@@ -28,9 +29,9 @@ import {
     UsageCharts,
     VerifyEmail,
     Well,
+    WellActionLog,
     WellInUse,
     WellsExplorer,
-    WellActionLog,
 } from './pages';
 
 import { HeaderBar } from './components';
@@ -90,6 +91,7 @@ function App() {
                             <Route path='/blog/launch-event-blog' component={LaunchEventBlog} />
                             <Route path='/blog/launch-event' component={LaunchEvent} />
                             <Route path='/briefing' component={Briefing} />
+                            <Route path='/create-action-item/:id' component={CreateActionItem} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
                             <Route path='/login' component={Login} />

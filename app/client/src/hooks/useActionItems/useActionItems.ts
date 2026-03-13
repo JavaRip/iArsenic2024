@@ -26,19 +26,24 @@ export function useActionItems() {
         })
     }
 
-    const createActionitem = () => {
+    const createActionItem = () => {
         return useMutation({
             mutationFn: (data?: Partial<ActionItem>) => {
                 return createActionItemFn(token, data)
             },
-            onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ['resource-action-items'] })
+            onSuccess: (data) => {
+                queryClient.invalidateQueries({
+                    queryKey: [
+                        'resource-action-items',
+                        data.resourceId,
+                    ],
+                })
             }
         })
     }
 
     return {
-        createActionitem,
+        createActionItem,
         getActionItem,
         getResourceActionItems,
     }

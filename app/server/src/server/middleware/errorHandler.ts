@@ -29,6 +29,7 @@ export default async function errorHandler(ctx: Context, next: () => Promise<voi
              * A KnownError is one we have accounted for and therefore would have thought about
              * the messaging. We pass this recognition onto the client via this variable being true
              */
+
             body.knownError = true
             body.name = error.name
             body.message = error.message
