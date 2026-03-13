@@ -208,11 +208,11 @@ export const WellService = {
         await WellRepo.update(validatedWell);
 
         await ActionItemService.createActionItem(auth, {
-            type: 'data-event',
-            message: `${JSON.stringify(wellUpdates, null, 2)}`,
             createdAt: new Date(),
-            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
+            message: `${JSON.stringify(wellUpdates, null, 2)}`,
             resourceId: validatedWell.id,
+            type: 'data-event',
+            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
         })
 
         return validatedWell;
@@ -308,11 +308,11 @@ export const WellService = {
         await WellRepo.update(validatedWell);
 
         await ActionItemService.createActionItem(auth, {
-            type: 'data-event',
-            message: `Well image added`,
             createdAt: new Date(),
-            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
+            message: `Well image added`,
             resourceId: wellId,
+            type: 'data-event',
+            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
         })
 
         return validatedWell;
