@@ -29,7 +29,8 @@ import {
     VerifyEmail,
     Well,
     WellInUse,
-    WellsExplorer
+    WellsExplorer,
+    WellActionLog,
 } from './pages';
 
 import { HeaderBar } from './components';
@@ -64,7 +65,7 @@ function App() {
                 <Switch>
                     {/* Splash & Map Page */}
                     <Route path='/' component={Splash} />
-                    
+
                     <Route path='/map'>
                         {/* Map passed as child component to route
                         not component parameter because it has props
@@ -101,6 +102,7 @@ function App() {
                             <Route path='/usage-charts' component={UsageCharts} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
                             <Route path='/well/:id' component={Well} />
+                            <Route path='/well/:id/action-log' component={WellActionLog} />
                             <Route path='/well/:id/depth' component={Depth} />
                             <Route path='/well/:id/flooding' component={Flooding} />
                             <Route path='/well/:id/region' component={Region} />
