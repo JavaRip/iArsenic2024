@@ -46,7 +46,7 @@ export default function WellActionLog() {
                 variant='outlined'
                 startIcon={<ArrowBackIcon />}
                 sx={{ alignSelf: 'start' }}
-                onClick={() => window.history.back()}
+                onClick={() => navigate('/wells/explorer')}
             >
                 <TranslatableText
                     variant='body1'

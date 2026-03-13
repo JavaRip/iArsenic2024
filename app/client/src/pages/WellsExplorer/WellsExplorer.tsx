@@ -119,7 +119,7 @@ export default function WellsExplorer(): JSX.Element {
     async function addWell() {
         try {
             const newWell = await createWellMutation.mutateAsync(undefined)
-            navigate(`/well/${newWell.id}`)
+            navigate(`/well/${newWell.id}/region`)
         } catch (err) {
             console.error('Failed to create well: ', err)
             throw err

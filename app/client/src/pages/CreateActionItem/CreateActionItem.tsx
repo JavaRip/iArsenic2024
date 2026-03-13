@@ -5,6 +5,7 @@ import PageCard from "../../components/PageCard";
 import { useActionItems } from "../../hooks/useActionItems/useActionItems";
 import { useRoute } from "wouter";
 import { navigate } from "wouter/use-browser-location";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function CreateActionItem(): JSX.Element {
     const [, params] = useRoute('/create-action-item/:id');
@@ -32,47 +33,61 @@ export default function CreateActionItem(): JSX.Element {
     };
 
     return (
-        <PageCard>
-            <Stack spacing={6} width='100%'>
+        <>
+            <Button
+                variant='outlined'
+                startIcon={<ArrowBackIcon />}
+                sx={{ alignSelf: 'start' }}
+                onClick={() => navigate(`/well/${resourceId}/action-log`)}
+            >
                 <TranslatableText
-                    variant="h4"
-                    english='Manual Entry'
-                    bengali='ম্যানুয়াল এন্ট্রি'
-                    textAlign="center"
+                    variant='body1'
+                    english='Return'
+                    bengali='ফিরে যান'
                 />
-                <TextField
-                    label={
-                        <TranslatableText
-                            english='Message'
-                            bengali='বার্তা'
-                        />
-                    }
-                    multiline
-                    minRows={3}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    fullWidth
-                />
+            </Button>
+            <PageCard>
+                <Stack spacing={6} width='100%'>
+                    <TranslatableText
+                        variant="h4"
+                        english='Manual Entry'
+                        bengali='ম্যানুয়াল এন্ট্রি'
+                        textAlign="center"
+                    />
+                    <TextField
+                        label={
+                            <TranslatableText
+                                english='Message'
+                                bengali='বার্তা'
+                            />
+                        }
+                        multiline
+                        minRows={3}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        fullWidth
+                    />
 
-                <Button
-                    sx={{ height: "4rem" }}
-                    variant="contained"
-                    onClick={handleSubmit}
-                    disabled={mutation.isPending || !message.trim()}
-                >
-                    {mutation.isPending ? (
-                        <CircularProgress />
-                    ) : (
-                        <TranslatableText
-                            variant="body1"
-                            english="Create action item"
-                            bengali="অ্যাকশন আইটেম তৈরি করুন" // chatgpt generated
-                        />
-                    )}
-                </Button>
+                    <Button
+                        sx={{ height: "4rem" }}
+                        variant="contained"
+                        onClick={handleSubmit}
+                        disabled={mutation.isPending || !message.trim()}
+                    >
+                        {mutation.isPending ? (
+                            <CircularProgress />
+                        ) : (
+                            <TranslatableText
+                                variant="body1"
+                                english="Create action item"
+                                bengali="অ্যাকশন আইটেম তৈরি করুন" // chatgpt generated
+                            />
+                        )}
+                    </Button>
 
-                {mutation.isError && <p>Error creating action item</p>}
-            </Stack>
-        </PageCard>
+                    {mutation.isError && <p>Error creating action item</p>}
+                </Stack>
+            </PageCard>
+        </>
     );
 }

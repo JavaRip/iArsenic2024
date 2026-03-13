@@ -40,11 +40,7 @@ export default function WellInUse(): JSX.Element {
                 data: { wellInUse },
             });
 
-            if (token) {
-                navigate(`/well/${wellId}/upload-image`);
-            } else {
-                navigate(`/well/${wellId}/review`);
-            }
+            navigate(`/well/${wellId}/review`);
         } catch (err) {
             console.error('Failed to update well:', err);
         }
@@ -76,7 +72,7 @@ export default function WellInUse(): JSX.Element {
             onNext={handleNext}
         >
             <PageCard>
-                <TranslatableText 
+                <TranslatableText
                     variant='h5'
                     textAlign="center"
                     english='Is anyone drinking from this well?'
@@ -102,11 +98,11 @@ export default function WellInUse(): JSX.Element {
                         onChange={handleWellInUseChange}
                     >
                         <Stack direction='row' columnGap={3}>
-                            <FormControlLabel 
-                                value='yes' 
-                                control={<Radio />} 
+                            <FormControlLabel
+                                value='yes'
+                                control={<Radio />}
                                 label={
-                                    <TranslatableText 
+                                    <TranslatableText
                                         variant='body1'
                                         english='Yes'
                                         bengali='হ্যাঁ'
@@ -114,11 +110,11 @@ export default function WellInUse(): JSX.Element {
                                 }
                             />
 
-                            <FormControlLabel 
-                                value='no' 
-                                control={<Radio />} 
+                            <FormControlLabel
+                                value='no'
+                                control={<Radio />}
                                 label={
-                                    <TranslatableText 
+                                    <TranslatableText
                                         variant='body1'
                                         english='No'
                                         bengali='না'
@@ -130,7 +126,7 @@ export default function WellInUse(): JSX.Element {
                 </FormControl>
 
                 {pageError && (
-                    <TranslatableText 
+                    <TranslatableText
                         error={true}
                         english='Please select an option'
                         bengali='অনুগ্রহ করে একটি অপশন বেছে নিন'

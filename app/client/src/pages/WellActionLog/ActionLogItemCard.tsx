@@ -59,6 +59,7 @@ export default function ActionLogItemCard({
 
                     return (
                         <TranslatableText
+                            textAlign='center'
                             mb="1rem"
                             variant="h4"
                             english={english}
