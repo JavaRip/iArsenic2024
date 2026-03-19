@@ -131,18 +131,18 @@ export default function Landing(): JSX.Element {
                             english={<>
                                 Using this app is entirely voluntary.&nbsp;
                                 <Link
-                                    onClick={() => navigate('/briefing')}  
+                                    onClick={() => navigate('/briefing')}
                                     sx={{ cursor: 'pointer' }}
                                 >
                                     Click here
                                 </Link>
-                                &nbsp;to learn what 
+                                &nbsp;to learn what
                                 information you may need to provide if you choose to proceed
                             </>}
                             bengali={<>
                                 এই অ্যাপটি ব্যবহার সম্পূর্ণ ইচ্ছানির্ভর।  আপনি এগিয়ে গেলে কী কী তথ্য দিতে হতে পারে, তা জানতে&nbsp;
                                 <Link
-                                    onClick={() => navigate('/briefing')}  
+                                    onClick={() => navigate('/briefing')}
                                     sx={{ cursor: 'pointer' }}
                                 >
                                     এখানে ক্লিক করুন।
@@ -155,8 +155,8 @@ export default function Landing(): JSX.Element {
 
             {/* this could be a dedicated component that handles pending and error states */}
             <Button
-                sx={{ 
-                    width: '90%', 
+                sx={{
+                    width: '90%',
                     height: '4rem',
                 }}
                 variant='contained'
@@ -174,7 +174,7 @@ export default function Landing(): JSX.Element {
                             <TranslatableText
                                 variant='body1'
                                 english='Something went wrong, please refresh'
-                                bengali='Something went wrong, please refresh' // BENGALI PLACEHOLDER
+                                bengali='কিছু ভুল হয়েছে, অনুগ্রহ করে রিফ্রেশ করুন' // chatgpt generated
                             />
                         )
                     } else {

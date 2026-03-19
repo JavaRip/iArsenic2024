@@ -108,7 +108,7 @@ export default function Filter({
                     <TranslatableText
                         variant='h6'
                         english='Filters'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='ফিল্টারসমূহ'
                     />
                 </Box>
                 {/* <Button
@@ -132,7 +132,7 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Geolocated'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='ভৌগোলিক অবস্থানযুক্ত'
                             />
                         }
                     />
@@ -148,7 +148,7 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Includes Images'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='ছবি অন্তর্ভুক্'
                             />
                         }
                     />
@@ -164,7 +164,7 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Complete Well'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='সম্পূর্ণ কূপ'
                             />
                         }
                     />
@@ -180,7 +180,7 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Own Wells Only'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='শুধুমাত্র নিজের কূপ'
                             />
                         }
                     />
@@ -194,7 +194,7 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Guest Wells'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='অতিথি কূপ'
                             />
                         }
                     >
@@ -202,21 +202,21 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Any'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='যেকোনো'
                             />
                         </MenuItem>
                         <MenuItem value="only">
                             <TranslatableText
                                 variant='body1'
                                 english='Only'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='শুধুমাত্র'
                             />
                         </MenuItem>
                         <MenuItem value="exclude">
                             <TranslatableText
                                 variant='body1'
                                 english='Exclude'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='বাদ দিন'
                             />
                         </MenuItem>
                     </TextField>
@@ -230,7 +230,7 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Flooding'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='পানিতে ডুবে যাওয়া'
                             />
                         }
                     >
@@ -238,21 +238,21 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Any'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='যেকোনো'
                             />
                         </MenuItem>
                         <MenuItem value="true">
                             <TranslatableText
                                 variant='body1'
                                 english='Yes'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='হ্যাঁ'
                             />
                         </MenuItem>
                         <MenuItem value="false">
                             <TranslatableText
                                 variant='body1'
                                 english='No'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='না'
                             />
                         </MenuItem>
                     </TextField>
@@ -266,7 +266,7 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Staining'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='দাগের ধরন'
                             />
                         }
                     >
@@ -274,21 +274,21 @@ export default function Filter({
                             <TranslatableText
                                 variant='body1'
                                 english='Any'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='যেকোনো'
                             />
                         </MenuItem>
                         <MenuItem value="red">
                             <TranslatableText
                                 variant='body1'
                                 english='Red'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='লাল'
                             />
                         </MenuItem>
                         <MenuItem value="black">
                             <TranslatableText
                                 variant='body1'
                                 english='Black'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='কালো'
                             />
                         </MenuItem>
                     </TextField>
@@ -326,7 +326,7 @@ export default function Filter({
                     <TranslatableText
                         variant='h5'
                         english='Region'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='অঞ্চল'
                     />
                     <RegionFilter
                         dropdownData={dropdownData}

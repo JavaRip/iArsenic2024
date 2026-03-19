@@ -188,7 +188,7 @@ export default function WellImageUpload(): JSX.Element {
                 textAlign="center"
                 marginBottom='1rem'
                 english='Upload Well Image'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='ওয়েলের ছবি আপলোড করুন'
             />
 
             <Card
@@ -276,7 +276,7 @@ export default function WellImageUpload(): JSX.Element {
                             <TranslatableText
                                 variant='body1'
                                 english='Image uploaded successfully!'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='ছবি সফলভাবে আপলোড হয়েছে!'
                             />
                         </Alert>
                     )}
@@ -289,7 +289,7 @@ export default function WellImageUpload(): JSX.Element {
                             <TranslatableText
                                 variant='body1'
                                 english={error}
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali={error} // todo provide translation
                             />
                         </Alert>
                     }
@@ -314,7 +314,7 @@ export default function WellImageUpload(): JSX.Element {
                         variant='h5'
                         mb='2rem'
                         english='Uploaded Images'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='আপলোড করা ছবিগুলো'
                     />
 
                     {loadingImages ? (
@@ -323,7 +323,7 @@ export default function WellImageUpload(): JSX.Element {
                         <TranslatableText
                             color="text.secondary"
                             english='No images uploaded.'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='কোনো ছবি আপলোড করা হয়নি।'
                         />
                     ) : (
                         <Box flexWrap="wrap" gap="1rem" display="flex" justifyContent="center">
@@ -354,7 +354,7 @@ export default function WellImageUpload(): JSX.Element {
             >
                 <TranslatableText
                     english='Next Step'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='পরবর্তী ধাপ'
                 />
             </Button>
         </>

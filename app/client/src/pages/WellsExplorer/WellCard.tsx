@@ -16,7 +16,7 @@ export default function WellCard({ well }: Props): JSX.Element {
     const { data: token } = auth.getAccessToken
 
     const [thumbnailUrl, setThumbnailUrl] = useState<string>();
-    
+
     // todo add getImages to useWells hook
     useEffect(() => {
         async function fetchSignedUrl() {
@@ -75,13 +75,13 @@ export default function WellCard({ well }: Props): JSX.Element {
             }}
             onClick={() => navigate(`/well/${well.id}`)}
         >
-            <Stack 
-                direction='row' 
-                width='100%' 
+            <Stack
+                direction='row'
+                width='100%'
                 justifyContent='space-between'
             >
                 <Box>
-                    <TranslatableText 
+                    <TranslatableText
                         english={(() => {
                             if (well.district && well.division) {
                                 return (
@@ -98,12 +98,26 @@ export default function WellCard({ well }: Props): JSX.Element {
                                     </>
                                 )
                             }
-                        })()} 
-                        bengali='BENGALI PLACEHOLDER' 
+                        })()}
+                        bengali={(() => {
+                            if (well.district && well.division) {
+                                return (
+                                    <>
+                                        <strong>অঞ্চল</strong> {well.division} - {well.district}
+                                    </>
+                                )
+                            } else {
+                                return (
+                                    <Typography color='error' variant='subtitle2'>
+                                        <strong>অঞ্চল</strong> প্রদান করা হয়নি
+                                    </Typography>
+                                )
+                            }
+                        })()}
                         variant='subtitle2'
                     />
 
-                    <TranslatableText 
+                    <TranslatableText
                         english={(() => {
                             if (well.modelOutput === undefined) {
                                 return (
@@ -122,12 +136,27 @@ export default function WellCard({ well }: Props): JSX.Element {
                                     </>
                                 )
                             }
-                        })()} 
-                        bengali='BENGALI PLACEHOLDER' 
+                        })()}
+                        bengali={(() => {
+                            if (well.modelOutput === undefined) {
+                                return (
+                                    <Typography color='error' variant='subtitle2'>
+                                        <strong>ঝুঁকি মূল্যায়ন</strong> তথ্য অনুপস্থিত
+                                    </Typography>
+                                )
+                            } else {
+                                return (
+                                    <>
+                                        <strong>ঝুঁকি মূল্যায়ন </strong>
+                                        {predictionToRiskFactor(well.riskAssesment).bengali}
+                                    </>
+                                )
+                            }
+                        })()}
                         variant='subtitle2'
                     />
 
-                    <TranslatableText 
+                    <TranslatableText
                         english={(() => {
                             if (well.wellInUse) {
                                 return (
@@ -150,12 +179,32 @@ export default function WellCard({ well }: Props): JSX.Element {
                                     </>
                                 )
                             }
-                        })()} 
-                        bengali='BENGALI PLACEHOLDER' 
+                        })()}
+                        bengali={(() => {
+                            if (well.wellInUse) {
+                                return (
+                                    <>
+                                        <strong>ব্যবহৃত কূপ</strong> হ্যাঁ
+                                    </>
+                                )
+                            } else if (well.wellInUse === false) {
+                                return (
+                                    <>
+                                        <strong>ব্যবহৃত কূপ</strong> না
+                                    </>
+                                )
+                            } else {
+                                return (
+                                    <Typography color='error' variant='subtitle2'>
+                                        <strong>ব্যবহৃত কূপ</strong> তথ্য প্রদান করা হয়নি
+                                    </Typography>
+                                )
+                            }
+                        })()}
                         variant='subtitle2'
                     />
 
-                    <TranslatableText 
+                    <TranslatableText
                         english={(() => {
                             if (well.staining === 'not sure') {
                                 if (well.utensilStaining === 'red') {
@@ -192,12 +241,30 @@ export default function WellCard({ well }: Props): JSX.Element {
                                     </>
                                 )
                             }
-                        })()} 
-                        bengali='BENGALI PLACEHOLDER' 
+                        })()}
+                        bengali={(() => {
+                            if (well.staining === 'not sure') {
+                                if (well.utensilStaining === 'red') {
+                                    return <><strong>দাগ</strong> লাল</>
+                                } else {
+                                    return <><strong>দাগ</strong> কালো</>
+                                }
+                            } else if (well.staining === 'red') {
+                                return <><strong>দাগ</strong> লাল</>
+                            } else if (well.staining === 'black') {
+                                return <><strong>দাগ</strong> কালো</>
+                            } else {
+                                return (
+                                    <Typography color='error' variant='subtitle2'>
+                                        <strong>দাগ</strong> প্রদান করা হয়নি
+                                    </Typography>
+                                )
+                            }
+                        })()}
                         variant='subtitle2'
                     />
 
-                    <TranslatableText 
+                    <TranslatableText
                         english={(() => {
                             if (well.depth !== undefined) {
                                 return (
@@ -215,25 +282,57 @@ export default function WellCard({ well }: Props): JSX.Element {
                                     </>
                                 )
                             }
-                        })()} 
-                        bengali='BENGALI PLACEHOLDER' 
+                        })()}
+                        bengali={(() => {
+                            if (well.depth !== undefined) {
+                                return (
+                                    <>
+                                        <strong>গভীরতা</strong> {well.depth} (মিটার)
+                                    </>
+                                )
+                            } else {
+                                return (
+                                    <Typography color='error' variant='subtitle2'>
+                                        <strong>গভীরতা</strong> প্রদান করা হয়নি
+                                    </Typography>
+                                )
+                            }
+                        })()}
                         variant='subtitle2'
                     />
 
-                    <TranslatableText 
+                    <TranslatableText
                         english={(() => {
                             return (
                                 <>
-                                    <strong>Created At</strong> {well.createdAt.toLocaleDateString()}
+                                    <strong>Created At</strong> {well.createdAt.toLocaleString('en-GB', {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "2-digit",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        second: "2-digit"
+                                    })}
                                 </>
                             )
-                        })()} 
-                        bengali='BENGALI PLACEHOLDER' 
+                        })()}
+                        bengali={
+                            <>
+                                <strong>তৈরির তারিখ</strong> {well.createdAt.toLocaleString('bn-BD', {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "2-digit",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit"
+                                })}
+                            </>
+                        }
                         variant='subtitle2'
                     />
 
-                    <TranslatableText 
-                        english={`${well.id}`} 
+                    <TranslatableText
+                        english={`${well.id}`}
                         bengali={`${well.id}`}
                         variant='subtitle2'
                         color='gray'

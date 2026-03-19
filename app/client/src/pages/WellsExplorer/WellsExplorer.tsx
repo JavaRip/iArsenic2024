@@ -160,7 +160,7 @@ export default function WellsExplorer(): JSX.Element {
                 <Stack>
                     <TranslatableText
                         english='Please login to view this page'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='এই পৃষ্ঠা দেখতে অনুগ্রহ করে লগইন করুন'
                     />
                 </Stack>
             )
@@ -186,7 +186,7 @@ export default function WellsExplorer(): JSX.Element {
         <>
             <TranslatableText
                 english='Wells Explorer'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='ওয়েলস এক্সপ্লোরার'
                 textAlign='center'
                 variant='h4'
             />
@@ -195,7 +195,7 @@ export default function WellsExplorer(): JSX.Element {
                 <TranslatableText
                     variant='body1'
                     english='Add Well'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='কূপ যোগ করুন'
                 />
             </Button>
 
@@ -213,7 +213,7 @@ export default function WellsExplorer(): JSX.Element {
             <TranslatableText
                 variant='h5'
                 english={`Selected ${filteredWells.length} / ${wells!.length} wells`}
-                bengali='BENGALI PLACEHOLDER'
+                bengali={`নির্বাচিত ${filteredWells.length} / ${wells!.length} কূপ`}
             />
 
             <Box
@@ -229,7 +229,7 @@ export default function WellsExplorer(): JSX.Element {
                     <TranslatableText
                         variant='body1'
                         english='No wells found'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='কোনো কূপ পাওয়া যায়নি'
                     />
                 ) : (
                     filteredWells

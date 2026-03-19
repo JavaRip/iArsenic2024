@@ -83,7 +83,7 @@ export default function ActionLogItemCard({
                     english={
                         <>
                             <strong>Event Time </strong>{
-                            actionItem.createdAt.toLocaleString('en-gb', {
+                            actionItem.createdAt.toLocaleString('en-GB', {
                                 year: "numeric",
                                 month: "short",
                                 day: "2-digit",

@@ -150,7 +150,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                             <NavListItem
                                 path='wells/explorer'
                                 Icon={SearchIcon}
-                                label={<TranslatableText english="Wells Explorer" bengali="BENGALI PLACEHOLDER" variant="body1" />}
+                                label={<TranslatableText english="Wells Explorer" bengali="ওয়েলস এক্সপ্লোরার" variant="body1" />} // chatgpt generated
                             />
                         </List>
                     </>
@@ -161,7 +161,7 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                         <Divider />
                         <TranslatableText
                             english='Admins Only'
-                            bengali='PLACEHOLDER BENGALI'
+                            bengali='শুধুমাত্র অ্যাডমিনদের জন্য'
                             variant='h6'
                         />
                         <List>

@@ -65,11 +65,11 @@ export default function WellImageDisplay({ well }: Props) {
     return (
         <PageCard>
             <Stack width='100%'>
-                <TranslatableText 
-                    variant="h6" 
+                <TranslatableText
+                    variant="h6"
                     gutterBottom
                     english='Uploaded Images'
-                    bengali='PLACEHOLDER BENGALI'
+                    bengali='আপলোড করা ছবিগুলো'
                 />
 
                 <Box
@@ -99,10 +99,10 @@ export default function WellImageDisplay({ well }: Props) {
                             ))}
                         </Carousel>
                     ) : (
-                        <TranslatableText 
+                        <TranslatableText
                             color="text.secondary"
                             english='No images uploaded.'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='কোনো ছবি আপলোড করা হয়নি।'
                         />
                     )}
                 </Box>
@@ -115,9 +115,9 @@ export default function WellImageDisplay({ well }: Props) {
                             navigate(`/well/${well.id}/upload-image?returnToReview=true`);
                         }}
                     >
-                        <TranslatableText 
+                        <TranslatableText
                             english='Edit Images'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='ছবি সম্পাদনা করুন'
                         />
                     </Button>
                 </Box>

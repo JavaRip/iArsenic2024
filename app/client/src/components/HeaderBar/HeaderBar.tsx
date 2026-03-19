@@ -85,7 +85,7 @@ export default function HeaderBar(): JSX.Element {
                                     <TranslatableText
                                         variant='body1'
                                         english='My Account'
-                                        bengali='BENGALI PLACEHOLDER'
+                                        bengali='আমার অ্যাকাউন্ট' // chatgpt generated
                                     />
                                     {
                                         user !== 'guest' && user.avatarUrl ?
@@ -122,7 +122,7 @@ export default function HeaderBar(): JSX.Element {
                                     <TranslatableText
                                         variant='body1'
                                         english='Login'
-                                        bengali='BENGALI PLACEHOLDER'
+                                        bengali='লগইন' // chatgpt generated
                                     />
                                 </Button>
                             )

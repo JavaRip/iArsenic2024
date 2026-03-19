@@ -46,7 +46,7 @@ export default function WellActionLog() {
                 variant='outlined'
                 startIcon={<ArrowBackIcon />}
                 sx={{ alignSelf: 'start' }}
-                onClick={() => navigate('/wells/explorer')}
+                onClick={() => navigate(`/well/${wellId}`)}
             >
                 <TranslatableText
                     variant='body1'

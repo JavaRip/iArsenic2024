@@ -29,16 +29,16 @@ export default function DateSlider({
             mt='16px'
             sx={{
                 width: '320px',
-            }} 
+            }}
         >
             <TranslatableText
                 mb='8px'
                 fontWeight='bold'
                 english='Depth Range Filter (meters)'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='গভীরতার পরিসর ফিল্টার (মিটার)'
             />
             <Slider
-                sx={{ 
+                sx={{
                     mx: '36px',
                     width: '240px',
                 }}
@@ -50,12 +50,12 @@ export default function DateSlider({
                 // valueLabelFormat={(v) => getDateLabel(v)}
                 // getAriaValueText={(v) => getDateLabel(v)}
                 step={1}
-                marks={[ 
-                    { 
+                marks={[
+                    {
                         value: 0,
                         label: 0,
                     },
-                    { 
+                    {
                         value: 500,
                         label: 500,
                     }
