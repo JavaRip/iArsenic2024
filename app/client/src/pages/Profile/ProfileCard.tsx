@@ -1,11 +1,51 @@
-import { Box, Button, Stack } from '@mui/material';
+import { useState, useRef, useCallback } from 'react';
+import {
+    Avatar,
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Slider,
+    Stack,
+    Typography,
+} from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
+import LogoutIcon from '@mui/icons-material/Logout';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import Cropper from 'react-easy-crop';
+import type { Area } from 'react-easy-crop';
 import PageCard from '../../components/PageCard';
 import TranslatableText from '../../components/TranslatableText';
 import { User } from '../../models';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '../../hooks/useAuth/useAuth';
+import { useUsers } from '../../hooks/useUsers/useUsers';
 import { navigate } from 'wouter/use-browser-location';
+
+async function getCroppedImg(imageSrc: string, pixelCrop: Area): Promise<File> {
+    const image = new Image();
+    image.src = imageSrc;
+    await new Promise<void>((resolve) => {
+        image.onload = () => resolve();
+    });
+    const canvas = document.createElement('canvas');
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(
+        image,
+        pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height,
+        0, 0, pixelCrop.width, pixelCrop.height,
+    );
+    return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+            if (!blob) { reject(new Error('Canvas is empty')); return; }
+            resolve(new File([blob], 'avatar.jpg', { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.9);
+    });
+}
 
 interface Props {
     user: User;
@@ -13,133 +53,214 @@ interface Props {
 }
 
 export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
-    const logout = useAuth().logout
+    const logout = useAuth().logout;
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [rawFile, setRawFile] = useState<File | null>(null);
+    const [imageSrc, setImageSrc] = useState<string | null>(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
+
+    const { updateProfileImage } = useUsers();
+    const uploadMutation = updateProfileImage(fileInputRef, setRawFile);
+
+    const initials = user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+
+    function handleAvatarClick() {
+        fileInputRef.current?.click();
+    }
+
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setRawFile(file);
+        const reader = new FileReader();
+        reader.onload = () => setImageSrc(reader.result as string);
+        reader.readAsDataURL(file);
+    }
+
+    const onCropComplete = useCallback((_: Area, pixels: Area) => {
+        setCroppedAreaPixels(pixels);
+    }, []);
+
+    async function handleCropConfirm() {
+        if (!imageSrc || !croppedAreaPixels) return;
+        const croppedFile = await getCroppedImg(imageSrc, croppedAreaPixels);
+        uploadMutation.mutate({ userId: user.id, file: croppedFile });
+        setImageSrc(null);
+    }
+
+    function handleCropCancel() {
+        setImageSrc(null);
+        setRawFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    }
 
     async function handleLogout() {
         try {
             await logout.mutateAsync();
             navigate('/landing');
-            location.reload()
+            location.reload();
         } catch (err) {
             console.error('Logout failed', err);
         }
-    };
+    }
 
     return (
         <Box width='100%'>
-           <TranslatableText 
+            <TranslatableText
                 width='100%'
-                textAlign='center' 
+                textAlign='center'
                 variant='h4'
-                mb='1rem'
-                english='Profile Page'
+                mb='1.5rem'
+                english='Profile'
                 bengali='BENGALI PLACEHOLDER'
             />
 
+            {/* Avatar with upload overlay */}
+            <Stack alignItems='center' mb={3}>
+                <Box position='relative' display='inline-block'>
+                    <Avatar
+                        src={user.avatarUrl}
+                        sx={{ width: 96, height: 96, fontSize: '2rem', cursor: 'pointer' }}
+                        onClick={handleAvatarClick}
+                    >
+                        {!user.avatarUrl && initials}
+                    </Avatar>
+                    <IconButton
+                        size='small'
+                        onClick={handleAvatarClick}
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: 0,
+                            bgcolor: 'background.paper',
+                            border: '1px solid',
+                            borderColor: 'divider',
+                            '&:hover': { bgcolor: 'action.hover' },
+                        }}
+                    >
+                        <CameraAltIcon fontSize='small' />
+                    </IconButton>
+                </Box>
+
+                <Typography variant='h6' mt={1.5}>{user.name}</Typography>
+                <Typography variant='body2' color='text.secondary'>{user.email}</Typography>
+            </Stack>
+
+            <input
+                ref={fileInputRef}
+                type='file'
+                accept='image/*'
+                style={{ display: 'none' }}
+                onChange={handleFileChange}
+            />
+
+            {/* Crop dialog */}
+            <Dialog open={!!imageSrc} fullWidth maxWidth='sm'>
+                <DialogTitle>
+                    <TranslatableText
+                        width='100%'
+                        variant='body1'
+                        english='Crop Profile Photo'
+                        bengali='BENGALI PLACEHOLDER'
+                    />
+                </DialogTitle>
+                <DialogContent sx={{ p: 0 }}>
+                    {imageSrc && (
+                        <Box position='relative' width='100%' height={320} bgcolor='black'>
+                            <Cropper
+                                image={imageSrc}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={1}
+                                cropShape='round'
+                                showGrid={false}
+                                onCropChange={setCrop}
+                                onZoomChange={setZoom}
+                                onCropComplete={onCropComplete}
+                            />
+                        </Box>
+                    )}
+                    <Box px={3} py={2}>
+                        <Typography variant='body2' gutterBottom>Zoom</Typography>
+                        <Slider
+                            value={zoom}
+                            min={1}
+                            max={3}
+                            step={0.05}
+                            onChange={(_, v) => setZoom(v as number)}
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCropCancel}>
+                        <TranslatableText
+                            width='100%'
+                            variant='body1'
+                            english='Cancel'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </Button>
+                    <Button
+                        variant='contained'
+                        onClick={handleCropConfirm}
+                        disabled={uploadMutation.isPending}
+                    >
+                        <TranslatableText
+                            width='100%'
+                            variant='body1'
+                            english='Apply'
+                            bengali='BENGALI PLACEHOLDER'
+                        />
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Info card */}
             <PageCard>
-                <TranslatableText 
-                    width='100%'
-                    variant='body1'
-                    english={
-                        <>
-                            <strong>Name</strong> {user.name}
-                        </>
-                    }
-                    bengali='BENGALI PLACEHOLDER'
+                <InfoRow label='Email Verified' value={user.emailVerified ? 'Yes' : 'No'} />
+                <InfoRow
+                    label='Account Type'
+                    value={user.type.charAt(0).toUpperCase() + user.type.slice(1)}
+                />
+                <InfoRow label='Member Since' value={user.createdAt.toLocaleDateString()} />
+                <InfoRow
+                    label='Language'
+                    value={user.language.charAt(0).toUpperCase() + user.language.slice(1)}
+                />
+                <InfoRow
+                    label='Units'
+                    value={user.units.charAt(0).toUpperCase() + user.units.slice(1)}
                 />
 
-                <TranslatableText 
-                    width='100%'
-                    variant='body1'
-                    english={
-                        <>
-                            <strong>Email</strong> {user.email}
-                        </>
-                    }
-                    bengali='BENGALI PLACEHOLDER'
-                />
-
-                <TranslatableText 
-                    width='100%'
-                    variant='body1'
-                    english={
-                        <>
-                            <strong>Email Verified</strong> {user.emailVerified ? "Yes" : "No"}
-                        </>
-                    }
-                    bengali='BENGALI PLACEHOLDER'
-                />
-
-                <TranslatableText 
-                    width='100%'
-                    variant='body1'
-                    english={
-                        <>
-                            <strong>User Type</strong> {user.type.charAt(0).toUpperCase() + user.type.slice(1)}
-                        </>
-                    }
-                    bengali='BENGALI PLACEHOLDER'
-                />
-
-                <TranslatableText 
-                    width='100%'
-                    variant='body1'
-                    english={
-                        <>
-                            <strong>Member Since</strong> {user.createdAt.toLocaleDateString()}
-                        </>
-                    }
-                    bengali='BENGALI PLACEHOLDER'
-                />
-
-                <TranslatableText 
-                    width='100%'
-                    variant='body1'
-                    english={
-                        <>
-                            <strong>Language</strong> {user.language}
-                        </>
-                    }
-                    bengali='BENGALI PLACEHOLDER'
-                />
-
-                <TranslatableText 
-                    width='100%'
-                    variant='body1'
-                    english={
-                        <>
-                            <strong>Units System</strong> {user.units}
-                        </>
-                    }
-                    bengali='BENGALI PLACEHOLDER'
-                />
-
-                <Stack width='100%' direction='row' justifyContent='space-between'>
+                <Stack width='100%' direction='row' justifyContent='space-between' mt={2}>
                     <Button
                         variant='outlined'
                         startIcon={<CreateIcon />}
-                        sx={{ mt: 2 }}
                         onClick={() => setEditMode(true)}
                     >
-                        <TranslatableText 
+                        <TranslatableText
                             width='100%'
                             variant='body1'
-                            english='Edit Profile'
+                            english='Settings'
                             bengali='BENGALI PLACEHOLDER'
                         />
                     </Button>
 
                     <Button
                         variant='outlined'
-                        startIcon={<LogoutIcon sx={{ color: 'error.main' }} />}
-                        sx={{ 
-                            mt: 2,
-                            borderColor: 'error.main',
-                            color: 'error.main',
-                        }}
+                        color='error'
+                        startIcon={<LogoutIcon />}
                         onClick={handleLogout}
                     >
-                        <TranslatableText 
+                        <TranslatableText
                             width='100%'
                             variant='body1'
                             english='Logout'
@@ -149,5 +270,13 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                 </Stack>
             </PageCard>
         </Box>
+    );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+    return (
+        <Typography variant='body1' width='100%'>
+            <strong>{label}:</strong> {value}
+        </Typography>
     );
 }

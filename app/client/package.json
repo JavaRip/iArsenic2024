@@ -25,6 +25,7 @@
     "react": "^18.2.0",
     "react-d3-speedometer": "^2.2.1",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^5.5.7",
     "react-leaflet": "^4.2.1",
     "react-responsive-carousel": "^3.2.23",
     "react-slick": "^0.30.2",

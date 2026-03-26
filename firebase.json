@@ -35,10 +35,9 @@
     "hosting": {
       "port": 5000
     },
-    "ui": {
+"ui": {
       "enabled": true
     },
-    "firestore": { "port": 8080 },
     "singleProjectMode": true
   }
 }

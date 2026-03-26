@@ -3,6 +3,7 @@ import { useAuth } from "../useAuth/useAuth"
 import { User, UserSchema } from "../../models"
 import getUserFn from './getUser'
 import updateUserFn from './updateUser'
+import addProfileImageFn from './addProfileImage'
 
 export function useUsers() {
     const auth = useAuth()
@@ -91,8 +92,35 @@ export function useUsers() {
         })
     };
 
+    const updateProfileImage = (
+        fileInputRef: React.RefObject<HTMLInputElement>,
+        setFile: React.Dispatch<React.SetStateAction<File | null>>,
+    ) => {
+        return useMutation({
+            mutationFn: ({
+                userId,
+                file,
+            }: {
+                userId: string;
+                file: File;
+            }) => {
+                return addProfileImageFn(token, userId, file);
+            },
+            onSuccess: () => {
+                setFile(null);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            },
+            onSettled: (_avatarUrl, _error, { userId }) => {
+                queryClient.invalidateQueries({ queryKey: ['user', userId] });
+            },
+        });
+    };
+
     return {
         getUser,
         updateUser,
+        updateProfileImage,
     }
 }

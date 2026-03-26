@@ -7,7 +7,6 @@ import { useUsers } from "../../hooks/useUsers/useUsers";
 
 export default function ProfilePage(): JSX.Element {
     const [editMode, setEditMode] = useState(false);
-    const [saving, setSaving] = useState(false);
 
     const auth = useAuth()
     const {
@@ -54,20 +53,7 @@ export default function ProfilePage(): JSX.Element {
     }
 
     if (editMode) {
-        return (
-            <>
-                {saving && (
-                    <Stack alignItems='center' justifyContent='center'>
-                        <CircularProgress />
-                    </Stack>
-                )}
-                <EditProfileCard
-                    user={user}
-                    setEditMode={setEditMode}
-                    setSaving={setSaving}
-                />
-            </>
-        );
+        return <EditProfileCard user={user} setEditMode={setEditMode} />;
     }
 
     return <ProfileCard user={user} setEditMode={setEditMode} />;

@@ -5,6 +5,7 @@ import { UserRepo, TokenRepo } from '../repositories'
 import bcrypt from 'bcrypt'
 import sendMail from '../emails/sendMail';
 import verifyEmailTemplate from '../emails/templates/verifyEmail';
+import signedUrl from '../utils/signedUrl';
 
 // 7 days
 const ACCESS_TOKEN_TTL = 1000 * 60 * 60 * 24 * 7
@@ -28,6 +29,11 @@ export const UserService = {
         }
 
         delete userRes.password
+
+        // avatarUrl stores the GCS path; generate a fresh signed URL before returning
+        if (userRes.avatarUrl && !userRes.avatarUrl.startsWith('http')) {
+            userRes.avatarUrl = await signedUrl('read', userRes.avatarUrl);
+        }
 
         return userRes
     },
@@ -90,6 +96,46 @@ export const UserService = {
 
         await UserRepo.update(validatedNewUser)
         return validatedNewUser
+    },
+
+    async getAvatarUploadUrl(
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        userId: string,
+        contentType: string,
+    ): Promise<{ signedUrl: string; path: string }> {
+        if (auth.user.type === 'guest') {
+            throw new KnownError({ name: 'Unauthorised', message: 'Login to upload avatar', code: 403 });
+        }
+        if (auth.user.type !== 'admin' && (auth.user as User).id !== userId) {
+            throw new KnownError({ name: 'Unauthorised', message: 'Cannot upload avatar for another user', code: 403 });
+        }
+        const ext = contentType === 'image/png' ? '.png' : contentType === 'image/webp' ? '.webp' : '.jpg';
+        const path = `users/${userId}/avatar${ext}`;
+        const url = await signedUrl('write', path, contentType);
+        return { signedUrl: url, path };
+    },
+
+    async confirmAvatarUpload(
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        userId: string,
+        avatarPath: string,
+    ): Promise<User> {
+        if (auth.user.type === 'guest') {
+            throw new KnownError({ name: 'Unauthorised', message: 'Login to update avatar', code: 403 });
+        }
+        if (auth.user.type !== 'admin' && (auth.user as User).id !== userId) {
+            throw new KnownError({ name: 'Unauthorised', message: 'Cannot update avatar for another user', code: 403 });
+        }
+        const user = await UserRepo.findById(userId);
+        if (user == null) {
+            throw new KnownError({ message: 'User not found', code: 404, name: 'UserNotFoundError' });
+        }
+        // Store the GCS path in the DB; return a fresh signed URL to the client
+        const updatedUser = UserSchema.parse({ ...user, avatarUrl: avatarPath });
+        await UserRepo.update(updatedUser);
+        delete updatedUser.password;
+        const avatarSignedUrl = await signedUrl('read', avatarPath);
+        return { ...updatedUser, avatarUrl: avatarSignedUrl };
     },
 
     async createUser(
