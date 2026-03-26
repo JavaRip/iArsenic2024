@@ -120,7 +120,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                 variant='h4'
                 mb='1.5rem'
                 english='Profile'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='প্রোফাইল'
             />
 
             {/* Avatar with upload overlay */}
@@ -169,7 +169,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                         width='100%'
                         variant='body1'
                         english='Crop Profile Photo'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='প্রোফাইল ছবি ক্রপ করুন'
                     />
                 </DialogTitle>
                 <DialogContent sx={{ p: 0 }}>
@@ -205,7 +205,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                             width='100%'
                             variant='body1'
                             english='Cancel'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='বাতিল'
                         />
                     </Button>
                     <Button
@@ -217,7 +217,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                             width='100%'
                             variant='body1'
                             english='Apply'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='প্রয়োগ করুন'
                         />
                     </Button>
                 </DialogActions>
@@ -225,19 +225,51 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
 
             {/* Info card */}
             <PageCard>
-                <InfoRow label='Email Verified' value={user.emailVerified ? 'Yes' : 'No'} />
-                <InfoRow
-                    label='Account Type'
-                    value={user.type.charAt(0).toUpperCase() + user.type.slice(1)}
+                <TranslatableText
+                    width='100%'
+                    variant='body1'
+                    english={<><strong>Email Verified: </strong>{user.emailVerified ? 'Yes' : 'No'}</>}
+                    bengali={<><strong>ইমেইল যাচাই: </strong>{user.emailVerified ? 'হ্যাঁ' : 'না'}</>}
                 />
-                <InfoRow label='Member Since' value={user.createdAt.toLocaleDateString()} />
-                <InfoRow
-                    label='Language'
-                    value={user.language.charAt(0).toUpperCase() + user.language.slice(1)}
+                <TranslatableText
+                    width='100%'
+                    variant='body1'
+                    english={<><strong>Account Type: </strong>{user.type === 'admin' ? 'Admin' : 'User'}</>}
+                    bengali={<><strong>অ্যাকাউন্টের ধরন: </strong>{user.type === 'admin' ? 'প্রশাসক' : 'ব্যবহারকারী'}</>}
                 />
-                <InfoRow
-                    label='Units'
-                    value={user.units.charAt(0).toUpperCase() + user.units.slice(1)}
+                <TranslatableText
+                    width='100%'
+                    variant='body1'
+                    english={
+                        <>
+                            <strong>Member Since: </strong>{user.createdAt.toLocaleString('en-GB', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: '2-digit',
+                            })}
+                        </>
+                    }
+                    bengali={
+                        <>
+                            <strong>সদস্যতার তারিখ: </strong>{user.createdAt.toLocaleString('bn-BD', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: '2-digit',
+                            })}
+                        </>
+                    }
+                />
+                <TranslatableText
+                    width='100%'
+                    variant='body1'
+                    english={<><strong>Language: </strong>{user.language === 'bengali' ? 'Bengali' : 'English'}</>}
+                    bengali={<><strong>ভাষা: </strong>{user.language === 'bengali' ? 'বাংলা' : 'ইংরেজি'}</>}
+                />
+                <TranslatableText
+                    width='100%'
+                    variant='body1'
+                    english={<><strong>Units: </strong>{user.units === 'meters' ? 'Meters' : 'Feet'}</>}
+                    bengali={<><strong>একক: </strong>{user.units === 'meters' ? 'মিটার' : 'ফুট'}</>}
                 />
 
                 <Stack width='100%' direction='row' justifyContent='space-between' mt={2}>
@@ -250,7 +282,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                             width='100%'
                             variant='body1'
                             english='Settings'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='সেটিংস'
                         />
                     </Button>
 
@@ -264,7 +296,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                             width='100%'
                             variant='body1'
                             english='Logout'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='লগআউট'
                         />
                     </Button>
                 </Stack>
@@ -273,10 +305,3 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
     );
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
-    return (
-        <Typography variant='body1' width='100%'>
-            <strong>{label}:</strong> {value}
-        </Typography>
-    );
-}

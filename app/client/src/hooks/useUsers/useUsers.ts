@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useAuth } from "../useAuth/useAuth"
 import { User, UserSchema } from "../../models"
 import getUserFn from './getUser'
+import getUsersFn from './getUsers'
 import updateUserFn from './updateUser'
 import addProfileImageFn from './addProfileImage'
 
@@ -9,6 +10,13 @@ export function useUsers() {
     const auth = useAuth()
     const { data: token } = auth.getAccessToken
     const queryClient = useQueryClient()
+
+    const getUsers = () => {
+        return useQuery<User[]>({
+            queryKey: ['users'],
+            queryFn: () => getUsersFn(token),
+        });
+    };
 
     const getUser = (userId?: string) => {
         return useQuery<User | 'guest'>({
@@ -119,6 +127,7 @@ export function useUsers() {
     };
 
     return {
+        getUsers,
         getUser,
         updateUser,
         updateProfileImage,

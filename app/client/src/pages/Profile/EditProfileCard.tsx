@@ -58,11 +58,11 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                 variant='h4'
                 mb='1.5rem'
                 english='Settings'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='সেটিংস'
             />
 
             <PageCard gap='0'>
-                <SettingLabel english='Display Name' bengali='BENGALI PLACEHOLDER' />
+                <SettingLabel english='Display Name' bengali='প্রদর্শনী নাম' />
                 <TextField
                     fullWidth
                     variant='outlined'
@@ -72,14 +72,14 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                     sx={{ mb: 3 }}
                 />
 
-                <SettingLabel english='Language' bengali='BENGALI PLACEHOLDER' />
+                <SettingLabel english='Language' bengali='ভাষা' />
                 <FormControl fullWidth sx={{ mb: 3 }} disabled={isPending}>
                     <InputLabel>
                         <TranslatableText
                             width='100%'
                             variant='body1'
                             english='Language'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='ভাষা'
                         />
                     </InputLabel>
                     <Select
@@ -90,7 +90,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                                 width='100%'
                                 variant='body1'
                                 english='Language'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='ভাষা'
                             />
                         }
                     >
@@ -99,7 +99,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                                 width='100%'
                                 variant='body1'
                                 english='English'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='ইংরেজি'
                             />
                         </MenuItem>
                         <MenuItem value='bengali'>
@@ -107,20 +107,20 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                                 width='100%'
                                 variant='body1'
                                 english='Bengali'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='বাংলা'
                             />
                         </MenuItem>
                     </Select>
                 </FormControl>
 
-                <SettingLabel english='Units System' bengali='BENGALI PLACEHOLDER' />
+                <SettingLabel english='Units System' bengali='একক পদ্ধতি' />
                 <FormControl fullWidth sx={{ mb: 3 }} disabled={isPending}>
                     <InputLabel>
                         <TranslatableText
                             width='100%'
                             variant='body1'
                             english='Units System'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='একক পদ্ধতি'
                         />
                     </InputLabel>
                     <Select
@@ -131,7 +131,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                                 width='100%'
                                 variant='body1'
                                 english='Units System'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='একক পদ্ধতি'
                             />
                         }
                     >
@@ -140,7 +140,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                                 width='100%'
                                 variant='body1'
                                 english='Meters'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='মিটার'
                             />
                         </MenuItem>
                         <MenuItem value='feet'>
@@ -148,7 +148,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                                 width='100%'
                                 variant='body1'
                                 english='Feet'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='ফুট'
                             />
                         </MenuItem>
                     </Select>
@@ -160,7 +160,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                             width='100%'
                             variant='body2'
                             english='Failed to save settings. Please try again.'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='সেটিংস সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।'
                         />
                     </Alert>
                 )}
@@ -176,7 +176,20 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                             width='100%'
                             variant='body1'
                             english={isPending ? 'Saving…' : 'Save'}
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali={isPending ? 'সংরক্ষণ হচ্ছে…' : 'সংরক্ষণ করুন'}
+                        />
+                    </Button>
+
+                    <Button
+                        variant='outlined'
+                        onClick={() => setEditMode(false)}
+                        disabled={isPending}
+                    >
+                        <TranslatableText
+                            width='100%'
+                            variant='body1'
+                            english='Cancel'
+                            bengali='বাতিল'
                         />
                     </Button>
                 </Stack>
@@ -192,7 +205,7 @@ function SettingLabel({ english, bengali }: { english: string; bengali: string }
             variant='body2'
             mb={1}
             english={<Typography variant='body2' color='text.secondary' fontWeight={600}>{english}</Typography>}
-            bengali={bengali}
+            bengali={<Typography variant='body2' color='text.secondary' fontWeight={600}>{bengali}</Typography>}
         />
     );
 }

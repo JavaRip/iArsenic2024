@@ -4,6 +4,7 @@ import { useAuth } from '../../middleware'
 
 const user = new Router()
 
+user.get('/users', useAuth, async ctx => UserController.getAllUsers(ctx))
 user.get('/user/:userId', useAuth, async ctx => UserController.getUser(ctx))
 user.patch('/user/:userId', useAuth, async (ctx) => UserController.updateUser(ctx))
 user.post('/user/:userId/avatar-upload-url', useAuth, async ctx => UserController.getAvatarUploadUrl(ctx))

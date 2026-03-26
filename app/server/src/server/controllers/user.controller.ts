@@ -51,6 +51,13 @@ export const UserController = {
         ctx.body = updatedUser
     },
 
+    async getAllUsers(ctx: Context): Promise<void> {
+        const auth = ctx.state.auth
+        const users = await UserService.getAllUsers(auth)
+        ctx.status = 200
+        ctx.body = { users }
+    },
+
     async getAvatarUploadUrl(ctx: Context): Promise<void> {
         const auth = ctx.state.auth
         const userId = ctx.params.userId

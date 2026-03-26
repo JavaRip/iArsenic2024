@@ -2,6 +2,8 @@ import { Route, Router, Switch } from 'wouter';
 import { createTheme } from '@mui/material/styles';
 import { Stack, ThemeProvider } from '@mui/material';
 import {
+    AllUsers,
+    UserProfile,
     BlogIndex,
     Briefing,
     CreateActionItem,
@@ -87,6 +89,8 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
+                            <Route path='/all-users' component={AllUsers} />
+                            <Route path='/user/:id' component={UserProfile} />
                             <Route path='/blog' component={BlogIndex} />
                             <Route path='/blog/launch-event-blog' component={LaunchEventBlog} />
                             <Route path='/blog/launch-event' component={LaunchEvent} />

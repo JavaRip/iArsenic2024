@@ -43,11 +43,24 @@ export const UserRepo: IUserRepo = {
 
     async findAll(): Promise<User[]> {
         const snapshot = await db.collection('user').get();
+
         const users: User[] = [];
 
         snapshot.forEach((doc) => {
-            const user = UserSchema.parse(doc.data());
-            users.push(user);
+            const docData = doc.data()
+
+            const result = UserSchema.safeParse({
+                ...docData,
+                createdAt: docData.createdAt.toDate(),
+            });
+
+            if (result.error) {
+                console.error('Error reading user')
+                console.error(docData)
+                console.error(result.error.message)
+            } else {
+                users.push(result.data);
+            }
         });
 
         return users;

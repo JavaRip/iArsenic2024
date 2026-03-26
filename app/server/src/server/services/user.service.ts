@@ -56,7 +56,7 @@ export const UserService = {
 
     async updateUser(
         auth: { user: User | { type: 'guest' }, token: AbstractToken },
-        userId: string, 
+        userId: string,
         userUpdates: Partial<User>
     ): Promise<User> {
         if (auth.user.type === 'guest') {
@@ -96,6 +96,21 @@ export const UserService = {
 
         await UserRepo.update(validatedNewUser)
         return validatedNewUser
+    },
+
+    async getAllUsers(
+        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+    ): Promise<User[]> {
+        if (auth.user.type !== 'admin') {
+            throw new KnownError({
+                message: 'Unauthorized',
+                code: 403,
+                name: 'UnauthorizedError',
+            });
+        }
+        if (!UserRepo.findAll) throw new Error('UserRepo.findAll not implemented');
+        const users = await UserRepo.findAll();
+        return users.map((u) => { delete u.password; return u; });
     },
 
     async getAvatarUploadUrl(
@@ -146,7 +161,7 @@ export const UserService = {
         units: Units,
     ): Promise<{ user: User; token: AccessToken }> {
         const existingUser = await UserRepo.findByEmail(email);
-    
+
         if (existingUser != null) {
             throw new KnownError({
                 message: 'User with this email already exists',
@@ -154,9 +169,9 @@ export const UserService = {
                 name: 'ValidationError',
             });
         }
-    
+
         const hashedPassword = bcrypt.hashSync(password, 10);
-    
+
         const newUser = UserSchema.parse({
             id: uuid4(),
             email,
@@ -168,14 +183,14 @@ export const UserService = {
             language,
             units,
         });
-    
+
         const user = await UserRepo.create({ ...newUser });
-    
+
         const result = validateModel(user, UserSchema);
         if (!result.ok) throw new Error(
             `Invalid user data: ${result.error.message} for user ID: ${user.id}`
         );
-    
+
         const verifyEmailToken = await TokenRepo.create({
             id: uuid4(),
             userId: user.id,
@@ -183,15 +198,19 @@ export const UserService = {
             expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
             type: 'verify-email',
         });
-    
+
         const validatedToken = VerifyEmailTokenSchema.parse(verifyEmailToken);
-    
+
+        const verifySubject = language === 'bengali'
+            ? 'iArsenic ইমেইল যাচাই করুন'
+            : 'Verify your email';
+
         await sendMail(
             user.email,
-            'Verify your email',
-            verifyEmailTemplate(validatedToken, user.name),
+            verifySubject,
+            verifyEmailTemplate(validatedToken, user.name, language),
         );
-    
+
         // Issue access token immediately after registration
         const accessTokenRecord = await TokenRepo.create({
             id: uuid4(),
@@ -200,11 +219,11 @@ export const UserService = {
             expiresAt: new Date(Date.now() + ACCESS_TOKEN_TTL),
             type: 'access',
         });
-    
+
         const token = AccessTokenSchema.parse(accessTokenRecord);
-    
+
         delete user.password;
-    
+
         return { user, token };
     },
 }

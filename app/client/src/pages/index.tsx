@@ -1,3 +1,5 @@
+export { default as AllUsers } from './AllUsers';
+export { default as UserProfile } from './UserProfile';
 export { BlogIndex, LaunchEvent, LaunchEventBlog } from './Blog';
 export { default as Briefing } from './Briefing';
 export { default as Depth } from './Depth';
