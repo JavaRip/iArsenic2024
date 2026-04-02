@@ -143,7 +143,7 @@ export default function WellPage() {
             )}
 
             <PhotoCard
-                wellId={wellId!}
+                well={well!}
             />
         </>
     );

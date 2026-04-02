@@ -6,7 +6,7 @@ import { KnownError } from '../errors';
 export const WellController = {
     async createWell(ctx: Context) {
         const auth = ctx.state.auth;
-    
+
         const parsed = WellSchema.partial().safeParse(ctx.request.body);
 
         let well: Well
@@ -17,10 +17,10 @@ export const WellController = {
             )
         } else {
             well = await WellService.createWell(
-                auth, 
+                auth,
             );
         }
-    
+
         ctx.status = 201;
         ctx.body = { ...well };
     },
@@ -88,7 +88,7 @@ export const WellController = {
 
         const well: Well = await WellService.getWellById(
             auth,
-            wellId, 
+            wellId,
         );
 
         ctx.status = 200
@@ -145,7 +145,7 @@ export const WellController = {
         const auth = ctx.state.auth
 
         const wellId = ctx.params.id;
-    
+
         if (!wellId) {
             throw new KnownError({
                 message: 'Well ID is required',
@@ -153,9 +153,9 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
-    
+
         const body = ctx.request.body as { contentType?: string };
-    
+
         if (!body.contentType || !body.contentType.startsWith('image/')) {
             throw new KnownError({
                 message: 'Invalid or missing content type',
@@ -163,15 +163,15 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
-    
+
         const { signedUrl, path } = await WellService.getImageUploadUrl(
             auth,
             wellId,
             body.contentType,
         );
-    
+
         ctx.status = 200;
-        ctx.body = { 
+        ctx.body = {
             url: signedUrl,
             path,
         };
@@ -180,7 +180,7 @@ export const WellController = {
     async confirmWellImageUpload(ctx: Context) {
         const auth = ctx.state.auth
         const wellId = ctx.params.id;
-    
+
         if (!wellId) {
             throw new KnownError({
                 message: 'Well ID is required',
@@ -188,7 +188,7 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
-    
+
         const body = ctx.request.body as { path?: string };
 
         if (!body.path || typeof body.path !== 'string') {
@@ -198,22 +198,22 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
-    
+
         const updatedWell = await WellService.confirmImageUpload(
             auth,
             wellId,
             body.path,
         );
-    
+
         ctx.status = 200;
         ctx.body = { ...updatedWell };
     },
 
     async getWellImageUrls(ctx: Context) {
-        const auth = ctx.state.auth
+        // const auth = ctx.state.auth
 
         const wellId = ctx.params.id;
-    
+
         if (!wellId) {
             throw new KnownError({
                 message: 'Well ID is required',
@@ -221,12 +221,12 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
-    
+
         const urls = await WellService.getWellImageSignedUrls(
-            auth,
-            wellId, 
+            // auth,
+            wellId,
         );
-    
+
         ctx.status = 200;
         ctx.body = { urls };
     },
@@ -235,7 +235,7 @@ export const WellController = {
         const auth = ctx.state.auth
         const wellId = ctx.params.id;
         const { path } = ctx.request.body as { path?: string };
-    
+
         if (!path || typeof path !== 'string') {
             throw new KnownError({
                 message: 'Image path is required',
@@ -251,13 +251,13 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
-    
+
         await WellService.deleteWellImage(
             auth,
-            wellId, 
+            wellId,
             path,
         );
-    
+
         ctx.status = 200;
         ctx.body = { success: true };
     },
@@ -285,7 +285,7 @@ export const WellController = {
 
         const user = UserSchema.parse(auth.user)
         const userId = user.id;
-    
+
         const { guestWellIds } = ctx.request.body as { guestWellIds?: string[] };
 
         if (!guestWellIds || !Array.isArray(guestWellIds)) {
@@ -295,12 +295,12 @@ export const WellController = {
                 name: 'ValidationError',
             });
         }
-    
+
         const claimed = await WellService.claimGuestWells(
-            userId, 
+            userId,
             guestWellIds,
         );
-    
+
         ctx.status = 200;
         ctx.body = { ...claimed };
     },
@@ -327,14 +327,14 @@ export const WellController = {
         }
 
         const user = UserSchema.parse(auth.user)
-    
+
         const filters = {
             ...ctx.query,
             userId: user.id,
         };
 
         const wells = await WellService.queryWells(filters);
-    
+
         ctx.status = 200;
         ctx.body = { wells };
     },
@@ -343,7 +343,7 @@ export const WellController = {
         const auth = ctx.state.auth
 
         const wellId = ctx.params.id;
-    
+
         if (!wellId) {
             throw new KnownError({
                 message: 'Well ID is required',

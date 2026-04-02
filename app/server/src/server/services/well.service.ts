@@ -319,7 +319,7 @@ export const WellService = {
     },
 
     async getWellImageSignedUrls(
-        auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        // auth: { user: User | { type: 'guest' }, token: AbstractToken },
         wellId: string,
     ) {
         const well = await WellRepo.findById(wellId);
@@ -328,17 +328,17 @@ export const WellService = {
             throw new KnownError({ message: 'Well not found', code: 404, name: 'WellNotFoundError' });
         }
 
-        if (well.userId !== 'guest') {
-            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
-                if (auth.user.type !== 'admin') {
-                    throw new KnownError({
-                        message: 'Unauthorized',
-                        code: 403,
-                        name: 'UnauthorizedError',
-                    });
-                }
-            }
-        }
+        // if (well.userId !== 'guest') {
+        //     if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
+        //         if (auth.user.type !== 'admin') {
+        //             throw new KnownError({
+        //                 message: 'Unauthorized',
+        //                 code: 403,
+        //                 name: 'UnauthorizedError',
+        //             });
+        //         }
+        //     }
+        // }
 
         const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
 

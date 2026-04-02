@@ -9,9 +9,10 @@ interface Props {
     url: string;
     index: number;
     onDelete: (path: string) => Promise<void>;
+    deletable?: boolean;
 }
 
-export default function PhotoItem({ url, index, onDelete }: Props) {
+export default function PhotoItem({ url, index, onDelete, deletable=true }: Props) {
     const [deleteState, setDeleteState] = useState<'wait' | 'confirm' | 'deleting'>('wait');
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -100,70 +101,72 @@ export default function PhotoItem({ url, index, onDelete }: Props) {
                     <OpenInNewIcon sx={{ color: "white" }} />
                 </Box>
 
-                {deleteState === 'deleting' ? (
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: 2,
-                            backgroundColor: "rgba(0,0,0,0.6)",
-                        }}
-                    >
-                        <CircularProgress
-                            size={20}
-                            sx={{ color: "whitesmoke" }}
-                        />
-                    </Box>
-                ) : deleteState === 'confirm' ? (
-                    <Box
-                        onClick={handleDeleteClick}
-                        sx={{
-                            width: 40,
-                            minWidth: 'max-content',
-                            height: 40,
-                            borderRadius: 2,
-                            backgroundColor: "rgba(255,0,0,0.8)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            "&:hover": {
-                                backgroundColor: "rgba(200,0,0,0.8)",
-                            },
-                        }}
-                    >
-                        <TranslatableText
-                            variant="caption"
-                            color="white"
-                            fontWeight="bold"
-                            px={2}
-                            sx={{ fontSize: '0.7rem' }}
-                            english="Delete?"
-                            bengali="মুছে ফেলুন?"
-                        />
-                    </Box>
-                ) : (
-                    <Box
-                        onClick={handleDeleteClick}
-                        sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: 2,
-                            backgroundColor: "rgba(0,0,0,0.6)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer",
-                            "&:hover": {
-                                backgroundColor: "rgba(0,0,0,0.8)",
-                            },
-                        }}
-                    >
-                        <DeleteIcon sx={{ color: "white" }} />
-                    </Box>
+                {deletable && (
+                    deleteState === 'deleting' ? (
+                        <Box
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: 2,
+                                backgroundColor: "rgba(0,0,0,0.6)",
+                            }}
+                        >
+                            <CircularProgress
+                                size={20}
+                                sx={{ color: "whitesmoke" }}
+                            />
+                        </Box>
+                    ) : deleteState === 'confirm' ? (
+                        <Box
+                            onClick={handleDeleteClick}
+                            sx={{
+                                width: 40,
+                                minWidth: 'max-content',
+                                height: 40,
+                                borderRadius: 2,
+                                backgroundColor: "rgba(255,0,0,0.8)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                cursor: "pointer",
+                                "&:hover": {
+                                    backgroundColor: "rgba(200,0,0,0.8)",
+                                },
+                            }}
+                        >
+                            <TranslatableText
+                                variant="caption"
+                                color="white"
+                                fontWeight="bold"
+                                px={2}
+                                sx={{ fontSize: '0.7rem' }}
+                                english="Delete?"
+                                bengali="মুছে ফেলুন?"
+                            />
+                        </Box>
+                    ) : (
+                        <Box
+                            onClick={handleDeleteClick}
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: 2,
+                                backgroundColor: "rgba(0,0,0,0.6)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                cursor: "pointer",
+                                "&:hover": {
+                                    backgroundColor: "rgba(0,0,0,0.8)",
+                                },
+                            }}
+                        >
+                            <DeleteIcon sx={{ color: "white" }} />
+                        </Box>
+                    )
                 )}
             </Stack>
         </Box>
