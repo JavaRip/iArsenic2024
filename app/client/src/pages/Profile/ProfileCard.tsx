@@ -56,7 +56,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
     const logout = useAuth().logout;
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const [rawFile, setRawFile] = useState<File | null>(null);
+    const [, setRawFile] = useState<File | null>(null);
     const [imageSrc, setImageSrc] = useState<string | null>(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -113,7 +113,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
     }
 
     return (
-        <Box width='100%'>
+        <Stack width="100%" alignItems="center" justifyContent="center">
             <TranslatableText
                 width='100%'
                 textAlign='center'
@@ -301,7 +301,7 @@ export default function ProfileCard({ user, setEditMode }: Props): JSX.Element {
                     </Button>
                 </Stack>
             </PageCard>
-        </Box>
+        </Stack>
     );
 }
 

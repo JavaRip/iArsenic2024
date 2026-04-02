@@ -68,7 +68,7 @@ export default function AllUsers(): JSX.Element {
     }
 
     return (
-        <Box width='100%'>
+        <Stack width="100%" alignItems="center" justifyContent="center">
             <TranslatableText
                 width='100%'
                 textAlign='center'
@@ -172,6 +172,6 @@ export default function AllUsers(): JSX.Element {
                     </Table>
                 </TableContainer>
             </Stack>
-        </Box>
+        </Stack>
     );
 }

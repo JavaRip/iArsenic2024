@@ -79,8 +79,8 @@ export default function CreateActionItem(): JSX.Element {
                         ) : (
                             <TranslatableText
                                 variant="body1"
-                                english="Create action item"
-                                bengali="অ্যাকশন আইটেম তৈরি করুন" // chatgpt generated
+                                english="Add log entry"
+                                bengali="লগ এন্ট্রি যোগ করুন"
                             />
                         )}
                     </Button>

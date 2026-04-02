@@ -1,6 +1,5 @@
 import {
     Alert,
-    Box,
     Button,
     CircularProgress,
     FormControl,
@@ -51,7 +50,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
     const isPending = mutation.isPending;
 
     return (
-        <Box width='100%'>
+        <Stack width="100%" alignItems="center" justifyContent="center">
             <TranslatableText
                 width='100%'
                 textAlign='center'
@@ -194,7 +193,7 @@ export default function EditProfileCard({ user, setEditMode }: Props): JSX.Eleme
                     </Button>
                 </Stack>
             </PageCard>
-        </Box>
+        </Stack>
     );
 }
 

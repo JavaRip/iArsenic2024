@@ -36,14 +36,14 @@ export default function UserProfile(): JSX.Element {
         );
     }
 
-    if (!currentUser || currentUser === 'guest' || currentUser.type !== 'admin') {
+    if (!currentUser || currentUser === 'guest') {
         return (
             <Box width='100%' textAlign='center' mt={4}>
                 <TranslatableText
                     width='100%'
                     variant='h6'
-                    english='Access denied. Admin only.'
-                    bengali='প্রবেশাধিকার নেই। শুধুমাত্র প্রশাসকের জন্য।'
+                    english='Please login to view this page'
+                    bengali='BENGALI PLACEHOLDER'
                 />
             </Box>
         );
@@ -72,7 +72,7 @@ export default function UserProfile(): JSX.Element {
     const userWells = (wells ?? []).filter((w) => w.userId === userId);
 
     return (
-        <Box width='100%'>
+        <Stack width="100%" alignItems="center" justifyContent="center">
             <TranslatableText
                 width='100%'
                 textAlign='center'
@@ -147,7 +147,8 @@ export default function UserProfile(): JSX.Element {
 
             {/* Wells */}
             <TranslatableText
-                variant='h5'
+                pb={4}
+                variant='h4'
                 mt={3}
                 mb={1}
                 english={`Wells (${userWells.length})`}
@@ -168,6 +169,6 @@ export default function UserProfile(): JSX.Element {
                     ))}
                 </Box>
             )}
-        </Box>
+        </Stack>
     );
 }

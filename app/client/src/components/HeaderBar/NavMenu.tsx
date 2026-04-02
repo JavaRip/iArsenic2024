@@ -159,22 +159,24 @@ export default function NavMenu({ open, setOpen, role }: props): JSX.Element {
                 {role === 'admin' && (
                     <>
                         <Divider />
-                        <TranslatableText
-                            english='Admins Only'
-                            bengali='শুধুমাত্র অ্যাডমিনদের জন্য'
-                            variant='h6'
-                        />
+                        <Box p={2}>
+                            <TranslatableText
+                                english='Admins Only'
+                                bengali='শুধুমাত্র অ্যাডমিনদের জন্য'
+                                variant='h6'
+                            />
+                        </Box>
                         <List>
                             <NavListItem
                                 path='all-users'
                                 Icon={GroupsIcon}
                                 label={<TranslatableText english='All Users' bengali="সকল ব্যবহারকারী" variant='body1' />}
                             />
-                            <NavListItem
+                            {/* <NavListItem
                                 path='all-wells'
                                 Icon={PublicIcon}
                                 label={<TranslatableText english='All Wells' bengali="সকল নলকূপ" variant='body1' />}
-                            />
+                            /> */}
                         </List>
                     </>
                 )}
