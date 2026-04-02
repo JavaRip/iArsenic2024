@@ -1,4 +1,5 @@
 import { Typography, Stack, TextField, Button, CircularProgress } from "@mui/material";
+import TranslatableText from "../../../components/TranslatableText";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth/useAuth";
 import { useLanguage } from "../../../hooks/useLanguage";
@@ -89,9 +90,12 @@ export default function RegisterSection() {
     ]);
     return (
         <Stack width="100%" alignItems="center" justifyContent="center">
-            <Typography variant="h5" mb={2}>
-                Register
-            </Typography>
+            <TranslatableText
+                variant="h5"
+                mb={2}
+                english="Register"
+                bengali="নিবন্ধন করুন"
+            />
 
             {error && (
                 <Typography color="error" mb={4}>
@@ -101,9 +105,13 @@ export default function RegisterSection() {
 
             {registerEmailPassword.isSuccess && (
                 <Stack direction='row' justifyContent='center'>
-                    <Typography mb={2} mr={2} color="primary">
-                        Register Successful
-                    </Typography>
+                    <TranslatableText
+                        mb={2}
+                        mr={2}
+                        color="primary"
+                        english="Register Successful"
+                        bengali="নিবন্ধন সফল হয়েছে"
+                    />
 
                     <CircularProgress
                         variant="determinate"
@@ -147,9 +155,9 @@ export default function RegisterSection() {
                     disabled={registerEmailPassword.isPending}
                 >
                     {registerEmailPassword.isPending ? (
-                        <CircularProgress /> 
+                        <CircularProgress />
                     ) : (
-                        "Register"
+                        <TranslatableText variant="body1" english="Register" bengali="নিবন্ধন করুন" />
                     )}
                 </Button>
             </Stack>
