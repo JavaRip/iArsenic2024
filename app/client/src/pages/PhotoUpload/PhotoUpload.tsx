@@ -3,11 +3,11 @@ import { useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { resizeImage } from "../../utils/resizeImage";
 import { navigate } from "wouter/use-browser-location";
-import PhotoItem from "./PhotoItem";
 import ImageIcon from '@mui/icons-material/Image';
 import TranslatableText from "../../components/TranslatableText";
 import { useAuth } from "../../hooks/useAuth/useAuth";
 import { AccessToken } from "../../models";
+import PhotoItem from "../../components/PhotoItem";
 
 export default function WellImageUpload(): JSX.Element {
     const [, params] = useRoute('/well/:id/upload-image');
@@ -31,18 +31,18 @@ export default function WellImageUpload(): JSX.Element {
             if (token) {
                 headers["Authorization"] = `Bearer ${token.id}`;
             }
-    
+
             const wellRes = await fetch(`/api/v1/self/well/${wellId}`, { headers });
             if (!wellRes.ok) return;
-    
+
             const well = await wellRes.json();
             const paths = well.imagePaths || [];
-    
+
             if (paths.length === 0) {
                 setImageUrls([]);
                 return;
             }
-    
+
             const urlsRes = await fetch(`/api/v1/self/well/${wellId}/signed-image-urls`, {
                 method: "POST",
                 headers: {
@@ -51,13 +51,13 @@ export default function WellImageUpload(): JSX.Element {
                 },
                 body: JSON.stringify({ paths })
             });
-    
+
             if (!urlsRes.ok) {
                 const text = await urlsRes.text();
                 console.error("Failed to fetch signed URLs:", text);
                 return;
             }
-    
+
             const { urls } = await urlsRes.json();
             setImageUrls(urls);
         } finally {
@@ -67,7 +67,7 @@ export default function WellImageUpload(): JSX.Element {
 
     async function onImageDelete(path: string) {
         if (!wellId) return;
-    
+
         const headers: HeadersInit = {
             "Content-Type": "application/json"
         };
@@ -75,19 +75,19 @@ export default function WellImageUpload(): JSX.Element {
         if (token) {
             headers["Authorization"] = `Bearer ${token.id}`;
         }
-    
+
         const res = await fetch(`/api/v1/self/well/${wellId}/image`, {
             method: "DELETE",
             headers,
             body: JSON.stringify({ path }),
         });
-    
+
         if (!res.ok) {
             const text = await res.text();
             console.error("Failed to delete image:", text);
             return;
         }
-    
+
         // Refresh well and image URLs after deletion
         await fetchWellAndImages(wellId, token);
     }
@@ -183,12 +183,12 @@ export default function WellImageUpload(): JSX.Element {
 
     return (
         <>
-            <TranslatableText 
+            <TranslatableText
                 variant='h4'
                 textAlign="center"
                 marginBottom='1rem'
-                english='Upload Well Image' 
-                bengali='BENGALI PLACEHOLDER'
+                english='Upload Well Image'
+                bengali='ওয়েলের ছবি আপলোড করুন'
             />
 
             <Card
@@ -269,27 +269,27 @@ export default function WellImageUpload(): JSX.Element {
                     </Button>
 
                     {success && (
-                        <Alert 
-                            severity="success" 
+                        <Alert
+                            severity="success"
                             sx={{ width: '100%' }}
                         >
-                            <TranslatableText 
+                            <TranslatableText
                                 variant='body1'
                                 english='Image uploaded successfully!'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='ছবি সফলভাবে আপলোড হয়েছে!'
                             />
                         </Alert>
                     )}
 
-                    {error && 
-                        <Alert 
-                            severity="error" 
+                    {error &&
+                        <Alert
+                            severity="error"
                             sx={{ width: '100%' }}
                         >
-                            <TranslatableText 
+                            <TranslatableText
                                 variant='body1'
                                 english={error}
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali={error} // todo provide translation
                             />
                         </Alert>
                     }
@@ -304,34 +304,34 @@ export default function WellImageUpload(): JSX.Element {
                     marginBottom: '16px',
                 }}
             >
-                <Box 
-                    width="100%" 
-                    display="flex" 
+                <Box
+                    width="100%"
+                    display="flex"
                     alignItems="center"
                     flexDirection="column"
                 >
-                    <TranslatableText 
-                        variant='h5' 
+                    <TranslatableText
+                        variant='h5'
                         mb='2rem'
                         english='Uploaded Images'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='আপলোড করা ছবিগুলো'
                     />
 
                     {loadingImages ? (
                         <CircularProgress />
                     ) : imageUrls.length === 0 ? (
-                        <TranslatableText 
+                        <TranslatableText
                             color="text.secondary"
                             english='No images uploaded.'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='কোনো ছবি আপলোড করা হয়নি।'
                         />
                     ) : (
                         <Box flexWrap="wrap" gap="1rem" display="flex" justifyContent="center">
                             {imageUrls.map((url, i) => (
-                                <PhotoItem 
-                                    key={url} 
-                                    url={url} 
-                                    index={i} 
+                                <PhotoItem
+                                    key={url}
+                                    url={url}
+                                    index={i}
                                     onDelete={onImageDelete}
                                 />
                             ))}
@@ -339,7 +339,7 @@ export default function WellImageUpload(): JSX.Element {
                     )}
                 </Box>
             </Card>
-            
+
             <Button
                 sx={{ width: '90%', height: '4rem' }}
                 variant='contained'
@@ -352,9 +352,9 @@ export default function WellImageUpload(): JSX.Element {
                     navigate(`/well/${wellId}/review`);
                 }}
             >
-                <TranslatableText 
+                <TranslatableText
                     english='Next Step'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='পরবর্তী ধাপ'
                 />
             </Button>
         </>

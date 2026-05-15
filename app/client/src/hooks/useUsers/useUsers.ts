@@ -2,15 +2,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useAuth } from "../useAuth/useAuth"
 import { User, UserSchema } from "../../models"
 import getUserFn from './getUser'
+import getUsersFn from './getUsers'
 import updateUserFn from './updateUser'
+import addProfileImageFn from './addProfileImage'
 
 export function useUsers() {
     const auth = useAuth()
     const { data: token } = auth.getAccessToken
     const queryClient = useQueryClient()
 
+    const getUsers = () => {
+        return useQuery<User[]>({
+            queryKey: ['users'],
+            queryFn: () => getUsersFn(token),
+        });
+    };
+
     const getUser = (userId?: string) => {
-        return useQuery<User>({
+        return useQuery<User | 'guest'>({
             queryKey: ['user', userId],
             enabled: !!userId,
             queryFn: () => getUserFn(token, userId!)
@@ -47,11 +56,11 @@ export function useUsers() {
                 queryClient.setQueryData<User>(
                     ['user', userId],
                     (old) => {
-                        return old 
-                            ? UserSchema.parse({ 
-                                ...old, 
+                        return old
+                            ? UserSchema.parse({
+                                ...old,
                                 ...updates,
-                            }) : 
+                            }) :
                             old
                     }
                 );
@@ -91,8 +100,36 @@ export function useUsers() {
         })
     };
 
+    const updateProfileImage = (
+        fileInputRef: React.RefObject<HTMLInputElement>,
+        setFile: React.Dispatch<React.SetStateAction<File | null>>,
+    ) => {
+        return useMutation({
+            mutationFn: ({
+                userId,
+                file,
+            }: {
+                userId: string;
+                file: File;
+            }) => {
+                return addProfileImageFn(token, userId, file);
+            },
+            onSuccess: () => {
+                setFile(null);
+                if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                }
+            },
+            onSettled: (_avatarUrl, _error, { userId }) => {
+                queryClient.invalidateQueries({ queryKey: ['user', userId] });
+            },
+        });
+    };
+
     return {
+        getUsers,
         getUser,
         updateUser,
+        updateProfileImage,
     }
 }

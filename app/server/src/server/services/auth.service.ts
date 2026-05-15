@@ -80,11 +80,16 @@ export const AuthService = {
         const emailBody = resetPasswordTemplate(
             resetToken as ResetPasswordToken,
             user.name,
+            user.language,
         )
+
+        const subject = user.language === 'bengali'
+            ? 'iArsenic পাসওয়ার্ড রিসেট করুন'
+            : 'Reset iArsenic Password';
 
         await sendMail(
             email,
-            'Reset iArsenic Password',
+            subject,
             emailBody,
         )
     },
@@ -266,16 +271,21 @@ export const AuthService = {
 
         const mailBody = verifyEmailTemplate(
             (verifyEmailToken as VerifyEmailToken),
-            newUser.name, 
+            newUser.name,
+            language,
         )
+
+        const verifySubject = language === 'bengali'
+            ? 'iArsenic ইমেইল যাচাই করুন'
+            : 'Verify iArsenic Email';
 
         await sendMail(
             newUser.email,
-            'Verify iArsenic Email',
+            verifySubject,
             mailBody,
         )
 
-        return { 
+        return {
             user: newUser,
             refreshToken: RefreshTokenSchema.parse(refreshToken), 
             accessToken: AccessTokenSchema.parse(accessToken),
@@ -336,12 +346,17 @@ export const AuthService = {
 
             const mailBody = verifyEmailTemplate(
                 (verifyEmailToken as VerifyEmailToken),
-                user.name, 
+                user.name,
+                language,
             )
+
+            const oauthVerifySubject = language === 'bengali'
+                ? 'iArsenic ইমেইল যাচাই করুন'
+                : 'Verify iArsenic Email';
 
             await sendMail(
                 user.email,
-                'Verify iArsenic Email',
+                oauthVerifySubject,
                 mailBody,
             )
         }

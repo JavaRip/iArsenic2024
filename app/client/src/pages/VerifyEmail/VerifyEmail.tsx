@@ -4,10 +4,12 @@ import { useRoute } from "wouter";
 import TranslatableText from "../../components/TranslatableText";
 import { navigate } from "wouter/use-browser-location";
 import { useAuth } from "../../hooks/useAuth/useAuth";
+import { useLanguage } from "../../hooks/useLanguage";
 
 export default function Review() {
     const [, params] = useRoute('/verify-email/:id');
     const verifyEmailToken = params?.id;
+    const { language } = useLanguage()
 
     const auth = useAuth()
     const { verifyEmail } = auth
@@ -18,7 +20,10 @@ export default function Review() {
     useEffect(() => {
         async function verifyEmailEffect() {
             if (!verifyEmailToken) {
-                setError('No verify email token in url')
+                setError(language === 'english'
+                    ? 'No verify email token in url'
+                    : 'ইউআরএলে কোনো ইমেইল ভেরিফিকেশন টোকেন নেই'
+                )
                 return
             }
 
@@ -57,34 +62,34 @@ export default function Review() {
 
     return (
         <Stack width="100%" alignItems="center" justifyContent="center">
-            <TranslatableText 
-                mb='1rem' 
-                textAlign='center' 
+            <TranslatableText
+                mb='1rem'
+                textAlign='center'
                 variant='h4'
                 english='Verify Email'
-                bengali='BENGALI PLACEHOLDER'
+                bengali='ইমেইল যাচাই করুন'
             />
 
             {error && (
-                <TranslatableText 
-                    mb='1rem' 
-                    textAlign='center' 
+                <TranslatableText
+                    mb='1rem'
+                    textAlign='center'
                     color='error'
                     error={true}
                     english={error}
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali={error} // todo provide translation
                 />
             )}
 
             {verifyEmail.isSuccess && (
                 <Stack direction='row' justifyContent='center'>
-                    <TranslatableText 
+                    <TranslatableText
                         mb={2}
                         mr={2}
                         color='primary'
-                        textAlign='center' 
+                        textAlign='center'
                         english='Password reset successfully'
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='পাসওয়ার্ড সফলভাবে রিসেট হয়েছে'
                     />
 
                     <CircularProgress

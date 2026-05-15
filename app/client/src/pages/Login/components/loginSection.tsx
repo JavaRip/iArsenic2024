@@ -5,6 +5,7 @@ import { useUnits } from "../../../hooks/useUnits";
 import { useLanguage } from "../../../hooks/useLanguage";
 import Divider from '@mui/material/Divider';
 import { navigate } from "wouter/use-browser-location";
+import TranslatableText from "../../../components/TranslatableText";
 
 export default function LoginSection() {
     const auth = useAuth()
@@ -19,7 +20,7 @@ export default function LoginSection() {
 
     const { language } = useLanguage()
     const { units } = useUnits()
-    
+
     const loginGoogle = auth.loginGoogle;
     const googleBtnRef = useRef<HTMLDivElement | null>(null);
 
@@ -61,7 +62,7 @@ export default function LoginSection() {
             callback: (response: { credential: string }) => {
                 const googleIdToken = response.credential;
 
-                loginGoogle.mutate({ 
+                loginGoogle.mutate({
                     googleIdToken,
                     language,
                     units,
@@ -113,9 +114,12 @@ export default function LoginSection() {
 
     return (
         <>
-            <Typography variant="h5" mb={2}>
-                Login
-            </Typography>
+            <TranslatableText
+                variant="h5"
+                english='Login'
+                bengali='লগইন'
+                mb={2}
+            />
 
             {error && (
                 <Typography color="error" mb={2}>
@@ -128,9 +132,13 @@ export default function LoginSection() {
                 loginGoogle.isSuccess
             ) && (
                 <Stack direction='row' justifyContent='center'>
-                    <Typography mb={2} mr={2} color="primary">
-                        Login Successful
-                    </Typography>
+                    <TranslatableText
+                        mb={2}
+                        mr={2}
+                        color="primary"
+                        english="Login Successful"
+                        bengali="লগইন সফল হয়েছে"
+                    />
 
                     <CircularProgress
                         variant="determinate"
@@ -170,7 +178,7 @@ export default function LoginSection() {
                     {authenticating ? (
                         <CircularProgress />
                     ): (
-                        'Login'
+                        <TranslatableText variant="body1" english="Login" bengali="লগইন" />
                     )}
                 </Button>
 
@@ -180,7 +188,7 @@ export default function LoginSection() {
                     onClick={() => navigate('/forgot-password')}
                     fullWidth
                 >
-                    Forgot Password
+                    <TranslatableText variant="body1" english="Forgot Password" bengali="পাসওয়ার্ড ভুলে গেছেন?" />
                 </Button>
             </Stack>
 
@@ -192,9 +200,12 @@ export default function LoginSection() {
                 }}
             />
 
-            <Typography variant="h5" mb={2}>
-                Login with Google
-            </Typography>
+            <TranslatableText
+                variant="h5"
+                mb={2}
+                english="Login with Google"
+                bengali="গুগল দিয়ে লগইন করুন"
+            />
 
             <Stack spacing={2} mb={4}>
 

@@ -11,7 +11,7 @@ import { useUsers } from '../../hooks/useUsers/useUsers';
 
 export default function HeaderBar(): JSX.Element {
     const auth = useAuth()
-    const { 
+    const {
         data: token,
         isLoading: tokenLoading,
     } = auth.getAccessToken
@@ -52,7 +52,7 @@ export default function HeaderBar(): JSX.Element {
                     <NavMenu
                         open={open}
                         setOpen={setOpen}
-                        role={user?.type}
+                        role={user === 'guest' ? undefined : user?.type}
                     />
 
                     <Typography
@@ -85,11 +85,11 @@ export default function HeaderBar(): JSX.Element {
                                     <TranslatableText
                                         variant='body1'
                                         english='My Account'
-                                        bengali='BENGALI PLACEHOLDER'
+                                        bengali='আমার অ্যাকাউন্ট' // chatgpt generated
                                     />
                                     {
-                                        user.avatarUrl ?
-                                            <Avatar 
+                                        user !== 'guest' && user.avatarUrl ?
+                                            <Avatar
                                                 src={user.avatarUrl}
                                                 sx={{
                                                     height: '28px',
@@ -97,7 +97,7 @@ export default function HeaderBar(): JSX.Element {
                                                     ml: '12px',
                                                 }}
                                             /> :
-                                            <AccountCircleIcon 
+                                            <AccountCircleIcon
                                                 sx={{
                                                     height: '28px',
                                                     width: '28px',
@@ -122,7 +122,7 @@ export default function HeaderBar(): JSX.Element {
                                     <TranslatableText
                                         variant='body1'
                                         english='Login'
-                                        bengali='BENGALI PLACEHOLDER'
+                                        bengali='লগইন' // chatgpt generated
                                     />
                                 </Button>
                             )

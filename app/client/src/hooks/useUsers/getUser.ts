@@ -1,9 +1,11 @@
-import { AccessToken, UserSchema } from "../../models";
+import { AccessToken, User, UserSchema } from "../../models";
 
 export default async function getUser(
     token: AccessToken | undefined,
     userId: string,
-) {
+): Promise<User | 'guest'> {
+    if (userId === 'guest') return 'guest'
+
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
     }

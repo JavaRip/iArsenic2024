@@ -1,12 +1,13 @@
 import { errorHandler } from '../../middleware'
+import actionItem from './action-item'
+import auth from './auth'
+import geodata from './geodata'
 import healthcheck from './healthcheck'
 import Router from '@koa/router'
 import self from './self'
+import token from './token'
 import user from './user'
 import well from './well'
-import geodata from './geodata'
-import token from './token'
-import auth from './auth'
 
 const routes = new Router({ prefix: '/api/v1' })
 
@@ -14,6 +15,7 @@ const routes = new Router({ prefix: '/api/v1' })
 routes.use(errorHandler)
 
 // mount the sub routes
+routes.use(actionItem.routes())
 routes.use(auth.routes())
 routes.use(geodata.routes())
 routes.use(healthcheck.routes())

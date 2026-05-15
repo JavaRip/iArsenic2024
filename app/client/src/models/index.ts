@@ -59,3 +59,6 @@ export type { Staining } from './wellStaining';
 
 export { UtensilStainingSchema } from './utensilStaining';
 export type { UtensilStaining } from './utensilStaining';
+
+export { ActionItemSchema } from './actionItem.model'
+export type { ActionItem } from './actionItem.model'

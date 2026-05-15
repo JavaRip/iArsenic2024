@@ -98,34 +98,34 @@ export default function ResetPassword(): JSX.Element {
     return (
         <Stack width="100%" alignItems="center" justifyContent="center">
             <PageCard>
-                <TranslatableText 
-                    mb='1rem' 
-                    textAlign='center' 
+                <TranslatableText
+                    mb='1rem'
+                    textAlign='center'
                     variant='h4'
                     english='Reset Password'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='পাসওয়ার্ড রিসেট করুন'
                 />
 
                 {error && (
-                    <TranslatableText 
-                        mb='1rem' 
-                        textAlign='center' 
+                    <TranslatableText
+                        mb='1rem'
+                        textAlign='center'
                         color='error'
                         error={true}
                         english={error}
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali={error} // todo provide translation
                     />
                 )}
 
                 {resetPassword.isSuccess && (
                     <Stack direction='row' justifyContent='center'>
-                        <TranslatableText 
+                        <TranslatableText
                             mb={2}
                             mr={2}
                             color='primary'
-                            textAlign='center' 
+                            textAlign='center'
                             english='Password reset successfully'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='পাসওয়ার্ড সফলভাবে রিসেট হয়েছে'
                         />
 
                         <CircularProgress
@@ -144,12 +144,12 @@ export default function ResetPassword(): JSX.Element {
                         onChange={handleNewPasswordChange}
                         disabled={resetPassword.isPending}
                         label={
-                            <TranslatableText 
-                                mb='1rem' 
-                                textAlign='center' 
+                            <TranslatableText
+                                mb='1rem'
+                                textAlign='center'
                                 variant='body1'
                                 english='New Password'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='নতুন পাসওয়ার্ড'
                             />
                         }
                     />
@@ -160,12 +160,12 @@ export default function ResetPassword(): JSX.Element {
                         onChange={handleConfirmPasswordChange}
                         disabled={resetPassword.isPending}
                         label={
-                            <TranslatableText 
-                                mb='1rem' 
-                                textAlign='center' 
+                            <TranslatableText
+                                mb='1rem'
+                                textAlign='center'
                                 variant='body1'
                                 english='Confirm Password'
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali='পাসওয়ার্ড নিশ্চিত করুন'
                             />
                         }
                     />
@@ -184,7 +184,14 @@ export default function ResetPassword(): JSX.Element {
                         {
                             resetPassword.isPending ?
                                 <CircularProgress /> :
-                                'Reset Password'
+                                <TranslatableText
+                                    mb='1rem'
+                                    textAlign='center'
+                                    variant='body1'
+                                    english='Reset Password'
+                                    bengali='পাসওয়ার্ড রিসেট করুন'
+                                />
+
                         }
                     </Button>
                 </Stack>

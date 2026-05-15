@@ -7,25 +7,26 @@ import { deleteFileFromBucket } from '../utils/deleteFileFromBucket'
 import { QueryTuple } from '../types'
 import produceEstimate from './prediction/produceEstimate'
 import { GeodataService } from './geodata.service'
+import { ActionItemService } from './actionItem.service'
 
 function modelEstimateToRiskAssesment(modelEstimate: ModelMessageCode) {
     switch (modelEstimate) {
-        case 0: 
+        case 0:
             return 2.5;
-        case 1: 
+        case 1:
             return 0.5;
-        case 2: 
-        case 3: 
+        case 2:
+        case 3:
             return 1.5;
-        case 4: 
-        case 5: 
+        case 4:
+        case 5:
             return 2.5;
-        case 6: 
+        case 6:
             return 3.5;
-        case 7: 
-        case 8: 
+        case 7:
+        case 8:
             return 4.5;
-        default: 
+        default:
             return 2.5;
     }
 }
@@ -36,22 +37,22 @@ export const WellService = {
         data: Partial<Well> = {}
     ): Promise<Well> {
         const userId = auth.user.type === 'guest' ? 'guest' : auth.user.id;
-    
+
         const well = {
             id: uuid4(),
             createdAt: new Date(),
             userId,
             ...data,
         };
-    
+
         well.geolocated = Array.isArray(well.geolocation)
             && well.geolocation.length === 2
             && typeof well.geolocation[0] === 'number'
             && typeof well.geolocation[1] === 'number';
-    
+
         well.hasImages = Array.isArray(well.imagePaths)
             && well.imagePaths.length > 0;
-    
+
         well.complete = (
             well.wellInUse !== undefined &&
             !!well.division &&
@@ -63,9 +64,19 @@ export const WellService = {
             typeof well.flooding === 'boolean' &&
             !!well.staining
         );
-    
+
         const validatedWell = WellSchema.parse(well);
-        return await WellRepo.create(validatedWell);
+        const newWell = await WellRepo.create(validatedWell);
+
+        await ActionItemService.createActionItem(auth, {
+            createdAt: new Date(),
+            message: 'Well created',
+            resourceId: newWell.id,
+            type: 'data-event',
+            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
+        })
+
+        return newWell
     },
 
     async getUserWells(userId: string): Promise<Well[]> {
@@ -112,7 +123,7 @@ export const WellService = {
         wellUpdates: Partial<Well>,
     ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
-    
+
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
@@ -120,7 +131,7 @@ export const WellService = {
                 name: 'WellNotFoundError',
             });
         }
-    
+
         if (well.userId !== 'guest') {
             if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 if (auth.user.type !== 'admin') {
@@ -132,7 +143,7 @@ export const WellService = {
                 }
             }
         }
-    
+
         let mouzaGeolocation = undefined;
         if (wellUpdates.mouza != null) {
             const division = wellUpdates.division || well.division;
@@ -140,7 +151,7 @@ export const WellService = {
             const upazila = wellUpdates.upazila || well.upazila;
             const union = wellUpdates.union || well.union;
             const mouza = wellUpdates.mouza || well.mouza;
-    
+
             if (district && division && upazila && union && mouza) {
                 mouzaGeolocation = await GeodataService.getLatLonFromRegion({
                     division,
@@ -151,7 +162,7 @@ export const WellService = {
                 }, true);
             }
         }
-    
+
         let modelOutput;
         try {
             modelOutput = await produceEstimate(well);
@@ -159,27 +170,27 @@ export const WellService = {
             console.error(error)
             console.error('Error producing estimate for well')
         }
-    
+
         if (modelOutput || modelOutput === 0) {
             wellUpdates.modelOutput = modelOutput;
             wellUpdates.riskAssesment = modelEstimateToRiskAssesment(modelOutput);
             wellUpdates.model = 'model6';
         }
-    
+
         const updatedWell = {
             ...well,
             ...wellUpdates,
             mouzaGeolocation: well.mouzaGeolocation || mouzaGeolocation,
         };
-    
+
         updatedWell.geolocated = Array.isArray(updatedWell.geolocation)
             && updatedWell.geolocation.length === 2
             && typeof updatedWell.geolocation[0] === 'number'
             && typeof updatedWell.geolocation[1] === 'number';
-    
+
         updatedWell.hasImages = Array.isArray(updatedWell.imagePaths)
             && updatedWell.imagePaths.length > 0;
-    
+
         updatedWell.complete = (
             updatedWell.wellInUse !== undefined &&
             !!updatedWell.division &&
@@ -191,10 +202,19 @@ export const WellService = {
             typeof updatedWell.flooding === 'boolean' &&
             !!updatedWell.staining
         );
-    
+
         const validatedWell = WellSchema.parse(updatedWell);
-    
+
         await WellRepo.update(validatedWell);
+
+        await ActionItemService.createActionItem(auth, {
+            createdAt: new Date(),
+            message: `${JSON.stringify(wellUpdates, null, 2)}`,
+            resourceId: validatedWell.id,
+            type: 'data-event',
+            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
+        })
+
         return validatedWell;
     },
 
@@ -208,7 +228,7 @@ export const WellService = {
         contentType: string,
     ): Promise<{ signedUrl: string, path: string }> {
         const well = await WellRepo.findById(wellId);
-    
+
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
@@ -231,32 +251,32 @@ export const WellService = {
                 }
             }
         }
-    
+
         const ext = contentType === 'image/png' ? '.png' :
             contentType === 'image/webp' ? '.webp' :
                 '.jpg';
 
         const destination = `wells/${wellId}/${uuid4()}${ext}`;
-    
+
         const signedUrl = await getSignedUrl(
             'write',
-            destination, 
+            destination,
             contentType,
         );
 
-        return { 
+        return {
             signedUrl,
             path: destination,
         }
     },
-    
+
     async confirmImageUpload(
         auth: { user: User | { type: 'guest' }, token: AbstractToken },
         wellId: string,
         imagePath: string,
     ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
-    
+
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
@@ -276,61 +296,69 @@ export const WellService = {
                 }
             }
         }
-    
+
         const updatedWell: Well = {
             ...well,
             imagePaths: Array.isArray(well.imagePaths)
                 ? [...well.imagePaths, imagePath]
                 : [imagePath],
         };
-    
+
         const validatedWell = WellSchema.parse(updatedWell);
         await WellRepo.update(validatedWell);
-    
+
+        await ActionItemService.createActionItem(auth, {
+            createdAt: new Date(),
+            message: `Well image added`,
+            resourceId: wellId,
+            type: 'data-event',
+            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
+        })
+
         return validatedWell;
     },
 
     async getWellImageSignedUrls(
-        auth: { user: User | { type: 'guest' }, token: AbstractToken },
-        wellId: string, 
+        // auth: { user: User | { type: 'guest' }, token: AbstractToken },
+        wellId: string,
     ) {
         const well = await WellRepo.findById(wellId);
-    
+
         if (!well) {
             throw new KnownError({ message: 'Well not found', code: 404, name: 'WellNotFoundError' });
         }
 
-        if (well.userId !== 'guest') {
-            if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
-                if (auth.user.type !== 'admin') {
-                    throw new KnownError({
-                        message: 'Unauthorized',
-                        code: 403,
-                        name: 'UnauthorizedError',
-                    });
-                }
-            }
-        }
-    
+        // if (well.userId !== 'guest') {
+        //     if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
+        //         if (auth.user.type !== 'admin') {
+        //             throw new KnownError({
+        //                 message: 'Unauthorized',
+        //                 code: 403,
+        //                 name: 'UnauthorizedError',
+        //             });
+        //         }
+        //     }
+        // }
+
         const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
-    
+
         const signedUrls = await Promise.all(imagePaths.map((path: string) =>
             getSignedUrl(
                 'read',
                 path,
-            ) 
+            )
         ));
-    
+
         return signedUrls;
     },
 
     async deleteWellImage(
         auth: { user: User | { type: 'guest' }, token: AbstractToken },
-        wellId: string, 
+        wellId: string,
         imagePath: string,
     ) {
         const well = await WellRepo.findById(wellId);
-    
+
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
@@ -353,9 +381,9 @@ export const WellService = {
                 }
             }
         }
-   
+
         const imagePaths = Array.isArray(well.imagePaths) ? well.imagePaths : [];
-    
+
         if (!imagePaths.includes(imagePath)) {
             throw new KnownError({
                 message: 'Image not associated with this well',
@@ -363,7 +391,7 @@ export const WellService = {
                 name: 'ImageNotLinkedError',
             });
         }
-    
+
         await deleteFileFromBucket(imagePath);
 
         const updatedPaths = imagePaths.filter((p: string) => p !== imagePath);
@@ -373,34 +401,42 @@ export const WellService = {
         }
 
         await WellRepo.update(updatedWell);
-    
+
+        await ActionItemService.createActionItem(auth, {
+            type: 'data-event',
+            message: `Well image deleted`,
+            createdAt: new Date(),
+            userId: auth.user.type === 'guest' ? 'guest' : auth.user.id,
+            resourceId: wellId,
+        })
+
         return { message: `Image deleted: ${imagePath}` };
     },
-    
+
     async claimGuestWells(userId: string, guestWellIds: string[]) {
         const updatedWells: Well[] = [];
-    
+
         for (const id of guestWellIds) {
             const well = await WellRepo.findById(id);
-    
+
             if (!well || well.userId !== 'guest') continue;
-    
+
             const updated = { ...well, userId };
             await WellRepo.update(updated);
             updatedWells.push(updated);
         }
-    
+
         return updatedWells;
     },
 
     async queryWells(filters: Record<string, any>): Promise<Well[]> {
         const queries: QueryTuple[] = [];
-    
+
         for (const [key, value] of Object.entries(filters)) {
             if (Array.isArray(value)) {
                 throw new Error(`Multiple filters for '${key}' are not supported.`);
             }
-    
+
             if (key.endsWith('_gte')) {
                 queries.push([key.replace('_gte', ''), '>=', Number(value)]);
             } else if (key.endsWith('_lte')) {
@@ -425,10 +461,10 @@ export const WellService = {
 
     async generatePrediction(
         auth: { user: User | { type: 'guest' }, token: AbstractToken },
-        wellId: string, 
+        wellId: string,
     ): Promise<Well> {
         const well = await WellRepo.findById(wellId);
-    
+
         if (!well) {
             throw new KnownError({
                 message: 'Well not found',
@@ -436,7 +472,7 @@ export const WellService = {
                 name: 'WellNotFoundError',
             });
         }
-        
+
         if (well.userId !== 'guest') {
             if (auth.user.type !== 'guest' && well.userId !== auth.user.id) {
                 if (auth.user.type !== 'admin') {

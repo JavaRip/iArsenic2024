@@ -72,7 +72,7 @@ export default function RegionFilter({
                 <TranslatableText
                     variant='body1'
                     english='Clear Region Filter'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='অঞ্চল ফিল্টার মুছে ফেলুন'
                 />
             </Button>
 
@@ -90,8 +90,8 @@ export default function RegionFilter({
                 }}
                 fullWidth
                 label={
-                    <TranslatableText 
-                        variant='body1' 
+                    <TranslatableText
+                        variant='body1'
                         english='Division'
                         bengali={regionTranslations!.Divisions.division}
                     />
@@ -99,8 +99,8 @@ export default function RegionFilter({
             >
                 {dropdownData.map(d => (
                     <MenuItem key={d.division} value={d.division}>
-                        <TranslatableText 
-                            variant='body1' 
+                        <TranslatableText
+                            variant='body1'
                             english={d.division}
                             bengali={regionTranslations!.Divisions[d.division.toLowerCase()]}
                         />
@@ -121,8 +121,8 @@ export default function RegionFilter({
                 fullWidth
                 disabled={!selectedDivision}
                 label={
-                    <TranslatableText 
-                        variant='body1' 
+                    <TranslatableText
+                        variant='body1'
                         english='District'
                         bengali={regionTranslations!.Districts.district}
                     />
@@ -130,8 +130,8 @@ export default function RegionFilter({
             >
                 {selectedDivision?.districts.map(d => (
                     <MenuItem key={d.district} value={d.district}>
-                        <TranslatableText 
-                            variant='body1' 
+                        <TranslatableText
+                            variant='body1'
                             english={d.district}
                             bengali={regionTranslations!.Districts[d.district.toLowerCase()]}
                         />
@@ -151,8 +151,8 @@ export default function RegionFilter({
                 fullWidth
                 disabled={!selectedDistrict}
                 label={
-                    <TranslatableText 
-                        variant='body1' 
+                    <TranslatableText
+                        variant='body1'
                         english='Upazila'
                         bengali={regionTranslations!.Upazilas.upazila}
                     />
@@ -160,8 +160,8 @@ export default function RegionFilter({
             >
                 {selectedDistrict?.upazilas.map(u => (
                     <MenuItem key={u.upazila} value={u.upazila}>
-                        <TranslatableText 
-                            variant='body1' 
+                        <TranslatableText
+                            variant='body1'
                             english={u.upazila}
                             bengali={regionTranslations!.Upazilas[u.upazila.toLowerCase()]}
                         />
@@ -180,8 +180,8 @@ export default function RegionFilter({
                 fullWidth
                 disabled={!selectedUpazila}
                 label={
-                    <TranslatableText 
-                        variant='body1' 
+                    <TranslatableText
+                        variant='body1'
                         english='Union'
                         bengali={regionTranslations!.Unions.union}
                     />
@@ -189,8 +189,8 @@ export default function RegionFilter({
             >
                 {selectedUpazila?.unions.map(u => (
                     <MenuItem key={u.union} value={u.union}>
-                        <TranslatableText 
-                            variant='body1' 
+                        <TranslatableText
+                            variant='body1'
                             english={u.union}
                             bengali={regionTranslations!.Unions[u.union.toLowerCase()]}
                         />
@@ -207,8 +207,8 @@ export default function RegionFilter({
                 fullWidth
                 disabled={!selectedUnion}
                 label={
-                    <TranslatableText 
-                        variant='body1' 
+                    <TranslatableText
+                        variant='body1'
                         english='Mouza'
                         bengali={regionTranslations!.Mouzas.mouza}
                     />
@@ -216,8 +216,8 @@ export default function RegionFilter({
             >
                 {selectedUnion?.mouzas.map(m => (
                     <MenuItem key={m} value={m}>
-                        <TranslatableText 
-                            variant='body1' 
+                        <TranslatableText
+                            variant='body1'
                             english={m}
                             bengali={regionTranslations!.Mouzas[m.toLowerCase()]}
                         />

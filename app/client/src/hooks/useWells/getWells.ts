@@ -43,5 +43,7 @@ export default async function getWells(
         validatedWells.push(result.data)
     }
 
-    return validatedWells as Well[]
+    return validatedWells.sort((a, b) => {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    }) as Well[]
 }

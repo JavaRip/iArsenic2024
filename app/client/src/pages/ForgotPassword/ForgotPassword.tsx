@@ -27,18 +27,18 @@ export default function ForgotPassword(): JSX.Element {
             } else {
                 setError("Failed to send reset link.");
             }
-        } 
+        }
     }
 
     return (
         <Stack width="100%" alignItems="center" justifyContent="center">
             <PageCard>
-                <TranslatableText 
+                <TranslatableText
                     mb='1rem'
                     textAlign="center"
                     variant='h4'
                     english='Forgot Password'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='পাসওয়ার্ড ভুলে গেছেন'
                 />
 
                 {error && (
@@ -46,7 +46,7 @@ export default function ForgotPassword(): JSX.Element {
                         variant='body1'
                         error={true}
                         english={error}
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali={error} // todo provide translated error
                     />
                 )}
 
@@ -58,7 +58,11 @@ export default function ForgotPassword(): JSX.Element {
                             Email may take 30 minutes or more to arrive,
                             please check spam and junk mail.
                         `}
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali={`
+                            পাসওয়ার্ড রিসেট ইমেইল সফলভাবে পাঠানো হয়েছে।
+                            ইমেইল আসতে ৩০ মিনিট বা তার বেশি সময় লাগতে পারে,
+                            অনুগ্রহ করে স্প্যাম এবং জাঙ্ক মেইল চেক করুন।
+                        `}
                     />
                 ) : (
                     <Stack spacing={2}>
@@ -68,10 +72,10 @@ export default function ForgotPassword(): JSX.Element {
                             onChange={handleEmailChange}
                             disabled={forgotPassword.isPending}
                             label={
-                                <TranslatableText 
+                                <TranslatableText
                                     variant='body1'
-                                    english='Email' 
-                                    bengali='BENGALI PLACEHOLDER'
+                                    english='Email'
+                                    bengali='ইমেইল'
                                 />
                             }
                         />
@@ -83,14 +87,18 @@ export default function ForgotPassword(): JSX.Element {
                             onClick={handlePasswordReset}
                             disabled={forgotPassword.isPending || !email}
                         >
-                            <TranslatableText 
+                            <TranslatableText
                                 variant='body1'
                                 english={
                                     forgotPassword.isPending ?
                                         'Sending...' :
                                         'Send Reset Link'
                                 }
-                                bengali='BENGALI PLACEHOLDER'
+                                bengali={
+                                    forgotPassword.isPending ?
+                                        'পাঠানো হচ্ছে...' :
+                                        'রিসেট লিংক পাঠান'
+                                }
                             />
                         </Button>
                     </Stack>

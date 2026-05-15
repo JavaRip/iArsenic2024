@@ -7,13 +7,13 @@ export const UserController = {
     async getUser(ctx: Context): Promise<void> {
         const auth = ctx.state.auth
 
-        if (!auth.token) {
-            throw new KnownError({
-                message: 'Unauthorized',
-                code: 403,
-                name: 'UnauthorizedError',
-            });
-        }
+        // if (!auth.token) {
+        //     throw new KnownError({
+        //         message: 'Unauthorized',
+        //         code: 403,
+        //         name: 'UnauthorizedError',
+        //     });
+        // }
 
         const userId = ctx.params.userId;
 
@@ -47,6 +47,49 @@ export const UserController = {
             )
         }
 
+        ctx.status = 200
+        ctx.body = updatedUser
+    },
+
+    async getAllUsers(ctx: Context): Promise<void> {
+        const auth = ctx.state.auth
+        const users = await UserService.getAllUsers(auth)
+        ctx.status = 200
+        ctx.body = { users }
+    },
+
+    async getAvatarUploadUrl(ctx: Context): Promise<void> {
+        const auth = ctx.state.auth
+        const userId = ctx.params.userId
+        const body = ctx.request.body as { contentType?: string }
+
+        if (!body.contentType || !body.contentType.startsWith('image/')) {
+            throw new KnownError({
+                message: 'Invalid or missing content type',
+                code: 400,
+                name: 'ValidationError',
+            })
+        }
+
+        const { signedUrl, path } = await UserService.getAvatarUploadUrl(auth, userId, body.contentType)
+        ctx.status = 200
+        ctx.body = { url: signedUrl, path }
+    },
+
+    async confirmAvatarUpload(ctx: Context): Promise<void> {
+        const auth = ctx.state.auth
+        const userId = ctx.params.userId
+        const body = ctx.request.body as { path?: string }
+
+        if (!body.path || typeof body.path !== 'string') {
+            throw new KnownError({
+                message: 'Avatar path is required',
+                code: 400,
+                name: 'ValidationError',
+            })
+        }
+
+        const updatedUser = await UserService.confirmAvatarUpload(auth, userId, body.path)
         ctx.status = 200
         ctx.body = updatedUser
     },

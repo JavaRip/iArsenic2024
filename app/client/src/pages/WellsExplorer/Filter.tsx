@@ -1,0 +1,404 @@
+import {
+    Box,
+    IconButton,
+    Collapse,
+    TextField,
+    MenuItem,
+    Checkbox,
+    FormControlLabel,
+    Stack,
+    Divider,
+} from '@mui/material';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { useState } from 'react';
+import RegionFilter from './filter/RegionFilter';
+import { DropdownDistrict, DropdownDivision, DropdownUnion, DropdownUpazila } from '../../types';
+import { FiltersType } from './FiltersType';
+import TranslatableText from '../../components/TranslatableText';
+import PageCard from '../../components/PageCard';
+import DepthSlider from './filter/DepthSlider';
+import { Well } from '../../models';
+import DateSlider from './filter/DateSlider';
+
+interface props {
+    wells: Well[];
+    dropdownData: DropdownDivision[];
+    filters: FiltersType;
+    setFilters: React.Dispatch<React.SetStateAction<FiltersType>>;
+    filterOpen: boolean;
+    setFilterOpen: (open: boolean) => void
+}
+
+export default function Filter({
+    wells,
+    dropdownData,
+    filters,
+    setFilters,
+    filterOpen,
+    setFilterOpen,
+}: props) {
+    const [selectedDivision, setSelectedDivision] = useState<DropdownDivision | null>(null);
+    const [selectedDistrict, setSelectedDistrict] = useState<DropdownDistrict | null>(null);
+    const [selectedUpazila, setSelectedUpazila] = useState<DropdownUpazila | null>(null);
+    const [selectedUnion, setSelectedUnion] = useState<DropdownUnion | null>(null);
+    const [selectedMouza, setSelectedMouza] = useState<string | null>(null);
+
+    function handleCheckboxChange(field: keyof typeof filters) {
+        setFilters({
+            ...filters,
+            [field]: !filters[field],
+        });
+    }
+
+    function handleTextChange(field: keyof typeof filters, value: string) {
+        setFilters({
+            ...filters,
+            [field]: value,
+        });
+    }
+
+    function setDateRange({
+        from,
+        to,
+    }: {
+        from: string, // ISO 8601 string
+        to: string,
+    }) {
+        setFilters({
+            ...filters,
+            afterDate: from,
+            beforeDate: to,
+        })
+    }
+
+    function setDepthRange({
+        from,
+        to,
+    }: {
+        from: number,
+        to: number,
+    }) {
+        setFilters({
+            ...filters,
+            aboveDepth: from,
+            belowDepth: to,
+        })
+    }
+
+    return (
+        <PageCard>
+            <Box
+                display="flex"
+                flexDirection='row'
+                justifyContent='space-between'
+                width='100%'
+            >
+                <Box
+                    display='flex'
+                    flexDirection='row'
+                    onClick={() => setFilterOpen(!filterOpen)}
+                    sx={{
+                        cursor: 'pointer',
+                    }}
+                >
+                    <IconButton>
+                        <FilterListIcon />
+                    </IconButton>
+
+                    <TranslatableText
+                        variant='h6'
+                        english='Filters'
+                        bengali='ফিল্টারসমূহ'
+                    />
+                </Box>
+                {/* <Button
+                    variant='outlined'
+                    onClick={() => buildQueryParams()}
+                >
+                    Apply
+                </Button> */}
+            </Box>
+
+            <Collapse in={filterOpen}>
+                <Stack spacing={2}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={filters.geolocated}
+                                onChange={() => handleCheckboxChange('geolocated')}
+                            />
+                        }
+                        label={
+                            <TranslatableText
+                                variant='body1'
+                                english='Geolocated'
+                                bengali='ভৌগোলিক অবস্থানযুক্ত'
+                            />
+                        }
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={filters.hasImages}
+                                onChange={() => handleCheckboxChange('hasImages')}
+                            />
+                        }
+                        label={
+                            <TranslatableText
+                                variant='body1'
+                                english='Includes Images'
+                                bengali='ছবি অন্তর্ভুক্'
+                            />
+                        }
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={filters.complete}
+                                onChange={() => handleCheckboxChange('complete')}
+                            />
+                        }
+                        label={
+                            <TranslatableText
+                                variant='body1'
+                                english='Complete Well'
+                                bengali='সম্পূর্ণ কূপ'
+                            />
+                        }
+                    />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={filters.ownWells}
+                                onChange={() => handleCheckboxChange('ownWells')}
+                            />
+                        }
+                        label={
+                            <TranslatableText
+                                variant='body1'
+                                english='Own Wells Only'
+                                bengali='শুধুমাত্র নিজের কূপ'
+                            />
+                        }
+                    />
+
+                    <TextField
+                        select
+                        value={filters.guestWells}
+                        onChange={(e) => handleTextChange('guestWells', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText
+                                variant='body1'
+                                english='Guest Wells'
+                                bengali='অতিথি কূপ'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText
+                                variant='body1'
+                                english='Any'
+                                bengali='যেকোনো'
+                            />
+                        </MenuItem>
+                        <MenuItem value="only">
+                            <TranslatableText
+                                variant='body1'
+                                english='Only'
+                                bengali='শুধুমাত্র'
+                            />
+                        </MenuItem>
+                        <MenuItem value="exclude">
+                            <TranslatableText
+                                variant='body1'
+                                english='Exclude'
+                                bengali='বাদ দিন'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        value={filters.flooding}
+                        onChange={(e) => handleTextChange('flooding', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText
+                                variant='body1'
+                                english='Flooding'
+                                bengali='পানিতে ডুবে যাওয়া'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText
+                                variant='body1'
+                                english='Any'
+                                bengali='যেকোনো'
+                            />
+                        </MenuItem>
+                        <MenuItem value="true">
+                            <TranslatableText
+                                variant='body1'
+                                english='Yes'
+                                bengali='হ্যাঁ'
+                            />
+                        </MenuItem>
+                        <MenuItem value="false">
+                            <TranslatableText
+                                variant='body1'
+                                english='No'
+                                bengali='না'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        value={filters.staining}
+                        onChange={(e) => handleTextChange('staining', e.target.value)}
+                        fullWidth
+                        label={
+                            <TranslatableText
+                                variant='body1'
+                                english='Staining'
+                                bengali='দাগের ধরন'
+                            />
+                        }
+                    >
+                        <MenuItem value="any">
+                            <TranslatableText
+                                variant='body1'
+                                english='Any'
+                                bengali='যেকোনো'
+                            />
+                        </MenuItem>
+                        <MenuItem value="red">
+                            <TranslatableText
+                                variant='body1'
+                                english='Red'
+                                bengali='লাল'
+                            />
+                        </MenuItem>
+                        <MenuItem value="black">
+                            <TranslatableText
+                                variant='body1'
+                                english='Black'
+                                bengali='কালো'
+                            />
+                        </MenuItem>
+                    </TextField>
+
+                    <DepthSlider
+                        setDepthRange={setDepthRange}
+                        depthRange={{
+                            from: filters.aboveDepth,
+                            to: filters.belowDepth,
+                        }}
+                    />
+
+                    <DateSlider
+                        earliestAvailableDate={
+                            wells.length > 0 ?
+                                wells[0].createdAt.toISOString().split('T')[0] :
+                                new Date().toISOString().split('T')[0]
+                        }
+                        latestAvailableDate={
+                            wells.length > 0 ?
+                                wells[
+                                    wells.length - 1
+                                ].createdAt.toISOString().split('T')[0] :
+                                new Date().toISOString().split('T')[0]
+                        }
+                        dateRange={{
+                            from: filters.afterDate,
+                            to: filters.beforeDate,
+                        }}
+                        setDateRange={setDateRange}
+                    />
+
+                    <Divider />
+
+                    <TranslatableText
+                        variant='h5'
+                        english='Region'
+                        bengali='অঞ্চল'
+                    />
+                    <RegionFilter
+                        dropdownData={dropdownData}
+                        selectedDivision={selectedDivision}
+                        setSelectedDivision={(division) => {
+                            setSelectedDivision(division)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    division: division?.division || '',
+                                    district: '',
+                                    upazila: '',
+                                    union: '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
+                        selectedDistrict={selectedDistrict}
+                        setSelectedDistrict={(district) => {
+                            setSelectedDistrict(district)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    district: district?.district || '',
+                                    upazila: '',
+                                    union: '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
+                        selectedUpazila={selectedUpazila}
+                        setSelectedUpazila={(upazila) => {
+                            setSelectedUpazila(upazila)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    upazila: upazila?.upazila || '',
+                                    union: '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
+                        selectedUnion={selectedUnion}
+                        setSelectedUnion={(union) => {
+                            setSelectedUnion(union)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    union: union?.union || '',
+                                    mouza: '',
+                                },
+                            }));
+                        }}
+                        selectedMouza={selectedMouza}
+                        setSelectedMouza={(mouza) => {
+                            setSelectedMouza(mouza)
+                            setFilters(f => ({
+                                ...f,
+                                region: {
+                                    ...f.region,
+                                    mouza: mouza || '',
+                                },
+                            }));
+                        }}
+                    />
+
+                </Stack>
+            </Collapse>
+        </PageCard>
+    );
+}

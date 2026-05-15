@@ -38,7 +38,7 @@
     "topojson-client": "^3.1.0",
     "typescript": "^5.5.4",
     "uuid4": "^2.0.3",
-    "zod": "^3.23.8"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

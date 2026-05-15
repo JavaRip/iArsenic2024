@@ -34,21 +34,21 @@ export default function SignUp(): JSX.Element {
             if (language === 'english') {
                 return "Password must be at least 10 characters long.";
             } else {
-                return "BENGALI PLACEHOLDER";
+                return "পাসওয়ার্ড কমপক্ষে ১০ অক্ষরের হতে হবে।";
             }
         }
         if (!/[A-Z]/.test(password)) {
             if (language === 'english') {
                 return "Password must contain at least one uppercase letter.";
             } else {
-                return "BENGALI PLACEHOLDER";
+                return "পাসওয়ার্ডে অন্তত একটি বড় হাতের অক্ষর থাকতে হবে।";
             }
         }
         if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
             if (language === 'english') {
                 return "Password must contain at least one symbol.";
             } else {
-                return "BENGALI PLACEHOLDER";
+                return "পাসওয়ার্ডে অন্তত একটি বিশেষ চিহ্ন থাকতে হবে।";
             }
         }
         return null;
@@ -59,7 +59,7 @@ export default function SignUp(): JSX.Element {
             if (language === 'english') {
                 setError('All fields are required');
             } else {
-                setError('BENGALI PLACEHOLDER');
+                setError('সব ঘর পূরণ করা আবশ্যক');
             }
             return;
         }
@@ -74,7 +74,7 @@ export default function SignUp(): JSX.Element {
             if (language === 'english') {
                 setError("Passwords do not match");
             } else {
-                setError('BENGALI PLACEHOLDER');
+                setError('পাসওয়ার্ড মিলছে না');
             }
             return;
         }
@@ -111,7 +111,12 @@ export default function SignUp(): JSX.Element {
                 }
             }
 
-            setError(`Failed to sign up, request id: ${resBody.requestId}`);
+            if (language === 'english') {
+                setError(`Failed to sign up, request id: ${resBody.requestId}`);
+            } else {
+                setError(`সাইন আপ ব্যর্থ হয়েছে, রিকোয়েস্ট আইডি: ${resBody.requestId}`);
+            }
+
             return;
         }
         const unclaimedWellIds = JSON.parse(localStorage.getItem("unclaimedWellIds") || "[]");
@@ -136,11 +141,11 @@ export default function SignUp(): JSX.Element {
         <>
             <PageCard>
                 <TranslatableText
-                    marginBottom='1rem' 
-                    textAlign='center' 
+                    marginBottom='1rem'
+                    textAlign='center'
                     variant='h4'
                     english='Sign Up'
-                    bengali='BENGALI PLACEHOLDER'
+                    bengali='সাইন আপ করুন'
                 />
 
                 <TextField
@@ -152,7 +157,7 @@ export default function SignUp(): JSX.Element {
                         <TranslatableText
                             variant='body1'
                             english='Name'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='নাম'
                         />
                     }
                 />
@@ -166,7 +171,7 @@ export default function SignUp(): JSX.Element {
                         <TranslatableText
                             variant='body1'
                             english='email'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='ইমেইল'
                         />
                     }
                 />
@@ -180,7 +185,7 @@ export default function SignUp(): JSX.Element {
                         <TranslatableText
                             variant='body1'
                             english='Password'
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='পাসওয়ার্ড'
                         />
                     }
                 />
@@ -191,20 +196,20 @@ export default function SignUp(): JSX.Element {
                     onChange={handleConfirmPasswordChange}
                     sx={{ width: '85%' }}
                     label={
-                        <TranslatableText 
+                        <TranslatableText
                             variant='body1'
                             english="Confirm Password"
-                            bengali='BENGALI PLACEHOLDER'
+                            bengali='পাসওয়ার্ড নিশ্চিত করুন'
                         />
                     }
                 />
 
                 {error && (
-                    <TranslatableText 
+                    <TranslatableText
                         error={true}
                         variant="body2"
                         english={error}
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali={error} // todo provide translation
                     />
                 )}
 
@@ -213,10 +218,10 @@ export default function SignUp(): JSX.Element {
                     variant='contained'
                     onClick={handleSubmit}
                 >
-                    <TranslatableText 
+                    <TranslatableText
                         variant='body1'
                         english="Sign Up"
-                        bengali='BENGALI PLACEHOLDER'
+                        bengali='সাইন আপ করুন'
                     />
                 </Button>
             </PageCard>

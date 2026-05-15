@@ -5,7 +5,7 @@ import { Typography } from '@mui/material';
 import getMapPin from '../../../utils/getMapPin';
 import TranslatableText from '../../../components/TranslatableText';
 import { Link } from 'wouter';
-import { predictionToRiskFactor } from '../utils/predictionToRiskFactor';
+import { predictionToRiskFactor } from '../../../utils/predictionToRiskFactor';
 import { Well } from '../../../models';
 
 type props = {

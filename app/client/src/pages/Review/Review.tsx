@@ -7,7 +7,7 @@ import Flooding from './Flooding';
 import Region from './Region';
 import Staining from './Staining';
 import Drinking from './Drinking';
-import Images from './Images';
+// import Images from './Images';
 import WellDataEntryLayout from "../../components/WellDataEntryLayout";
 import TranslatableText from '../../components/TranslatableText';
 import { useAuth } from '../../hooks/useAuth/useAuth';
@@ -18,7 +18,7 @@ export default function Review(): JSX.Element {
     const wellId = params?.id;
 
     const auth = useAuth()
-    const { data: token } = auth.getAccessToken;
+    const { data: token, isLoading } = auth.getAccessToken;
 
     const [well, setWell] = useState<Well>();
 
@@ -47,7 +47,7 @@ export default function Review(): JSX.Element {
         fetchWell();
     }, [token, wellId]);
 
-    if (!well) {
+    if (!well || isLoading) {
         return <CircularProgress />;
     }
 
@@ -58,7 +58,11 @@ export default function Review(): JSX.Element {
     if (well.wellInUse == null) navigate(`/well/${wellId}/well-in-use`);
 
     async function handleNext() {
-        navigate(`/well/${wellId}/result`);
+        if (token) {
+            navigate(`/well/${wellId}`);
+        } else {
+            navigate(`/well/${wellId}/result`);
+        }
     }
 
     return (
@@ -81,11 +85,11 @@ export default function Review(): JSX.Element {
             <Region well={well} />
             <Staining well={well} />
             <Depth well={well} />
-            {well.depth && well.depth <= 15 && 
+            {well.depth && well.depth <= 15 &&
                 <Flooding well={well} />
             }
             <Drinking well={well} />
-            {token && <Images well={well} />}
+            {/* {token && <Images well={well} />} */}
         </WellDataEntryLayout>
     );
 }

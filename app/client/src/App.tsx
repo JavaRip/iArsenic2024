@@ -2,8 +2,11 @@ import { Route, Router, Switch } from 'wouter';
 import { createTheme } from '@mui/material/styles';
 import { Stack, ThemeProvider } from '@mui/material';
 import {
+    AllUsers,
+    UserProfile,
     BlogIndex,
     Briefing,
+    CreateActionItem,
     Depth,
     Flooding,
     ForgotPassword,
@@ -12,7 +15,6 @@ import {
     LaunchEventBlog,
     Login,
     Map,
-    MyWells,
     PhotoUpload,
     PrivacyPolicy,
     Profile,
@@ -29,7 +31,9 @@ import {
     UsageCharts,
     VerifyEmail,
     Well,
+    WellActionLog,
     WellInUse,
+    WellsExplorer,
 } from './pages';
 
 import { HeaderBar } from './components';
@@ -64,7 +68,7 @@ function App() {
                 <Switch>
                     {/* Splash & Map Page */}
                     <Route path='/' component={Splash} />
-                    
+
                     <Route path='/map'>
                         {/* Map passed as child component to route
                         not component parameter because it has props
@@ -85,14 +89,16 @@ function App() {
                             marginBottom='2rem'
                             alignItems='center'
                         >
+                            <Route path='/all-users' component={AllUsers} />
+                            <Route path='/user/:id' component={UserProfile} />
                             <Route path='/blog' component={BlogIndex} />
-                            <Route path='/blog/launch-event' component={LaunchEvent} />
                             <Route path='/blog/launch-event-blog' component={LaunchEventBlog} />
+                            <Route path='/blog/launch-event' component={LaunchEvent} />
                             <Route path='/briefing' component={Briefing} />
+                            <Route path='/create-action-item/:id' component={CreateActionItem} />
                             <Route path='/forgot-password' component={ForgotPassword} />
                             <Route path='/landing' component={Landing} />
                             <Route path='/login' component={Login} />
-                            <Route path='/my-wells' component={MyWells} />
                             <Route path='/privacy-policy' component={PrivacyPolicy} />
                             <Route path='/profile' component={Profile} />
                             <Route path='/reset-password/:id' component={ResetPassword} />
@@ -102,6 +108,7 @@ function App() {
                             <Route path='/usage-charts' component={UsageCharts} />
                             <Route path='/verify-email/:id' component={VerifyEmail} />
                             <Route path='/well/:id' component={Well} />
+                            <Route path='/well/:id/action-log' component={WellActionLog} />
                             <Route path='/well/:id/depth' component={Depth} />
                             <Route path='/well/:id/flooding' component={Flooding} />
                             <Route path='/well/:id/region' component={Region} />
@@ -111,6 +118,7 @@ function App() {
                             <Route path='/well/:id/staining' component={Staining} />
                             <Route path='/well/:id/upload-image' component={PhotoUpload} />
                             <Route path='/well/:id/well-in-use' component={WellInUse} />
+                            <Route path='/wells/explorer' component={WellsExplorer} />
                         </Stack>
                     </Route>
                 </Switch>
